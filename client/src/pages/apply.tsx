@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -12,14 +12,45 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Mic, MicOff, Play, Pause, Trash2 } from "lucide-react";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
+
+// Voice recording interface
+interface VoiceRecording {
+  isRecording: boolean;
+  audioBlob: Blob | null;
+  audioUrl: string | null;
+  isPlaying: boolean;
+  duration: number;
+}
 
 export default function Apply() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  // Voice recording state for each field
+  const [voiceRecordings, setVoiceRecordings] = useState<{[key: string]: VoiceRecording}>({
+    experience: { isRecording: false, audioBlob: null, audioUrl: null, isPlaying: false, duration: 0 },
+    intentions: { isRecording: false, audioBlob: null, audioUrl: null, isPlaying: false, duration: 0 },
+    challenges: { isRecording: false, audioBlob: null, audioUrl: null, isPlaying: false, duration: 0 },
+    support: { isRecording: false, audioBlob: null, audioUrl: null, isPlaying: false, duration: 0 }
+  });
+
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const recordingTimerRef = useRef<NodeJS.Timeout | null>(null);
+
   const handleNavClick = () => {
+    // Clean up any recordings when navigating away
+    Object.values(voiceRecordings).forEach(recording => {
+      if (recording.audioUrl) {
+        URL.revokeObjectURL(recording.audioUrl);
+      }
+    });
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -35,6 +66,235 @@ export default function Apply() {
       support: "",
     },
   });
+
+  // Voice recording functions
+  const startRecording = async (fieldName: string) => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      
+      const chunks: BlobPart[] = [];
+      let startTime = Date.now();
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          chunks.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(chunks, { type: 'audio/webm' });
+        const audioUrl = URL.createObjectURL(audioBlob);
+        const duration = Math.round((Date.now() - startTime) / 1000);
+
+        setVoiceRecordings(prev => ({
+          ...prev,
+          [fieldName]: {
+            ...prev[fieldName],
+            isRecording: false,
+            audioBlob,
+            audioUrl,
+            duration
+          }
+        }));
+
+        // Clean up stream
+        stream.getTracks().forEach(track => track.stop());
+      };
+
+      mediaRecorder.start();
+      
+      setVoiceRecordings(prev => ({
+        ...prev,
+        [fieldName]: { ...prev[fieldName], isRecording: true, duration: 0 }
+      }));
+
+      // Start timer
+      recordingTimerRef.current = setInterval(() => {
+        setVoiceRecordings(prev => ({
+          ...prev,
+          [fieldName]: { 
+            ...prev[fieldName], 
+            duration: Math.round((Date.now() - startTime) / 1000) 
+          }
+        }));
+      }, 1000);
+
+      toast({
+        title: "Recording started",
+        description: "Speak your answer clearly. Click stop when finished.",
+      });
+    } catch (error) {
+      console.error('Error starting recording:', error);
+      toast({
+        title: "Recording failed",
+        description: "Please check your microphone permissions and try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const stopRecording = (fieldName: string) => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+      mediaRecorderRef.current.stop();
+    }
+    if (recordingTimerRef.current) {
+      clearInterval(recordingTimerRef.current);
+      recordingTimerRef.current = null;
+    }
+  };
+
+  const playRecording = (fieldName: string) => {
+    const recording = voiceRecordings[fieldName];
+    if (!recording.audioUrl) return;
+
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+
+    audioRef.current = new Audio(recording.audioUrl);
+    audioRef.current.onplay = () => {
+      setVoiceRecordings(prev => ({
+        ...prev,
+        [fieldName]: { ...prev[fieldName], isPlaying: true }
+      }));
+    };
+    audioRef.current.onended = () => {
+      setVoiceRecordings(prev => ({
+        ...prev,
+        [fieldName]: { ...prev[fieldName], isPlaying: false }
+      }));
+    };
+    audioRef.current.play();
+  };
+
+  const pauseRecording = (fieldName: string) => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setVoiceRecordings(prev => ({
+        ...prev,
+        [fieldName]: { ...prev[fieldName], isPlaying: false }
+      }));
+    }
+  };
+
+  const deleteRecording = (fieldName: string) => {
+    const recording = voiceRecordings[fieldName];
+    if (recording.audioUrl) {
+      URL.revokeObjectURL(recording.audioUrl);
+    }
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+    
+    setVoiceRecordings(prev => ({
+      ...prev,
+      [fieldName]: { 
+        isRecording: false, 
+        audioBlob: null, 
+        audioUrl: null, 
+        isPlaying: false, 
+        duration: 0 
+      }
+    }));
+
+    toast({
+      title: "Recording deleted",
+      description: "You can record a new answer or type your response.",
+    });
+  };
+
+  const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Voice controls component
+  const VoiceControls = ({ fieldName }: { fieldName: string }) => {
+    const recording = voiceRecordings[fieldName];
+
+    return (
+      <div className="flex items-center gap-2 mt-2 p-3 bg-gray-700 bg-opacity-50 rounded-lg">
+        {!recording.audioUrl ? (
+          // Recording controls
+          <>
+            <Button
+              type="button"
+              variant={recording.isRecording ? "destructive" : "outline"}
+              size="sm"
+              onClick={() => recording.isRecording ? stopRecording(fieldName) : startRecording(fieldName)}
+              disabled={recording.isRecording && !mediaRecorderRef.current}
+              className="flex items-center gap-2"
+            >
+              {recording.isRecording ? (
+                <>
+                  <MicOff className="w-4 h-4" />
+                  Stop ({formatDuration(recording.duration)})
+                </>
+              ) : (
+                <>
+                  <Mic className="w-4 h-4" />
+                  Record Voice Answer
+                </>
+              )}
+            </Button>
+            {recording.isRecording && (
+              <div className="flex items-center gap-2 text-sm text-red-400">
+                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                Recording...
+              </div>
+            )}
+          </>
+        ) : (
+          // Playback controls
+          <>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => recording.isPlaying ? pauseRecording(fieldName) : playRecording(fieldName)}
+              className="flex items-center gap-2"
+            >
+              {recording.isPlaying ? (
+                <>
+                  <Pause className="w-4 h-4" />
+                  Pause
+                </>
+              ) : (
+                <>
+                  <Play className="w-4 h-4" />
+                  Play
+                </>
+              )}
+            </Button>
+            <span className="text-sm text-gray-300">
+              {formatDuration(recording.duration)} recorded
+            </span>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => deleteRecording(fieldName)}
+              className="text-red-400 hover:text-red-300"
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => startRecording(fieldName)}
+              className="text-xs"
+            >
+              Re-record
+            </Button>
+          </>
+        )}
+      </div>
+    );
+  };
 
   const submitApplication = useMutation({
     mutationFn: async (data: InsertApplication) => {
@@ -213,12 +473,15 @@ export default function Apply() {
                       <FormItem>
                         <FormLabel className="text-gray-300">What's your experience with somatic work, embodiment practices, or healing? *</FormLabel>
                         <FormControl>
-                          <Textarea 
-                            placeholder="Share your background and any previous healing work..."
-                            rows={4}
-                            className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-400"
-                            {...field} 
-                          />
+                          <div>
+                            <Textarea 
+                              placeholder="Share your background and any previous healing work... (or record your answer below)"
+                              rows={4}
+                              className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-400"
+                              {...field} 
+                            />
+                            <VoiceControls fieldName="experience" />
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -232,12 +495,15 @@ export default function Apply() {
                       <FormItem>
                         <FormLabel className="text-gray-300">What are you hoping to explore or heal through this work? *</FormLabel>
                         <FormControl>
-                          <Textarea 
-                            placeholder="What draws you to this work? What are you seeking to shift or explore?"
-                            rows={4}
-                            className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-400"
-                            {...field} 
-                          />
+                          <div>
+                            <Textarea 
+                              placeholder="What draws you to this work? What are you seeking to shift or explore? (or record your answer below)"
+                              rows={4}
+                              className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-400"
+                              {...field} 
+                            />
+                            <VoiceControls fieldName="intentions" />
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -251,12 +517,15 @@ export default function Apply() {
                       <FormItem>
                         <FormLabel className="text-gray-300">What are the biggest challenges you're facing right now? *</FormLabel>
                         <FormControl>
-                          <Textarea 
-                            placeholder="Share what's feeling difficult or stuck in your life..."
-                            rows={4}
-                            className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-400"
-                            {...field} 
-                          />
+                          <div>
+                            <Textarea 
+                              placeholder="Share what's feeling difficult or stuck in your life... (or record your answer below)"
+                              rows={4}
+                              className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-400"
+                              {...field} 
+                            />
+                            <VoiceControls fieldName="challenges" />
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -270,12 +539,15 @@ export default function Apply() {
                       <FormItem>
                         <FormLabel className="text-gray-300">What kind of support do you feel would be most helpful? *</FormLabel>
                         <FormControl>
-                          <Textarea 
-                            placeholder="What type of guidance, holding, or support would feel most meaningful to you?"
-                            rows={4}
-                            className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-400"
-                            {...field} 
-                          />
+                          <div>
+                            <Textarea 
+                              placeholder="What type of guidance, holding, or support would feel most meaningful to you? (or record your answer below)"
+                              rows={4}
+                              className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-400"
+                              {...field} 
+                            />
+                            <VoiceControls fieldName="support" />
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
