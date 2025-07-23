@@ -15,7 +15,87 @@ if (!import.meta.env.VITE_STRIPE_PUBLIC_KEY) {
 }
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
-const CheckoutForm = ({ email, setEmail, includeAddon, setIncludeAddon }: {
+const EmailForm = ({ email, setEmail, includeAddon, setIncludeAddon }: {
+  email: string;
+  setEmail: (email: string) => void;
+  includeAddon: boolean;
+  setIncludeAddon: (include: boolean) => void;
+}) => {
+  const totalAmount = includeAddon ? 89 : 64;
+
+  return (
+    <div className="min-h-screen bg-black text-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-2xl mx-auto">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-serif font-bold text-white mb-4">Complete Your Purchase</h1>
+          <p className="text-gray-300">Enter your email to proceed to payment</p>
+        </div>
+
+        <Card className="bg-gray-900 border border-purple-400 border-opacity-30 mystique-glow">
+          <CardHeader>
+            <CardTitle className="text-white">Order Details</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Order Summary */}
+            <div className="bg-black bg-opacity-50 rounded-lg p-4">
+              <h3 className="text-white font-semibold mb-4">Your Order</h3>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-gray-300">The Good Girl Paradox Masterclass</span>
+                  <span className="text-white">$64.00</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Checkbox 
+                    id="addon"
+                    checked={includeAddon}
+                    onCheckedChange={(checked) => setIncludeAddon(checked as boolean)}
+                    className="border-purple-400"
+                  />
+                  <Label htmlFor="addon" className="text-gray-300 cursor-pointer">
+                    Add "Return to Body" bonus session (+$25)
+                  </Label>
+                  <span className="text-white">$25.00</span>
+                </div>
+                <div className="border-t border-gray-700 pt-2 mt-4">
+                  <div className="flex justify-between font-semibold">
+                    <span className="text-white">Total</span>
+                    <span className="text-purple-400">${totalAmount}.00</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Email Input */}
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-white">Email Address</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="your@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-black bg-opacity-50 border-gray-600 text-white"
+                required
+              />
+              <p className="text-sm text-gray-400">
+                We'll send your masterclass access to this email address.
+              </p>
+            </div>
+
+            <Button 
+              className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold py-4 px-8 rounded-xl text-lg transition-all duration-300 mystique-glow"
+              disabled={!email || !email.includes('@')}
+            >
+              Continue to Payment
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+const PaymentForm = ({ email, setEmail, includeAddon, setIncludeAddon }: {
   email: string;
   setEmail: (email: string) => void;
   includeAddon: boolean;
@@ -209,7 +289,7 @@ export default function Checkout() {
 
   if (!email) {
     return (
-      <CheckoutForm 
+      <EmailForm 
         email={email}
         setEmail={setEmail}
         includeAddon={includeAddon}
@@ -231,7 +311,7 @@ export default function Checkout() {
 
   return (
     <Elements stripe={stripePromise} options={{ clientSecret }}>
-      <CheckoutForm 
+      <PaymentForm 
         email={email}
         setEmail={setEmail}
         includeAddon={includeAddon}
