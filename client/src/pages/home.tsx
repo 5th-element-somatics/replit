@@ -302,8 +302,8 @@ export default function Home() {
               <p className="text-gray-400 text-sm mb-2">
                 Questions about your purchase?
               </p>
-              <a href="mailto:info@fifthelementsomatics.com" className="text-purple-400 hover:text-pink-600 transition-colors">
-                info@fifthelementsomatics.com
+              <a href="mailto:hello@fifthelementsomatics.com" className="text-purple-400 hover:text-pink-600 transition-colors">
+                hello@fifthelementsomatics.com
               </a>
             </div>
           </div>

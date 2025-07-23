@@ -181,10 +181,10 @@ export default function Watch() {
                 If you have any questions or technical issues, we're here to help.
               </p>
               <a 
-                href="mailto:info@fifthelementsomatics.com"
+                href="mailto:hello@fifthelementsomatics.com"
                 className="text-purple-400 hover:text-pink-400 transition-colors"
               >
-                info@fifthelementsomatics.com
+                hello@fifthelementsomatics.com
               </a>
             </CardContent>
           </Card>
