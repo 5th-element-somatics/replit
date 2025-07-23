@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Link } from "wouter";
-import { Share2, Copy, Heart, Sparkles } from "lucide-react";
+import { Share2, Copy, Heart, Sparkles, Volume2, VolumeX, Play, Pause, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -138,19 +138,93 @@ export default function Quiz() {
   const [showResult, setShowResult] = useState(false);
   const [result, setResult] = useState<keyof typeof resultTypes | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoadingAudio, setIsLoadingAudio] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const { toast } = useToast();
+
+  const playQuestionAudio = async (questionText: string) => {
+    if (!soundEnabled) return;
+    
+    setIsLoadingAudio(true);
+    try {
+      const response = await apiRequest("POST", "/api/text-to-speech", {
+        text: questionText
+      });
+      
+      if (response.ok) {
+        const audioBlob = await response.blob();
+        const audioUrl = URL.createObjectURL(audioBlob);
+        
+        if (audioRef.current) {
+          audioRef.current.pause();
+        }
+        
+        audioRef.current = new Audio(audioUrl);
+        audioRef.current.onplay = () => setIsPlaying(true);
+        audioRef.current.onended = () => {
+          setIsPlaying(false);
+          URL.revokeObjectURL(audioUrl);
+        };
+        audioRef.current.onerror = () => {
+          setIsPlaying(false);
+          URL.revokeObjectURL(audioUrl);
+        };
+        
+        await audioRef.current.play();
+      }
+    } catch (error) {
+      console.error("Error playing audio:", error);
+      toast({
+        title: "Audio unavailable",
+        description: "Voice narration temporarily unavailable",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoadingAudio(false);
+    }
+  };
+
+  const toggleAudio = () => {
+    if (isPlaying && audioRef.current) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else if (audioRef.current) {
+      audioRef.current.play();
+    } else {
+      playQuestionAudio(quizQuestions[currentQuestion].question);
+    }
+  };
 
   const handleAnswer = (questionId: string, value: string) => {
     setAnswers({ ...answers, [questionId]: value });
   };
 
   const nextQuestion = () => {
+    // Stop current audio when moving to next question
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    }
+    
     if (currentQuestion < quizQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
       calculateResult();
     }
   };
+
+  // Auto-play question when it changes (if sound is enabled)
+  useEffect(() => {
+    if (soundEnabled && !showResult && quizQuestions[currentQuestion]) {
+      const timer = setTimeout(() => {
+        playQuestionAudio(quizQuestions[currentQuestion].question);
+      }, 500); // Small delay to let UI settle
+      
+      return () => clearTimeout(timer);
+    }
+  }, [currentQuestion, soundEnabled, showResult]);
 
   const calculateResult = () => {
     const scores = { people_pleaser: 0, perfectionist: 0, rebel: 0 };
@@ -419,11 +493,52 @@ export default function Quiz() {
           </div>
         </div>
 
+        {/* Audio Controls */}
+        <div className="flex justify-center items-center gap-4 mb-6">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setSoundEnabled(!soundEnabled)}
+            className="text-gray-300 hover:text-white flex items-center gap-2"
+          >
+            {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+            <span className="text-sm">{soundEnabled ? "Sound On" : "Sound Off"}</span>
+          </Button>
+          
+          {soundEnabled && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleAudio}
+              disabled={isLoadingAudio}
+              className="text-emerald-400 hover:text-emerald-300 flex items-center gap-2"
+            >
+              {isLoadingAudio ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : isPlaying ? (
+                <Pause className="w-4 h-4" />
+              ) : (
+                <Play className="w-4 h-4" />
+              )}
+              <span className="text-sm">
+                {isLoadingAudio ? "Loading..." : isPlaying ? "Pause" : "Play Question"}
+              </span>
+            </Button>
+          )}
+        </div>
+
         {/* Question */}
         <Card className="bg-gray-800 border border-purple-400 border-opacity-20 mystique-glow">
           <CardHeader>
-            <CardTitle className="text-2xl text-white text-center">
+            <CardTitle className="text-2xl text-white text-center flex items-center justify-center gap-3">
               {quizQuestions[currentQuestion].question}
+              {soundEnabled && isPlaying && (
+                <div className="flex gap-1">
+                  <div className="w-1 h-4 bg-emerald-400 rounded animate-pulse"></div>
+                  <div className="w-1 h-3 bg-emerald-400 rounded animate-pulse" style={{animationDelay: '0.1s'}}></div>
+                  <div className="w-1 h-5 bg-emerald-400 rounded animate-pulse" style={{animationDelay: '0.2s'}}></div>
+                </div>
+              )}
             </CardTitle>
           </CardHeader>
           <CardContent>
