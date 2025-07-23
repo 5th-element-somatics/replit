@@ -11,6 +11,7 @@ import Checkout from "@/pages/checkout";
 import Watch from "@/pages/watch";
 import Apply from "@/pages/apply";
 import Admin from "@/pages/admin";
+import Quiz from "@/pages/quiz";
 import FreeMeditation from "@/pages/free-meditation";
 import NotFound from "@/pages/not-found";
 
@@ -26,6 +27,7 @@ function Router() {
       <Route path="/apply" component={Apply} />
       <Route path="/admin" component={Admin} />
       <Route path="/free-meditation" component={FreeMeditation} />
+      <Route path="/quiz" component={Quiz} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -32,6 +32,7 @@ export default function Masterclass() {
         <div className="hidden md:flex space-x-8">
           <Link href="/" className="text-gray-300 hover:text-white transition-colors">Home</Link>
           <Link href="/about" className="text-gray-300 hover:text-white transition-colors">About</Link>
+          <Link href="/quiz" className="text-emerald-400 hover:text-emerald-300 transition-colors font-semibold">Quiz</Link>
           <Link href="/masterclass" className="text-white font-semibold">Masterclass</Link>
           <Link href="/work-with-me" className="text-gray-300 hover:text-white transition-colors">Work With Me</Link>
         </div>

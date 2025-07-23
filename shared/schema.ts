@@ -34,6 +34,8 @@ export const leads = pgTable("leads", {
   email: text("email").notNull().unique(),
   name: text("name"),
   source: text("source").notNull().default("meditation-download"),
+  quizResult: text("quiz_result"),
+  quizAnswers: text("quiz_answers"), // JSON string of quiz answers
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -63,6 +65,8 @@ export const insertLeadSchema = createInsertSchema(leads).pick({
   email: true,
   name: true,
   source: true,
+  quizResult: true,
+  quizAnswers: true,
 });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;

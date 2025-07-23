@@ -125,11 +125,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Submit lead for free meditation
+  // Submit lead for free meditation or quiz
   app.post("/api/leads", async (req, res) => {
     try {
-      const leadData = insertLeadSchema.parse(req.body);
-      const lead = await storage.createLead(leadData);
+      const { quizAnswers, ...leadData } = req.body;
+      
+      const parsedLeadData = insertLeadSchema.parse({
+        ...leadData,
+        quizAnswers: quizAnswers ? JSON.stringify(quizAnswers) : undefined
+      });
+      
+      const lead = await storage.createLead(parsedLeadData);
       res.json({ success: true, id: lead.id });
     } catch (error: any) {
       res.status(400).json({ message: "Error submitting lead: " + error.message });
