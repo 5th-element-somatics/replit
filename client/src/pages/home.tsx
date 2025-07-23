@@ -113,9 +113,7 @@ export default function Home() {
                 <strong className="text-white">WITH THEMSELVES, THEIR BODIES, AND THE PEOPLE THEY LOVE.</strong>
               </p>
               <Link href="/quiz">
-                <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 mystique-glow">
-                  QUIZ
-                </Button>
+                <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 mystique-glow">TAKE THE 'Good Girl' ARCHETYPE QUIZ!</Button>
               </Link>
             </div>
             <div className="relative">
