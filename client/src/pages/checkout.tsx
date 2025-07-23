@@ -41,6 +41,7 @@ const CheckoutHeader = () => {
         <Link href="/about" onClick={handleNavClick} className="text-gray-400 hover:text-white transition-colors">ABOUT</Link>
         <Link href="/quiz" onClick={handleNavClick} className="text-emerald-400 hover:text-emerald-300 transition-colors font-semibold">TAKE THE QUIZ</Link>
         <Link href="/masterclass" onClick={handleNavClick} className="text-gray-400 hover:text-white transition-colors">MASTERCLASS</Link>
+        <Link href="/work-with-me" onClick={handleNavClick} className="text-gray-400 hover:text-white transition-colors">WORK WITH ME</Link>
       </div>
 
       {/* Mobile Menu Button */}
@@ -60,6 +61,7 @@ const CheckoutHeader = () => {
             <Link href="/about" onClick={handleNavClick} className="text-gray-400 hover:text-white transition-colors">ABOUT</Link>
             <Link href="/quiz" onClick={handleNavClick} className="text-emerald-400 hover:text-emerald-300 transition-colors font-semibold">TAKE THE QUIZ</Link>
             <Link href="/masterclass" onClick={handleNavClick} className="text-gray-400 hover:text-white transition-colors">MASTERCLASS</Link>
+            <Link href="/work-with-me" onClick={handleNavClick} className="text-gray-400 hover:text-white transition-colors">WORK WITH ME</Link>
           </div>
         </div>
       )}

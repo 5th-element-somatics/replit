@@ -3,13 +3,41 @@ import { SEOHead } from "@/components/SEOHead";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import saintPhotoUrl from "@assets/saint_photo_1753245778552.png";
 
 import tiger_no_bg from "@assets/tiger_no_bg.png";
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+
+  const testimonials = [
+    {
+      text: "Saint has a profound gift for reading the body and creating safety. She exceeded all my expectations. Her ability to gently guide me through painful memories without ever overwhelming me was nothing short of transformative. After every session, I've felt energized and hopeful, no longer stuck in worry or fear. I leave our time together full of gratitude, with a renewed sense of trust in myself and in the healing process.",
+      name: "ERIN"
+    },
+    {
+      text: "Saint creates and holds a space unlike any other. I was able to unveil feelings I had buried deep inside. Feelings I didn't even know I was ready to release. With her, I actually processed and let go. The comfort and presence she brought to my darkest thoughts and emotions was incredible. I've never felt more seen, more supported, or more safe.",
+      name: "AMANDA"
+    },
+    {
+      text: "I came into the session carrying deep constriction, and was challenged to stay with it in my body, rather than escaping into my thoughts. It was uncomfortable yet in Saint's presence, I felt safe enough to experience it fully. Her touch was an anchor, a reminder that I have a body, and that my body is allowed to express itself, even in its most tender or raw states. I'm deeply grateful for the way she met me with gentleness, never pushing, just kissing the edge of what I was ready for.",
+      name: "MÁREE"
+    },
+    {
+      text: "The most valuable part of my experience with Saint was the safety to express my full emotional spectrum and be truly held in that vulnerability. I never once felt like I was 'too much.' Her presence was grounded, focused, and free of judgment. She gently guided me out of mental loops and into my body, where I found compassion for my sensations. I left knowing I could meet myself fully and shift from freeze into empowered movement.",
+      name: "Anonymous"
+    }
+  ];
+
+  // Auto-rotate testimonials every 8 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    }, 8000);
+    return () => clearInterval(interval);
+  }, [testimonials.length]);
 
   const handleNavClick = () => {
     setIsMenuOpen(false);
@@ -84,9 +112,9 @@ export default function Home() {
               <p className="text-lg text-gray-300 mb-8">
                 <strong className="text-white">WITH THEMSELVES, THEIR BODIES, AND THE PEOPLE THEY LOVE.</strong>
               </p>
-              <Link href="/work-with-me">
+              <Link href="/quiz">
                 <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 mystique-glow">
-                  WORK WITH ME
+                  QUIZ
                 </Button>
               </Link>
             </div>
@@ -192,41 +220,61 @@ export default function Home() {
           </div>
         </div>
       </section>
-      {/* Client Praise */}
+      {/* Client Praise - Rotating Carousel */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white text-center mb-12">
             CLIENT PRAISE
           </h2>
           
-          <div className="grid md:grid-cols-2 gap-8">
-            {[
-              {
-                text: "Saint has a profound gift for reading the body and creating safety. She exceeded all my expectations. Her ability to gently guide me through painful memories without ever overwhelming me was nothing short of transformative. After every session, I've felt energized and hopeful, no longer stuck in worry or fear. I leave our time together full of gratitude, with a renewed sense of trust in myself and in the healing process.",
-                name: "ERIN"
-              },
-              {
-                text: "Saint creates and holds a space unlike any other. I was able to unveil feelings I had buried deep inside. Feelings I didn't even know I was ready to release. With her, I actually processed and let go. The comfort and presence she brought to my darkest thoughts and emotions was incredible. I've never felt more seen, more supported, or more safe.",
-                name: "AMANDA"
-              },
-              {
-                text: "I came into the session carrying deep constriction, and was challenged to stay with it in my body, rather than escaping into my thoughts. It was uncomfortable yet in Saint's presence, I felt safe enough to experience it fully. Her touch was an anchor, a reminder that I have a body, and that my body is allowed to express itself, even in its most tender or raw states. I'm deeply grateful for the way she met me with gentleness, never pushing, just kissing the edge of what I was ready for.",
-                name: "MÁREE"
-              },
-              {
-                text: "The most valuable part of my experience with Saint was the safety to express my full emotional spectrum and be truly held in that vulnerability. I never once felt like I was 'too much.' Her presence was grounded, focused, and free of judgment. She gently guided me out of mental loops and into my body, where I found compassion for my sensations. I left knowing I could meet myself fully and shift from freeze into empowered movement.",
-                name: "Anonymous"
-              }
-            ].map((testimonial, index) => (
-              <Card key={index} className="bg-gray-800 border border-purple-400 border-opacity-20">
-                <CardContent className="p-6">
-                  <p className="text-gray-300 mb-4 italic">"{testimonial.text}"</p>
-                  <div className="border-t border-gray-600 pt-4">
-                    <p className="text-white font-semibold">{testimonial.name}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="relative">
+            {/* Main Testimonial Display */}
+            <Card className="bg-gray-800 border border-purple-400 border-opacity-20 min-h-[300px] transition-all duration-1000 ease-in-out">
+              <CardContent className="p-8 text-center">
+                <p className="text-gray-300 mb-6 italic text-lg leading-relaxed">
+                  "{testimonials[currentTestimonial].text}"
+                </p>
+                <div className="border-t border-gray-600 pt-6">
+                  <p className="text-white font-semibold text-xl">{testimonials[currentTestimonial].name}</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Navigation Dots */}
+            <div className="flex justify-center mt-6 space-x-2">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentTestimonial(index)}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === currentTestimonial 
+                      ? 'bg-purple-400 scale-110' 
+                      : 'bg-gray-600 hover:bg-gray-500'
+                  }`}
+                  aria-label={`View testimonial ${index + 1}`}
+                />
+              ))}
+            </div>
+
+            {/* Manual Navigation Arrows */}
+            <button
+              onClick={() => setCurrentTestimonial((prev) => prev === 0 ? testimonials.length - 1 : prev - 1)}
+              className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 bg-purple-600 hover:bg-purple-500 text-white rounded-full p-2 transition-all duration-300 opacity-70 hover:opacity-100"
+              aria-label="Previous testimonial"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              onClick={() => setCurrentTestimonial((prev) => (prev + 1) % testimonials.length)}
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 bg-purple-600 hover:bg-purple-500 text-white rounded-full p-2 transition-all duration-300 opacity-70 hover:opacity-100"
+              aria-label="Next testimonial"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
           </div>
         </div>
       </section>
