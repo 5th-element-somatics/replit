@@ -162,8 +162,8 @@
   }
 
   @keyframes breathing-slow {
-    0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.5; }
-    50% { transform: scale(1.3) rotate(180deg); opacity: 0.2; }
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.3); opacity: 0.2; }
   }
 
   @keyframes float-enhanced {
