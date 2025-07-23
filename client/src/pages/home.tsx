@@ -154,7 +154,7 @@ export default function Home() {
               <CardContent className="p-6">
                 <h3 className="text-xl font-serif font-bold text-white mb-3">FREE GROUNDING MEDITATION</h3>
                 <p className="text-gray-400 text-sm mb-4">10-minute somatic drop-in to reconnect</p>
-                <Link href="/free-meditation">
+                <Link href="/free-meditation" onClick={handleNavClick}>
                   <Button className="bg-emerald-600 hover:bg-emerald-700 text-white w-full">
                     Download Free
                   </Button>
@@ -166,7 +166,7 @@ export default function Home() {
               <CardContent className="p-6">
                 <h3 className="text-xl font-serif font-bold text-white mb-3">THE GOOD GIRL PARADOX MASTERCLASS</h3>
                 <p className="text-gray-400 text-sm mb-4">90-minute self-led journey · $64</p>
-                <Link href="/masterclass">
+                <Link href="/masterclass" onClick={handleNavClick}>
                   <Button className="bg-pink-600 hover:bg-pink-700 text-white w-full">
                     Watch Now
                   </Button>
@@ -178,7 +178,7 @@ export default function Home() {
               <CardContent className="p-6">
                 <h3 className="text-xl font-serif font-bold text-white mb-3">1:1 MENTORSHIP</h3>
                 <p className="text-gray-400 text-sm mb-4">Private somatic containers for quantum transformation</p>
-                <Link href="/work-with-me">
+                <Link href="/work-with-me" onClick={handleNavClick}>
                   <Button className="bg-purple-600 hover:bg-purple-700 text-white w-full">
                     Learn More
                   </Button>
@@ -213,7 +213,7 @@ export default function Home() {
           </div>
           
           <div className="mt-12">
-            <Link href="/masterclass">
+            <Link href="/masterclass" onClick={handleNavClick}>
               <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-12 py-5 rounded-full text-xl transition-all duration-300 mystique-glow">
                 JOIN MASTERCLASS<br />
                 <span className="text-sm">THE GOOD GIRL PARADOX</span>
@@ -295,7 +295,7 @@ export default function Home() {
           </div>
           
           <div className="mt-8">
-            <Link href="/work-with-me">
+            <Link href="/work-with-me" onClick={handleNavClick}>
               <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 mystique-glow">
                 APPLY FOR MENTORSHIP
               </Button>
@@ -321,7 +321,7 @@ export default function Home() {
           </div>
           
           <div className="mt-8">
-            <Link href="/work-with-me">
+            <Link href="/work-with-me" onClick={handleNavClick}>
               <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 mystique-glow">
                 APPLY FOR MENTORSHIP
               </Button>
@@ -349,7 +349,7 @@ export default function Home() {
             </div>
           </div>
           
-          <Link href="/free-meditation">
+          <Link href="/free-meditation" onClick={handleNavClick}>
             <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 mystique-glow">
               DOWNLOAD FOR FREE
             </Button>
@@ -376,8 +376,8 @@ export default function Home() {
               <h5 className="font-semibold text-white mb-4">Connect</h5>
               <div className="space-y-2">
                 <a href="https://instagram.com/fifthelementsomatics" target="_blank" rel="noopener noreferrer" className="block text-gray-400 hover:text-purple-400 transition-colors">Instagram</a>
-                <Link href="/about" className="block text-gray-400 hover:text-purple-400 transition-colors">About Saint</Link>
-                <Link href="/work-with-me" className="block text-gray-400 hover:text-purple-400 transition-colors">Work With Me</Link>
+                <Link href="/about" onClick={handleNavClick} className="block text-gray-400 hover:text-purple-400 transition-colors">About Saint</Link>
+                <Link href="/work-with-me" onClick={handleNavClick} className="block text-gray-400 hover:text-purple-400 transition-colors">Work With Me</Link>
               </div>
             </div>
             

@@ -599,7 +599,7 @@ export default function Quiz() {
                   Share Your Result
                 </Button>
                 
-                <Link href="/masterclass">
+                <Link href="/masterclass" onClick={handleNavClick}>
                   <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold w-full">
                     Begin Your Reclamation
                   </Button>

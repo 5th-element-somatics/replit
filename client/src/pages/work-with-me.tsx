@@ -77,7 +77,7 @@ export default function WorkWithMe() {
             <p>You've read the books.</p>
             <p><strong className="text-white">But your body still doesn't feel safe.</strong></p>
           </div>
-          <Link href="/apply">
+          <Link href="/apply" onClick={handleNavClick}>
             <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-6 sm:px-8 py-3 sm:py-4 rounded-full text-base sm:text-lg transition-all duration-300 mystique-glow w-full max-w-sm mx-auto sm:w-auto">
               APPLY TO WORK WITH ME
             </Button>
@@ -222,7 +222,7 @@ export default function WorkWithMe() {
             Ready to be held in a space designed for all of you?
           </h2>
           <p className="text-xl text-gray-300 mb-8">I invite you to apply below.</p>
-          <Link href="/apply">
+          <Link href="/apply" onClick={handleNavClick}>
             <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-12 py-5 rounded-full text-xl transition-all duration-300 mystique-glow">
               I'M READY TO CHANGE MY LIFE
             </Button>
@@ -265,7 +265,7 @@ export default function WorkWithMe() {
             <CardContent className="p-6">
               <h3 className="text-xl font-serif font-bold text-white mb-2">THE GOOD GIRL PARADOX</h3>
               <p className="text-gray-300 mb-4">A masterclass in erotic liberation<br />90-minute instant access</p>
-              <Link href="/masterclass">
+              <Link href="/masterclass" onClick={handleNavClick}>
                 <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold w-full">
                   WATCH NOW
                 </Button>
@@ -295,8 +295,8 @@ export default function WorkWithMe() {
               <h5 className="font-semibold text-white mb-4">Connect</h5>
               <div className="space-y-2">
                 <a href="https://instagram.com/fifthelementsomatics" target="_blank" rel="noopener noreferrer" className="block text-gray-400 hover:text-purple-400 transition-colors">Instagram</a>
-                <Link href="/about" className="block text-gray-400 hover:text-purple-400 transition-colors">About Saint</Link>
-                <Link href="/work-with-me" className="block text-gray-400 hover:text-purple-400 transition-colors">Work With Me</Link>
+                <Link href="/about" onClick={handleNavClick} className="block text-gray-400 hover:text-purple-400 transition-colors">About Saint</Link>
+                <Link href="/work-with-me" onClick={handleNavClick} className="block text-gray-400 hover:text-purple-400 transition-colors">Work With Me</Link>
               </div>
             </div>
             

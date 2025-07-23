@@ -352,8 +352,8 @@ export default function Masterclass() {
               <h5 className="font-semibold text-white mb-4">Connect</h5>
               <div className="space-y-2">
                 <a href="https://instagram.com/fifthelementsomatics" target="_blank" rel="noopener noreferrer" className="block text-gray-400 hover:text-purple-400 transition-colors">Instagram</a>
-                <Link href="/about" className="block text-gray-400 hover:text-purple-400 transition-colors">About Saint</Link>
-                <Link href="/work-with-me" className="block text-gray-400 hover:text-purple-400 transition-colors">Work With Me</Link>
+                <Link href="/about" onClick={handleNavClick} className="block text-gray-400 hover:text-purple-400 transition-colors">About Saint</Link>
+                <Link href="/work-with-me" onClick={handleNavClick} className="block text-gray-400 hover:text-purple-400 transition-colors">Work With Me</Link>
               </div>
             </div>
             

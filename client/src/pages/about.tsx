@@ -77,7 +77,7 @@ export default function About() {
           <p className="text-xl sm:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
             I help you remember what your body already knows how to soften, how to hold, how to choose yourself again and again.
           </p>
-          <Link href="/work-with-me">
+          <Link href="/work-with-me" onClick={handleNavClick}>
             <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-6 sm:px-8 py-3 sm:py-4 rounded-full text-base sm:text-lg transition-all duration-300 mystique-glow w-full max-w-xs mx-auto sm:w-auto">
               Apply for Mentorship
             </Button>
@@ -267,8 +267,8 @@ export default function About() {
               <h5 className="font-semibold text-white mb-4">Connect</h5>
               <div className="space-y-2">
                 <a href="https://instagram.com/fifthelementsomatics" target="_blank" rel="noopener noreferrer" className="block text-gray-400 hover:text-purple-400 transition-colors">Instagram</a>
-                <Link href="/about" className="block text-gray-400 hover:text-purple-400 transition-colors">About Saint</Link>
-                <Link href="/work-with-me" className="block text-gray-400 hover:text-purple-400 transition-colors">Work With Me</Link>
+                <Link href="/about" onClick={handleNavClick} className="block text-gray-400 hover:text-purple-400 transition-colors">About Saint</Link>
+                <Link href="/work-with-me" onClick={handleNavClick} className="block text-gray-400 hover:text-purple-400 transition-colors">Work With Me</Link>
               </div>
             </div>
             
