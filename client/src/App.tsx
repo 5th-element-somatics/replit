@@ -9,6 +9,9 @@ import WorkWithMe from "@/pages/work-with-me";
 import Masterclass from "@/pages/masterclass";
 import Checkout from "@/pages/checkout";
 import Watch from "@/pages/watch";
+import Apply from "@/pages/apply";
+import Admin from "@/pages/admin";
+import FreeMeditation from "@/pages/free-meditation";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -20,6 +23,9 @@ function Router() {
       <Route path="/masterclass" component={Masterclass} />
       <Route path="/checkout" component={Checkout} />
       <Route path="/watch" component={Watch} />
+      <Route path="/apply" component={Apply} />
+      <Route path="/admin" component={Admin} />
+      <Route path="/free-meditation" component={FreeMeditation} />
       <Route component={NotFound} />
     </Switch>
   );

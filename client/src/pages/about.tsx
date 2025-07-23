@@ -175,9 +175,11 @@ export default function About() {
                 </div>
                 <h3 className="text-lg font-semibold text-white mb-2">✧ Free Grounding Meditation ✧</h3>
                 <p className="text-sm text-gray-400 mb-4">Feel safe in your skin again. THIS GENTLE AUDIO INVITES YOU BACK INTO YOUR BODY WITH PRESENCE AND EASE.</p>
-                <Button className="bg-gray-600 hover:bg-gray-700 text-white text-sm">
-                  Download For FREE
-                </Button>
+                <Link href="/free-meditation">
+                  <Button className="bg-gray-600 hover:bg-gray-700 text-white text-sm">
+                    Download For FREE
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           </div>

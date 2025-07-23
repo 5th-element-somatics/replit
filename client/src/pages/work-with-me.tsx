@@ -35,9 +35,11 @@ export default function WorkWithMe() {
             <p>You've read the books.</p>
             <p><strong className="text-white">But your body still doesn't feel safe.</strong></p>
           </div>
-          <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 mystique-glow">
-            APPLY TO WORK WITH ME
-          </Button>
+          <Link href="/apply">
+            <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 mystique-glow">
+              APPLY TO WORK WITH ME
+            </Button>
+          </Link>
         </div>
       </section>
 
@@ -89,9 +91,11 @@ export default function WorkWithMe() {
             <p><strong className="text-white">Just you, as you are.</strong></p>
           </div>
           
-          <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 mystique-glow">
-            APPLY BELOW
-          </Button>
+          <Link href="/apply">
+            <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 mystique-glow">
+              APPLY BELOW
+            </Button>
+          </Link>
         </div>
       </section>
 
@@ -176,9 +180,11 @@ export default function WorkWithMe() {
             Ready to be held in a space designed for all of you?
           </h2>
           <p className="text-xl text-gray-300 mb-8">I invite you to apply below.</p>
-          <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-12 py-5 rounded-full text-xl transition-all duration-300 mystique-glow">
-            I'M READY TO CHANGE MY LIFE
-          </Button>
+          <Link href="/apply">
+            <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-12 py-5 rounded-full text-xl transition-all duration-300 mystique-glow">
+              I'M READY TO CHANGE MY LIFE
+            </Button>
+          </Link>
         </div>
       </section>
 

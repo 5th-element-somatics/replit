@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import Stripe from "stripe";
 import { storage } from "./storage";
-import { insertPurchaseSchema } from "@shared/schema";
+import { insertPurchaseSchema, insertApplicationSchema, insertLeadSchema } from "@shared/schema";
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
@@ -85,6 +85,64 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
     } catch (error: any) {
       res.status(500).json({ message: "Error verifying purchase: " + error.message });
+    }
+  });
+
+  // Submit application for mentorship
+  app.post("/api/applications", async (req, res) => {
+    try {
+      const applicationData = insertApplicationSchema.parse(req.body);
+      const application = await storage.createApplication(applicationData);
+      res.json({ success: true, id: application.id });
+    } catch (error: any) {
+      res.status(400).json({ message: "Error submitting application: " + error.message });
+    }
+  });
+
+  // Get all applications (admin endpoint)
+  app.get("/api/applications", async (req, res) => {
+    try {
+      const applications = await storage.getAllApplications();
+      res.json(applications);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching applications: " + error.message });
+    }
+  });
+
+  // Get specific application (admin endpoint)
+  app.get("/api/applications/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const application = await storage.getApplication(id);
+      
+      if (application) {
+        res.json(application);
+      } else {
+        res.status(404).json({ message: "Application not found" });
+      }
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching application: " + error.message });
+    }
+  });
+
+  // Submit lead for free meditation
+  app.post("/api/leads", async (req, res) => {
+    try {
+      const leadData = insertLeadSchema.parse(req.body);
+      const lead = await storage.createLead(leadData);
+      res.json({ success: true, id: lead.id });
+    } catch (error: any) {
+      res.status(400).json({ message: "Error submitting lead: " + error.message });
+    }
+  });
+
+  // Get all leads (admin endpoint)
+  app.get("/api/leads", async (req, res) => {
+    try {
+      const leads = await storage.getAllLeads();
+      res.json(leads);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching leads: " + error.message });
     }
   });
 
