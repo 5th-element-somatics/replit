@@ -1,7 +1,7 @@
 import { useStripe, Elements, PaymentElement, useElements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { useEffect, useState } from 'react';
-import { useLocation } from 'wouter';
+import { useLocation, Link } from 'wouter';
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { SEOHead } from "@/components/SEOHead";
@@ -10,11 +10,62 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ArrowLeft, Lock, Check, Menu, X } from "lucide-react";
 
 if (!import.meta.env.VITE_STRIPE_PUBLIC_KEY) {
   throw new Error('Missing required Stripe key: VITE_STRIPE_PUBLIC_KEY');
 }
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+
+const CheckoutHeader = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleNavClick = () => {
+    setIsMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  return (
+    <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8 bg-black bg-opacity-50 backdrop-blur-sm border-b border-gray-800">
+      <Link href="/" onClick={handleNavClick}>
+        <img 
+          src="/tiger-logo.png" 
+          alt="Fifth Element Somatics" 
+          className="h-10 w-auto cursor-pointer hover:opacity-90 transition-opacity"
+        />
+      </Link>
+      
+      {/* Desktop Navigation */}
+      <div className="hidden md:flex space-x-6 text-sm">
+        <Link href="/" onClick={handleNavClick} className="text-gray-400 hover:text-white transition-colors">HOME</Link>
+        <Link href="/about" onClick={handleNavClick} className="text-gray-400 hover:text-white transition-colors">ABOUT</Link>
+        <Link href="/quiz" onClick={handleNavClick} className="text-emerald-400 hover:text-emerald-300 transition-colors font-semibold">TAKE THE QUIZ</Link>
+        <Link href="/masterclass" onClick={handleNavClick} className="text-gray-400 hover:text-white transition-colors">MASTERCLASS</Link>
+      </div>
+
+      {/* Mobile Menu Button */}
+      <button 
+        className="md:hidden text-white p-2"
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+        aria-label="Toggle menu"
+      >
+        {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+      </button>
+
+      {/* Mobile Navigation */}
+      {isMenuOpen && (
+        <div className="absolute top-16 left-0 right-0 bg-black bg-opacity-95 backdrop-blur-sm md:hidden z-50">
+          <div className="flex flex-col p-4 space-y-3">
+            <Link href="/" onClick={handleNavClick} className="text-gray-400 hover:text-white transition-colors">HOME</Link>
+            <Link href="/about" onClick={handleNavClick} className="text-gray-400 hover:text-white transition-colors">ABOUT</Link>
+            <Link href="/quiz" onClick={handleNavClick} className="text-emerald-400 hover:text-emerald-300 transition-colors font-semibold">TAKE THE QUIZ</Link>
+            <Link href="/masterclass" onClick={handleNavClick} className="text-gray-400 hover:text-white transition-colors">MASTERCLASS</Link>
+          </div>
+        </div>
+      )}
+    </nav>
+  );
+};
 
 const EmailForm = ({ email, setEmail, includeAddon, setIncludeAddon }: {
   email: string;
@@ -25,72 +76,108 @@ const EmailForm = ({ email, setEmail, includeAddon, setIncludeAddon }: {
   const totalAmount = includeAddon ? 89 : 64;
 
   return (
-    <div className="min-h-screen bg-black text-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-2xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-serif font-bold text-white mb-4">Complete Your Purchase</h1>
-          <p className="text-gray-300">Enter your email to proceed to payment</p>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-gray-100">
+      <CheckoutHeader />
+      
+      <div className="py-8 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-2xl mx-auto">
+          {/* Back Button */}
+          <Link href="/masterclass" className="inline-flex items-center text-gray-400 hover:text-white transition-colors mb-6">
+            <ArrowLeft size={16} className="mr-2" />
+            Back to Masterclass
+          </Link>
 
-        <Card className="bg-gray-900 border border-purple-400 border-opacity-30 mystique-glow">
-          <CardHeader>
-            <CardTitle className="text-white">Order Details</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {/* Order Summary */}
-            <div className="bg-black bg-opacity-50 rounded-lg p-4">
-              <h3 className="text-white font-semibold mb-4">Your Order</h3>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-gray-300">The Good Girl Paradox Masterclass</span>
-                  <span className="text-white">$64.00</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Checkbox 
-                    id="addon"
-                    checked={includeAddon}
-                    onCheckedChange={(checked) => setIncludeAddon(checked as boolean)}
-                    className="border-purple-400"
-                  />
-                  <Label htmlFor="addon" className="text-gray-300 cursor-pointer">
-                    Add "Return to Body" bonus session (+$25)
-                  </Label>
-                  <span className="text-white">$25.00</span>
-                </div>
-                <div className="border-t border-gray-700 pt-2 mt-4">
-                  <div className="flex justify-between font-semibold">
-                    <span className="text-white">Total</span>
-                    <span className="text-purple-400">${totalAmount}.00</span>
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-serif font-bold text-white mb-2">Complete Your Purchase</h1>
+            <p className="text-gray-400">Enter your details to secure your spot</p>
+          </div>
+
+          <Card className="bg-gray-900 border border-purple-400 border-opacity-30 mystique-glow shadow-2xl">
+            <CardHeader className="border-b border-gray-800">
+              <CardTitle className="text-white flex items-center">
+                <Lock size={18} className="mr-2 text-green-400" />
+                Secure Checkout
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6 p-6">
+              {/* Order Summary */}
+              <div className="bg-gradient-to-r from-purple-900/20 to-pink-900/20 rounded-lg p-6 border border-purple-500/20">
+                <h3 className="text-white font-serif font-semibold mb-4 text-lg">Your Order</h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center py-2">
+                    <div className="flex-1">
+                      <div className="text-white font-medium">The Good Girl Paradox Masterclass</div>
+                      <div className="text-sm text-gray-400">Lifetime access • Digital content</div>
+                    </div>
+                    <span className="text-white font-semibold">$64.00</span>
+                  </div>
+                  
+                  <div className="border border-gray-700 rounded-lg p-4">
+                    <div className="flex items-start space-x-3">
+                      <Checkbox 
+                        id="addon"
+                        checked={includeAddon}
+                        onCheckedChange={(checked) => setIncludeAddon(checked as boolean)}
+                        className="border-purple-400 mt-1"
+                      />
+                      <div className="flex-1">
+                        <Label htmlFor="addon" className="text-gray-300 cursor-pointer font-medium">
+                          Add "Return to Body" Bonus Session
+                        </Label>
+                        <div className="text-sm text-gray-400 mt-1">
+                          3 sacred rituals to help you feel, soften, & stay in the shift
+                        </div>
+                      </div>
+                      <span className="text-white font-semibold">+$25.00</span>
+                    </div>
+                  </div>
+                  
+                  <div className="border-t border-gray-600 pt-4 mt-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-white font-semibold text-lg">Total</span>
+                      <span className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                        ${totalAmount}.00
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Email Input */}
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-white">Email Address</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="your@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="bg-black bg-opacity-50 border-gray-600 text-white"
-                required
-              />
-              <p className="text-sm text-gray-400">
-                We'll send your masterclass access to this email address.
-              </p>
-            </div>
+              {/* Email Input */}
+              <div className="space-y-3">
+                <Label htmlFor="email" className="text-white font-medium">Email Address *</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="your@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-500 focus:border-purple-400 transition-colors h-12"
+                  required
+                />
+                <div className="flex items-start space-x-2">
+                  <Check size={16} className="text-green-400 mt-0.5 flex-shrink-0" />
+                  <p className="text-sm text-gray-400">
+                    Your masterclass access and receipt will be sent to this email address.
+                  </p>
+                </div>
+              </div>
 
-            <Button 
-              className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold py-4 px-8 rounded-xl text-lg transition-all duration-300 mystique-glow"
-              disabled={!email || !email.includes('@')}
-            >
-              Continue to Payment
-            </Button>
-          </CardContent>
-        </Card>
+              <Button 
+                className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold py-4 px-8 rounded-xl text-lg transition-all duration-300 mystique-glow shadow-lg hover:shadow-purple-500/25"
+                disabled={!email || !email.includes('@')}
+              >
+                Continue to Secure Payment
+              </Button>
+
+              <div className="text-center">
+                <p className="text-xs text-gray-500">
+                  Secured by Stripe • SSL Encrypted • 30-day money-back guarantee
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );
@@ -151,112 +238,105 @@ const PaymentForm = ({ email, setEmail, includeAddon, setIncludeAddon }: {
   const totalAmount = includeAddon ? 89 : 64;
 
   return (
-    <div className="min-h-screen bg-black text-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-gray-100">
+      <CheckoutHeader />
+      
       <SEOHead 
         title="Secure Checkout - The Good Girl Paradox Masterclass | Fifth Element Somatics"
         description="Complete your purchase of The Good Girl Paradox Masterclass. Secure checkout with Stripe. Join thousands of women transforming their relationship with power and pleasure."
         url="https://fifthelementsomatics.com/checkout"
         keywords="masterclass checkout, secure payment, good girl paradox purchase, somatic healing payment"
       />
-      <div className="max-w-2xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-serif font-bold text-white mb-4">Complete Your Purchase</h1>
-          <p className="text-gray-300">Secure payment powered by Stripe</p>
-        </div>
+      
+      <div className="py-8 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-2xl mx-auto">
+          {/* Back Button */}
+          <Link href="/masterclass" className="inline-flex items-center text-gray-400 hover:text-white transition-colors mb-6">
+            <ArrowLeft size={16} className="mr-2" />
+            Back to Masterclass
+          </Link>
 
-        <Card className="bg-gray-900 border border-purple-400 border-opacity-30 mystique-glow">
-          <CardHeader>
-            <CardTitle className="text-white">Order Summary</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {/* Order Summary */}
-            <div className="bg-black bg-opacity-50 rounded-xl p-6">
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-300">The Good Girl Paradox Masterclass</span>
-                  <span className="text-white font-semibold">$64.00</span>
-                </div>
-                {includeAddon && (
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-serif font-bold text-white mb-2">Complete Your Purchase</h1>
+            <p className="text-gray-400">Secure payment powered by Stripe</p>
+          </div>
+
+          <form onSubmit={handleSubmit}>
+            <Card className="bg-gray-900 border border-purple-400 border-opacity-30 mystique-glow shadow-2xl">
+              <CardHeader className="border-b border-gray-800">
+                <CardTitle className="text-white flex items-center">
+                  <Lock size={18} className="mr-2 text-green-400" />
+                  Payment Details
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6 p-6">
+                {/* Order Summary */}
+                <div className="bg-gradient-to-r from-purple-900/20 to-pink-900/20 rounded-lg p-4 border border-purple-500/20">
                   <div className="flex justify-between items-center text-sm">
-                    <span className="text-gray-400">+ Return to the Body</span>
-                    <span className="text-gray-400">$25.00</span>
+                    <span className="text-gray-300">Email: {email}</span>
+                    <button
+                      type="button"
+                      onClick={() => setEmail("")}
+                      className="text-purple-400 hover:text-purple-300 underline"
+                    >
+                      Change
+                    </button>
                   </div>
-                )}
-                <div className="border-t border-gray-600 pt-3">
-                  <div className="flex justify-between items-center text-lg font-semibold">
-                    <span className="text-white">Total</span>
-                    <span className="gradient-text">${totalAmount}.00</span>
+                  <div className="mt-3 pt-3 border-t border-gray-700">
+                    <div className="flex justify-between items-center">
+                      <span className="text-white font-semibold">Total</span>
+                      <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                        ${totalAmount}.00
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
 
-            {/* Email Input */}
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-gray-300">Email Address</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-400 focus:border-purple-400"
-                placeholder="your@email.com"
-              />
-            </div>
-
-            {/* Addon Toggle */}
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="addon"
-                checked={includeAddon}
-                onCheckedChange={(checked) => setIncludeAddon(checked === true)}
-                className="border-purple-400"
-              />
-              <Label htmlFor="addon" className="text-gray-300 text-sm">
-                Add "Return to the Body" audio rituals for $25
-              </Label>
-            </div>
-
-            {/* Payment Form */}
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <Label className="text-gray-300">Card Information</Label>
-                <div className="bg-black bg-opacity-50 border border-gray-600 rounded-lg p-4">
-                  <PaymentElement />
+                {/* Payment Element */}
+                <div className="space-y-4">
+                  <div className="bg-black bg-opacity-50 rounded-lg p-4">
+                    <PaymentElement 
+                      options={{
+                        layout: 'tabs',
+                        fields: {
+                          billingDetails: 'auto'
+                        }
+                      }}
+                    />
+                  </div>
                 </div>
-              </div>
-              
-              <Button 
-                type="submit" 
-                disabled={!stripe || isProcessing}
-                className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold py-4 px-8 rounded-xl text-lg transition-all duration-300 mystique-glow transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isProcessing ? (
-                  <span className="flex items-center">
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Processing...
-                  </span>
-                ) : (
-                  <span>
-                    <svg className="w-5 h-5 mr-2 inline" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                    </svg>
-                    Complete Purchase - ${totalAmount}
-                  </span>
-                )}
-              </Button>
-              
-              <p className="text-xs text-gray-400 text-center">
-                Your payment is secured with 256-bit SSL encryption. 
-                By completing your purchase, you agree to our terms of service.
-              </p>
-            </form>
-          </CardContent>
-        </Card>
+
+                <Button 
+                  type="submit"
+                  disabled={!stripe || isProcessing}
+                  className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold py-4 px-8 rounded-xl text-lg transition-all duration-300 mystique-glow shadow-lg hover:shadow-purple-500/25"
+                >
+                  {isProcessing ? (
+                    <div className="flex items-center space-x-2">
+                      <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full" />
+                      <span>Processing...</span>
+                    </div>
+                  ) : (
+                    `Complete Purchase - $${totalAmount}.00`
+                  )}
+                </Button>
+
+                <div className="text-center space-y-2">
+                  <p className="text-xs text-gray-500">
+                    Secured by Stripe • SSL Encrypted • 30-day money-back guarantee
+                  </p>
+                  <div className="flex items-center justify-center space-x-4 text-xs text-gray-500">
+                    <span>Apple Pay</span>
+                    <span>•</span>
+                    <span>Google Pay</span>
+                    <span>•</span>
+                    <span>Link</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </form>
+        </div>
       </div>
     </div>
   );
@@ -307,10 +387,11 @@ export default function Checkout() {
 
   if (!clientSecret) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin w-8 h-8 border-4 border-purple-400 border-t-transparent rounded-full mx-auto mb-4" />
-          <p className="text-gray-300">Preparing your secure checkout...</p>
+          <div className="animate-spin w-12 h-12 border-4 border-purple-400 border-t-transparent rounded-full mx-auto mb-4" />
+          <p className="text-gray-300 text-lg">Preparing your secure checkout...</p>
+          <p className="text-gray-500 text-sm mt-2">This may take a moment</p>
         </div>
       </div>
     );
