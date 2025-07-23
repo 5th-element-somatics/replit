@@ -255,15 +255,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (quizResult && process.env.SENDGRID_API_KEY && process.env.SENDGRID_FROM_EMAIL) {
         try {
           await sendQuizResultEmail(leadData.email, leadData.name, quizResult);
+          console.log(`Quiz result email sent to ${leadData.email} for ${quizResult}`);
         } catch (emailError) {
           console.error("Error sending quiz result email:", emailError);
-          // Don't fail the lead creation if email fails
+          return res.status(500).json({ 
+            message: "Lead saved but email failed to send. Please try again or contact support.",
+            leadId: lead.id 
+          });
         }
       }
       
       res.json({ success: true, id: lead.id });
     } catch (error: any) {
       res.status(400).json({ message: "Error submitting lead: " + error.message });
+    }
+  });
+
+  // Send quiz result email (direct endpoint for testing)
+  app.post("/api/send-quiz-email", async (req, res) => {
+    try {
+      const { email, name, quizResult } = req.body;
+      
+      if (!email || !name || !quizResult) {
+        return res.status(400).json({ message: "Email, name, and quiz result are required" });
+      }
+      
+      if (!process.env.SENDGRID_API_KEY || !process.env.SENDGRID_FROM_EMAIL) {
+        return res.status(500).json({ message: "Email service not configured" });
+      }
+      
+      await sendQuizResultEmail(email, name, quizResult);
+      res.json({ success: true, message: "Email sent successfully" });
+    } catch (error: any) {
+      console.error("Direct email send error:", error);
+      res.status(500).json({ message: "Error sending email: " + error.message });
     }
   });
 

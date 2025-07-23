@@ -31,7 +31,7 @@ export const applications = pgTable("applications", {
 
 export const leads = pgTable("leads", {
   id: serial("id").primaryKey(),
-  email: text("email").notNull().unique(),
+  email: text("email").notNull(),
   name: text("name"),
   source: text("source").notNull().default("meditation-download"),
   quizResult: text("quiz_result"),
