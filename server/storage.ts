@@ -1,4 +1,6 @@
 import { users, purchases, type User, type InsertUser, type Purchase, type InsertPurchase } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
@@ -9,59 +11,42 @@ export interface IStorage {
   getPurchaseByEmail(email: string): Promise<Purchase | undefined>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private purchases: Map<number, Purchase>;
-  private currentUserId: number;
-  private currentPurchaseId: number;
-
-  constructor() {
-    this.users = new Map();
-    this.purchases = new Map();
-    this.currentUserId = 1;
-    this.currentPurchaseId = 1;
-  }
-
+export class DatabaseStorage implements IStorage {
   async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentUserId++;
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
     return user;
   }
 
   async createPurchase(insertPurchase: InsertPurchase): Promise<Purchase> {
-    const id = this.currentPurchaseId++;
-    const purchase: Purchase = { 
-      ...insertPurchase, 
-      id,
-      hasReturnToBodyAddon: insertPurchase.hasReturnToBodyAddon ?? false,
-      createdAt: new Date()
-    };
-    this.purchases.set(id, purchase);
+    const [purchase] = await db
+      .insert(purchases)
+      .values(insertPurchase)
+      .returning();
     return purchase;
   }
 
   async getPurchaseByPaymentIntent(paymentIntentId: string): Promise<Purchase | undefined> {
-    return Array.from(this.purchases.values()).find(
-      (purchase) => purchase.stripePaymentIntentId === paymentIntentId,
-    );
+    const [purchase] = await db.select().from(purchases).where(eq(purchases.stripePaymentIntentId, paymentIntentId));
+    return purchase || undefined;
   }
 
   async getPurchaseByEmail(email: string): Promise<Purchase | undefined> {
-    return Array.from(this.purchases.values()).find(
-      (purchase) => purchase.email === email,
-    );
+    const [purchase] = await db.select().from(purchases).where(eq(purchases.email, email));
+    return purchase || undefined;
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
