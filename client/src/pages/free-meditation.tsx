@@ -153,9 +153,12 @@ export default function FreeMeditation() {
               {/* Breathing glow animation around icon */}
               <div className="absolute inset-0 w-24 h-24 mx-auto bg-gradient-to-br from-emerald-500/30 to-teal-600/30 rounded-full blur-xl animate-breathing"></div>
               <div className="relative w-20 h-20 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/30 animate-breathing-slow">
-                <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2L8 6v6c0 2.21 1.79 4 4 4s4-1.79 4-4V6l-4-4zm-2 8V8.5L12 7l2 1.5V10c0 1.1-.9 2-2 2s-2-.9-2-2zm0 4.5v3c0 .55.45 1 1 1s1-.45 1-1v-3c-.33.17-.67.25-1 .25s-.67-.08-1-.25z"/>
-                  <path d="M9 16c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1zm6 0c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1z"/>
+                <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" strokeLinecap="round" strokeDasharray="0 4" strokeDashoffset="0">
+                    <animate attributeName="stroke-dasharray" dur="4s" values="0 62.8;31.4 31.4;62.8 0;31.4 31.4;0 62.8" repeatCount="indefinite"/>
+                  </circle>
+                  <circle cx="12" cy="12" r="6" strokeWidth="1" opacity="0.5"/>
+                  <circle cx="12" cy="12" r="2" fill="currentColor" opacity="0.8"/>
                 </svg>
               </div>
             </div>
