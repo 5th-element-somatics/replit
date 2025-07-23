@@ -169,7 +169,7 @@ export default function About() {
                 </div>
                 <h3 className="text-lg font-semibold text-white mb-2">✧ Apply for Mentorship ✧</h3>
                 <p className="text-sm text-gray-400 mb-4">1:1 GUIDANCE DESIGNED FOR YOUR FULL UNRAVELING, HEALING, AND RETURN TO POWER</p>
-                <Link href="/work-with-me">
+                <Link href="/work-with-me" onClick={handleNavClick}>
                   <Button className="bg-purple-600 hover:bg-purple-700 text-white text-sm">
                     Apply Now
                   </Button>

@@ -12,11 +12,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import tiger_no_bg from "@assets/tiger_no_bg.png";
 
 export default function Apply() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleNavClick = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const form = useForm<InsertApplication>({
     resolver: zodResolver(insertApplicationSchema),
@@ -64,13 +69,12 @@ export default function Apply() {
       <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
         {/* Navigation */}
         <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
-          <Link href="/">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
-                <span className="text-white font-serif font-bold">5E</span>
-              </div>
-              <span className="text-lg font-serif font-semibold">Fifth Element Somatics</span>
-            </div>
+          <Link href="/" onClick={handleNavClick}>
+            <img 
+              src={tiger_no_bg} 
+              alt="Fifth Element Somatics" 
+              className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
+            />
           </Link>
         </nav>
 
@@ -88,7 +92,7 @@ export default function Apply() {
               <p className="text-gray-300">
                 Thank you for your application! Saint will review your submission and be in touch within 48 hours.
               </p>
-              <Link href="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+              <Link href="/" onClick={handleNavClick}>
                 <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500">
                   Return to Home
                 </Button>
@@ -110,19 +114,20 @@ export default function Apply() {
       />
       {/* Navigation */}
       <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
-        <Link href="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-serif font-bold">5E</span>
-            </div>
-            <span className="text-lg font-serif font-semibold">Fifth Element Somatics</span>
-          </div>
+        <Link href="/" onClick={handleNavClick}>
+          <img 
+            src={tiger_no_bg} 
+            alt="Fifth Element Somatics" 
+            className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
+          />
         </Link>
         <div className="hidden md:flex space-x-8">
-          <Link href="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-gray-300 hover:text-white transition-colors">Home</Link>
-          <Link href="/about" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-gray-300 hover:text-white transition-colors">About</Link>
-          <Link href="/masterclass" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-gray-300 hover:text-white transition-colors">Masterclass</Link>
-          <Link href="/work-with-me" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-gray-300 hover:text-white transition-colors">Work With Me</Link>
+          <Link href="/" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">HOME</Link>
+          <Link href="/free-meditation" onClick={handleNavClick} className="text-emerald-400 hover:text-emerald-300 transition-colors font-semibold">FREE MEDITATION</Link>
+          <Link href="/quiz" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">TAKE THE QUIZ</Link>
+          <Link href="/work-with-me" onClick={handleNavClick} className="text-white font-semibold">WORK WITH ME</Link>
+          <Link href="/masterclass" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">MASTERCLASS</Link>
+          <Link href="/about" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">ABOUT</Link>
         </div>
       </nav>
 
