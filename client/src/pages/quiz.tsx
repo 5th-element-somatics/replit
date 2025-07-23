@@ -154,9 +154,15 @@ export default function Quiz() {
       // Add answer options if requested
       if (includeAnswers && quizQuestions[currentQuestion]) {
         const options = quizQuestions[currentQuestion].options;
-        fullText += " Your options are: ";
+        fullText += " Your choices are: ";
         options.forEach((option, index) => {
-          fullText += `Option ${index + 1}: ${option.text}. `;
+          if (index === 0) {
+            fullText += `${option.text}, `;
+          } else if (index === options.length - 1) {
+            fullText += `or ${option.text}.`;
+          } else {
+            fullText += `${option.text}, `;
+          }
         });
       }
       
@@ -211,9 +217,15 @@ export default function Quiz() {
   const playAnswersOnly = () => {
     if (quizQuestions[currentQuestion]) {
       const options = quizQuestions[currentQuestion].options;
-      let answersText = "Your answer options are: ";
+      let answersText = "Let me repeat your choices: ";
       options.forEach((option, index) => {
-        answersText += `Option ${index + 1}: ${option.text}. `;
+        if (index === 0) {
+          answersText += `${option.text}, `;
+        } else if (index === options.length - 1) {
+          answersText += `or ${option.text}.`;
+        } else {
+          answersText += `${option.text}, `;
+        }
       });
       playQuestionAudio(answersText, false);
     }
