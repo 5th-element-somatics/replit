@@ -150,13 +150,13 @@ export default function Home() {
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            <Card className="bg-gray-800 border border-purple-400 border-opacity-20 text-center hover:border-opacity-60 transition-all duration-300">
+            <Card className="bg-gray-800 border border-emerald-400 border-opacity-20 text-center hover:border-opacity-60 transition-all duration-300">
               <CardContent className="p-6">
-                <h3 className="text-xl font-serif font-bold text-white mb-3">1:1 MENTORSHIP</h3>
-                <p className="text-gray-400 text-sm mb-4">Private somatic containers for quantum transformation</p>
-                <Link href="/work-with-me">
-                  <Button className="bg-purple-600 hover:bg-purple-700 text-white w-full">
-                    Learn More
+                <h3 className="text-xl font-serif font-bold text-white mb-3">FREE GROUNDING MEDITATION</h3>
+                <p className="text-gray-400 text-sm mb-4">10-minute somatic drop-in to reconnect</p>
+                <Link href="/free-meditation">
+                  <Button className="bg-emerald-600 hover:bg-emerald-700 text-white w-full">
+                    Download Free
                   </Button>
                 </Link>
               </CardContent>
@@ -176,11 +176,11 @@ export default function Home() {
 
             <Card className="bg-gray-800 border border-purple-400 border-opacity-20 text-center hover:border-opacity-60 transition-all duration-300">
               <CardContent className="p-6">
-                <h3 className="text-xl font-serif font-bold text-white mb-3">FREE GROUNDING MEDITATION</h3>
-                <p className="text-gray-400 text-sm mb-4">10-minute somatic drop-in to reconnect</p>
-                <Link href="/free-meditation">
-                  <Button className="bg-gray-600 hover:bg-gray-700 text-white w-full">
-                    Download Free
+                <h3 className="text-xl font-serif font-bold text-white mb-3">1:1 MENTORSHIP</h3>
+                <p className="text-gray-400 text-sm mb-4">Private somatic containers for quantum transformation</p>
+                <Link href="/work-with-me">
+                  <Button className="bg-purple-600 hover:bg-purple-700 text-white w-full">
+                    Learn More
                   </Button>
                 </Link>
               </CardContent>
