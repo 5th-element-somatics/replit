@@ -9,6 +9,7 @@ import { Link } from "wouter";
 import { Share2, Copy, Heart, Sparkles, Volume2, VolumeX, Play, Pause, Loader2, Menu, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import tiger_no_bg from "@assets/tiger_no_bg.png";
 
 interface QuizQuestion {
   id: string;
@@ -662,7 +663,7 @@ export default function Quiz() {
           <nav className="flex items-center justify-between mb-8">
             <Link href="/" onClick={handleNavClick}>
               <img 
-                src="/tiger-logo.png" 
+                src={tiger_no_bg} 
                 alt="Fifth Element Somatics" 
                 className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
               />
@@ -814,7 +815,7 @@ export default function Quiz() {
         <nav className="flex items-center justify-between mb-8">
           <Link href="/" onClick={handleNavClick}>
             <img 
-              src="/tiger-logo.png" 
+              src={tiger_no_bg} 
               alt="Fifth Element Somatics" 
               className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
             />

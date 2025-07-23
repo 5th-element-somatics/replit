@@ -6,6 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Link, useLocation } from "wouter";
 import { Menu, X } from "lucide-react";
 import saintPhotoUrl from "@assets/saint_photo_1753245778552.png";
+import tiger_no_bg from "@assets/tiger_no_bg.png";
 
 export default function Masterclass() {
   const [includeAddon, setIncludeAddon] = useState(false);
@@ -39,7 +40,7 @@ export default function Masterclass() {
       <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
         <Link href="/" onClick={handleNavClick}>
           <img 
-            src="/tiger-logo.png" 
+            src={tiger_no_bg} 
             alt="Fifth Element Somatics" 
             className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
           />

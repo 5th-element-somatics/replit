@@ -4,6 +4,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { Link } from "wouter";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import tiger_no_bg from "@assets/tiger_no_bg.png";
 
 export default function WorkWithMe() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -25,7 +26,7 @@ export default function WorkWithMe() {
       <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
         <Link href="/" onClick={handleNavClick}>
           <img 
-            src="/tiger-logo.png" 
+            src={tiger_no_bg} 
             alt="Fifth Element Somatics" 
             className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
           />

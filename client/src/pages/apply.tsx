@@ -88,7 +88,7 @@ export default function Apply() {
               <p className="text-gray-300">
                 Thank you for your application! Saint will review your submission and be in touch within 48 hours.
               </p>
-              <Link href="/">
+              <Link href="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                 <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500">
                   Return to Home
                 </Button>
@@ -110,7 +110,7 @@ export default function Apply() {
       />
       {/* Navigation */}
       <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
-        <Link href="/">
+        <Link href="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
               <span className="text-white font-serif font-bold">5E</span>
@@ -119,10 +119,10 @@ export default function Apply() {
           </div>
         </Link>
         <div className="hidden md:flex space-x-8">
-          <Link href="/" className="text-gray-300 hover:text-white transition-colors">Home</Link>
-          <Link href="/about" className="text-gray-300 hover:text-white transition-colors">About</Link>
-          <Link href="/masterclass" className="text-gray-300 hover:text-white transition-colors">Masterclass</Link>
-          <Link href="/work-with-me" className="text-gray-300 hover:text-white transition-colors">Work With Me</Link>
+          <Link href="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-gray-300 hover:text-white transition-colors">Home</Link>
+          <Link href="/about" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-gray-300 hover:text-white transition-colors">About</Link>
+          <Link href="/masterclass" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-gray-300 hover:text-white transition-colors">Masterclass</Link>
+          <Link href="/work-with-me" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-gray-300 hover:text-white transition-colors">Work With Me</Link>
         </div>
       </nav>
 

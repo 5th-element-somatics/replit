@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowLeft, Lock, Check, Menu, X } from "lucide-react";
+import tiger_no_bg from "@assets/tiger_no_bg.png";
 
 if (!import.meta.env.VITE_STRIPE_PUBLIC_KEY) {
   throw new Error('Missing required Stripe key: VITE_STRIPE_PUBLIC_KEY');
@@ -29,7 +30,7 @@ const CheckoutHeader = () => {
     <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8 bg-black bg-opacity-50 backdrop-blur-sm border-b border-gray-800">
       <Link href="/" onClick={handleNavClick}>
         <img 
-          src="/tiger-logo.png" 
+          src={tiger_no_bg} 
           alt="Fifth Element Somatics" 
           className="h-10 w-auto cursor-pointer hover:opacity-90 transition-opacity"
         />

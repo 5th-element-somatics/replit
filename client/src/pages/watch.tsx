@@ -53,7 +53,10 @@ export default function Watch() {
               We couldn't verify your purchase. Please check your email or contact support.
             </p>
             <Button 
-              onClick={() => window.location.href = '/'}
+              onClick={() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                window.location.href = '/';
+              }}
               className="bg-gradient-to-r from-purple-500 to-pink-600"
             >
               Return to Home
