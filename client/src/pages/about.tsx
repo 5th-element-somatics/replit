@@ -76,7 +76,7 @@ export default function About() {
             I help you remember what your body already knows how to soften, how to hold, how to choose yourself again and again.
           </p>
           <Link href="/work-with-me">
-            <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 mystique-glow">
+            <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-6 sm:px-8 py-3 sm:py-4 rounded-full text-base sm:text-lg transition-all duration-300 mystique-glow w-full max-w-xs mx-auto sm:w-auto">
               Apply for Mentorship
             </Button>
           </Link>
@@ -86,7 +86,7 @@ export default function About() {
       {/* About Story Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
             <div>
               <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-6">
                 Meet Saint
@@ -156,7 +156,7 @@ export default function About() {
             Let's begin.
           </h2>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             <Card className="bg-gray-800 border border-purple-400 border-opacity-20 text-center">
               <CardContent className="p-6">
                 <div className="w-12 h-12 mx-auto mb-4 text-purple-400">

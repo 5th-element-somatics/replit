@@ -76,7 +76,7 @@ export default function WorkWithMe() {
             <p><strong className="text-white">But your body still doesn't feel safe.</strong></p>
           </div>
           <Link href="/apply">
-            <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 mystique-glow">
+            <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-6 sm:px-8 py-3 sm:py-4 rounded-full text-base sm:text-lg transition-all duration-300 mystique-glow w-full max-w-sm mx-auto sm:w-auto">
               APPLY TO WORK WITH ME
             </Button>
           </Link>
@@ -95,7 +95,7 @@ export default function WorkWithMe() {
           
           <h3 className="text-2xl font-serif font-bold text-white mb-8">Includes:</h3>
           
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-12">
             <Card className="bg-gray-800 border border-purple-400 border-opacity-20">
               <CardContent className="p-6 text-center">
                 <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -132,7 +132,7 @@ export default function WorkWithMe() {
           </div>
           
           <Link href="/apply">
-            <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 mystique-glow">
+            <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-6 sm:px-8 py-3 sm:py-4 rounded-full text-base sm:text-lg transition-all duration-300 mystique-glow w-full max-w-xs mx-auto sm:w-auto">
               APPLY BELOW
             </Button>
           </Link>

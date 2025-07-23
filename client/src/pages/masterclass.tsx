@@ -240,7 +240,7 @@ export default function Masterclass() {
             What Women Are Saying
           </h2>
           
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             {[
               {
                 text: "This masterclass helped me understand why I felt so disconnected from my body. Saint's approach is gentle yet powerful.",
@@ -313,12 +313,12 @@ export default function Masterclass() {
           
           <Button 
             onClick={handlePurchase}
-            className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-12 py-5 rounded-full text-xl transition-all duration-300 mystique-glow"
+            className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-6 sm:px-12 py-4 sm:py-5 rounded-full text-base sm:text-xl transition-all duration-300 mystique-glow w-full max-w-md mx-auto"
           >
-            <svg className="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+            <svg className="w-5 h-5 mr-2 sm:mr-3" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
             </svg>
-            Yes — I'm Ready to Reclaim
+            <span className="text-center">Yes — I'm Ready to Reclaim</span>
           </Button>
           
           <p className="text-gray-400 text-sm mt-4">

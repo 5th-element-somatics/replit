@@ -589,18 +589,18 @@ export default function Quiz() {
               </div>
 
               {/* Actions */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col gap-3 sm:gap-4 justify-center max-w-md mx-auto">
                 <Button 
                   onClick={shareResult}
                   variant="outline"
-                  className="border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-black"
+                  className="border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-black w-full"
                 >
                   <Share2 className="w-4 h-4 mr-2" />
                   Share Your Result
                 </Button>
                 
                 <Link href="/masterclass">
-                  <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold">
+                  <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold w-full">
                     Begin Your Reclamation
                   </Button>
                 </Link>
@@ -608,7 +608,7 @@ export default function Quiz() {
                 <Button 
                   onClick={() => window.location.reload()}
                   variant="outline"
-                  className="border-gray-400 text-gray-400 hover:bg-gray-400 hover:text-black"
+                  className="border-gray-400 text-gray-400 hover:bg-gray-400 hover:text-black w-full"
                 >
                   Retake Quiz
                 </Button>

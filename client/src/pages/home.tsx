@@ -96,10 +96,10 @@ export default function Home() {
       {/* Hero Section */}
       <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="text-center lg:text-left">
-              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-serif font-bold mb-6">
-                <span className="gradient-text">SENSUAL. SOVEREIGN. SACRED.</span>
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            <div className="text-center lg:text-left order-2 lg:order-1">
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-serif font-bold mb-6 leading-tight">
+                <span className="gradient-text break-words">SENSUAL. SOVEREIGN. SACRED.</span>
               </h1>
               <p className="text-xl sm:text-2xl text-gray-300 mb-6">
                 I help women reclaim their erotic truth
@@ -113,14 +113,16 @@ export default function Home() {
                 <strong className="text-white">WITH THEMSELVES, THEIR BODIES, AND THE PEOPLE THEY LOVE.</strong>
               </p>
               <Link href="/quiz">
-                <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 mystique-glow">TAKE THE 'Good Girl' ARCHETYPE QUIZ!</Button>
+                <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-4 sm:px-8 py-3 sm:py-4 rounded-full text-sm sm:text-lg transition-all duration-300 mystique-glow w-full max-w-xs mx-auto sm:mx-0 sm:w-auto">
+                  <span className="text-center">TAKE THE QUIZ</span>
+                </Button>
               </Link>
             </div>
-            <div className="relative">
+            <div className="relative order-1 lg:order-2">
               <img 
                 src={saintPhotoUrl} 
                 alt="Saint - Somatic Sexologist and Reclamation Guide"
-                className="w-full h-auto rounded-lg shadow-2xl"
+                className="w-full h-auto rounded-lg shadow-2xl max-w-sm mx-auto lg:max-w-none"
               />
             </div>
           </div>
@@ -145,7 +147,7 @@ export default function Home() {
             WAYS TO WORK WITH ME
           </h2>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             <Card className="bg-gray-800 border border-purple-400 border-opacity-20 text-center hover:border-opacity-60 transition-all duration-300">
               <CardContent className="p-6">
                 <h3 className="text-xl font-serif font-bold text-white mb-3">1:1 MENTORSHIP</h3>
@@ -227,13 +229,13 @@ export default function Home() {
           
           <div className="relative">
             {/* Main Testimonial Display */}
-            <Card className="bg-gray-800 border border-purple-400 border-opacity-20 min-h-[300px] transition-all duration-1000 ease-in-out">
-              <CardContent className="p-8 text-center">
-                <p className="text-gray-300 mb-6 italic text-lg leading-relaxed">
+            <Card className="bg-gray-800 border border-purple-400 border-opacity-20 min-h-[280px] sm:min-h-[300px] transition-all duration-1000 ease-in-out mx-2 sm:mx-0">
+              <CardContent className="p-4 sm:p-8 text-center">
+                <p className="text-gray-300 mb-4 sm:mb-6 italic text-base sm:text-lg leading-relaxed">
                   "{testimonials[currentTestimonial].text}"
                 </p>
-                <div className="border-t border-gray-600 pt-6">
-                  <p className="text-white font-semibold text-xl">{testimonials[currentTestimonial].name}</p>
+                <div className="border-t border-gray-600 pt-4 sm:pt-6">
+                  <p className="text-white font-semibold text-lg sm:text-xl">{testimonials[currentTestimonial].name}</p>
                 </div>
               </CardContent>
             </Card>
@@ -254,10 +256,10 @@ export default function Home() {
               ))}
             </div>
 
-            {/* Manual Navigation Arrows */}
+            {/* Manual Navigation Arrows - Hidden on mobile to prevent overflow */}
             <button
               onClick={() => setCurrentTestimonial((prev) => prev === 0 ? testimonials.length - 1 : prev - 1)}
-              className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 bg-purple-600 hover:bg-purple-500 text-white rounded-full p-2 transition-all duration-300 opacity-70 hover:opacity-100"
+              className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 bg-purple-600 hover:bg-purple-500 text-white rounded-full p-2 transition-all duration-300 opacity-70 hover:opacity-100 hidden sm:block"
               aria-label="Previous testimonial"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -266,7 +268,7 @@ export default function Home() {
             </button>
             <button
               onClick={() => setCurrentTestimonial((prev) => (prev + 1) % testimonials.length)}
-              className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 bg-purple-600 hover:bg-purple-500 text-white rounded-full p-2 transition-all duration-300 opacity-70 hover:opacity-100"
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 bg-purple-600 hover:bg-purple-500 text-white rounded-full p-2 transition-all duration-300 opacity-70 hover:opacity-100 hidden sm:block"
               aria-label="Next testimonial"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
