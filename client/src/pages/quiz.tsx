@@ -142,10 +142,23 @@ export default function Quiz() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const lastAudioRequestRef = useRef<number>(0);
   const { toast } = useToast();
 
   const playQuestionAudio = async (questionText: string, includeAnswers: boolean = true) => {
     if (!soundEnabled) return;
+    
+    // Simple rate limiting - wait at least 2 seconds between requests
+    const now = Date.now();
+    if (now - lastAudioRequestRef.current < 2000) {
+      toast({
+        title: "Please wait",
+        description: "Let the current audio finish before requesting more.",
+        variant: "default"
+      });
+      return;
+    }
+    lastAudioRequestRef.current = now;
     
     setIsLoadingAudio(true);
     try {
@@ -194,9 +207,9 @@ export default function Quiz() {
     } catch (error) {
       console.error("Error playing audio:", error);
       toast({
-        title: "Audio unavailable",
-        description: "Voice narration temporarily unavailable",
-        variant: "destructive"
+        title: "Voice narration paused",
+        description: "Audio will be available again shortly. You can continue with the quiz normally.",
+        variant: "default"
       });
     } finally {
       setIsLoadingAudio(false);
@@ -254,7 +267,7 @@ export default function Quiz() {
     if (soundEnabled && !showResult && quizQuestions[currentQuestion]) {
       const timer = setTimeout(() => {
         playQuestionAudio(quizQuestions[currentQuestion].question, true);
-      }, 500); // Small delay to let UI settle
+      }, 800); // Slightly longer delay to avoid rate limits
       
       return () => clearTimeout(timer);
     }
@@ -568,7 +581,7 @@ export default function Quiz() {
                 className="text-purple-400 hover:text-purple-300 flex items-center gap-2"
               >
                 <Volume2 className="w-4 h-4" />
-                <span className="text-sm">Replay Options</span>
+                <span className="text-sm">Repeat Choices</span>
               </Button>
             </div>
           )}

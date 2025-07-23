@@ -183,6 +183,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       if (!response.ok) {
+        if (response.status === 429) {
+          throw new Error(`Rate limit reached. Please wait a moment before trying again.`);
+        }
         throw new Error(`Eleven Labs API error: ${response.statusText}`);
       }
 
