@@ -127,21 +127,37 @@ export default function FreeMeditation() {
       />
       {/* Hero Section with Visual Background */}
       <div className="py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full blur-2xl animate-pulse" style={{animationDelay: '1s'}}></div>
-          <div className="absolute bottom-20 left-1/3 w-40 h-40 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
+        {/* Enhanced Animated Background with Breathing Pattern */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {/* Main breathing orbs */}
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-emerald-500/15 to-transparent rounded-full blur-3xl animate-breathing"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-tl from-purple-500/15 to-transparent rounded-full blur-3xl animate-breathing-reverse"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-gradient-to-br from-pink-500/10 to-transparent rounded-full blur-2xl animate-breathing-slow"></div>
+          
+          {/* Floating particles */}
+          <div className="absolute top-20 left-20 w-2 h-2 bg-emerald-400/30 rounded-full animate-float"></div>
+          <div className="absolute top-40 right-32 w-1 h-1 bg-purple-400/40 rounded-full animate-float-delayed"></div>
+          <div className="absolute bottom-32 left-40 w-3 h-3 bg-pink-400/20 rounded-full animate-float-slow"></div>
+          <div className="absolute bottom-20 right-20 w-1 h-1 bg-teal-400/50 rounded-full animate-float"></div>
+          
+          {/* Subtle grid pattern */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="w-full h-full" style={{backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0)', backgroundSize: '40px 40px'}}></div>
+          </div>
         </div>
         
         <div className="max-w-4xl mx-auto relative z-10">
           {/* Visual Header with Icon */}
           <div className="text-center mb-12">
-            <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-500/30">
-              <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2L8 6v6c0 2.21 1.79 4 4 4s4-1.79 4-4V6l-4-4zm-2 8V8.5L12 7l2 1.5V10c0 1.1-.9 2-2 2s-2-.9-2-2zm0 4.5v3c0 .55.45 1 1 1s1-.45 1-1v-3c-.33.17-.67.25-1 .25s-.67-.08-1-.25z"/>
-                <path d="M9 16c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1zm6 0c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1z"/>
-              </svg>
+            <div className="relative mb-8">
+              {/* Breathing glow animation around icon */}
+              <div className="absolute inset-0 w-24 h-24 mx-auto bg-gradient-to-br from-emerald-500/30 to-teal-600/30 rounded-full blur-xl animate-breathing"></div>
+              <div className="relative w-20 h-20 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/30 animate-breathing-slow">
+                <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2L8 6v6c0 2.21 1.79 4 4 4s4-1.79 4-4V6l-4-4zm-2 8V8.5L12 7l2 1.5V10c0 1.1-.9 2-2 2s-2-.9-2-2zm0 4.5v3c0 .55.45 1 1 1s1-.45 1-1v-3c-.33.17-.67.25-1 .25s-.67-.08-1-.25z"/>
+                  <path d="M9 16c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1zm6 0c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1z"/>
+                </svg>
+              </div>
             </div>
             <p className="text-emerald-400 font-semibold mb-2 tracking-wide">FREE GROUNDING MEDITATION</p>
             <h1 className="text-3xl sm:text-5xl font-serif font-bold text-white mb-6 leading-tight">
@@ -151,48 +167,63 @@ export default function FreeMeditation() {
               DOWNLOAD THIS FREE GROUNDING MEDITATION & ROOT INTO YOUR BODY
             </p>
             
-            {/* Visual Benefits Section */}
+            {/* Enhanced Visual Benefits Section */}
             <div className="mb-12">
-              <h3 className="text-lg font-serif font-bold text-white mb-6">Inside this guided audio you will:</h3>
+              <h3 className="text-lg font-serif font-bold text-white mb-8 animate-fade-in">Inside this guided audio you will:</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-emerald-500/20">
-                  <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                    </svg>
+                <div className="group bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-emerald-500/20 hover:border-emerald-500/40 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-lg hover:shadow-emerald-500/20 animate-slide-up">
+                  <div className="relative mb-4">
+                    <div className="absolute inset-0 w-14 h-14 mx-auto bg-emerald-500/20 rounded-full blur-lg animate-breathing"></div>
+                    <div className="relative w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center mx-auto group-hover:animate-breathing-slow">
+                      <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                      </svg>
+                    </div>
                   </div>
-                  <p className="text-gray-300 text-sm">Regulate your nervous system in real time</p>
+                  <p className="text-gray-300 text-sm font-medium">Regulate your nervous system in real time</p>
                 </div>
-                <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-purple-500/20">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                    </svg>
+                
+                <div className="group bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20 animate-slide-up" style={{animationDelay: '0.2s'}}>
+                  <div className="relative mb-4">
+                    <div className="absolute inset-0 w-14 h-14 mx-auto bg-purple-500/20 rounded-full blur-lg animate-breathing-reverse"></div>
+                    <div className="relative w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto group-hover:animate-breathing-slow">
+                      <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                      </svg>
+                    </div>
                   </div>
-                  <p className="text-gray-300 text-sm">Feel your body as a safe, powerful place to be</p>
+                  <p className="text-gray-300 text-sm font-medium">Feel your body as a safe, powerful place to be</p>
                 </div>
-                <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-pink-500/20">
-                  <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/>
-                    </svg>
+                
+                <div className="group bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-pink-500/20 hover:border-pink-500/40 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-lg hover:shadow-pink-500/20 animate-slide-up" style={{animationDelay: '0.4s'}}>
+                  <div className="relative mb-4">
+                    <div className="absolute inset-0 w-14 h-14 mx-auto bg-pink-500/20 rounded-full blur-lg animate-breathing-slow"></div>
+                    <div className="relative w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center mx-auto group-hover:animate-breathing">
+                      <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                      </svg>
+                    </div>
                   </div>
-                  <p className="text-gray-300 text-sm">Shift from disconnection to embodied presence</p>
+                  <p className="text-gray-300 text-sm font-medium">Shift from disconnection to embodied presence</p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Enhanced Sign-up Form */}
-          <div className="max-w-md mx-auto">
-            <Card className="bg-gray-800/80 backdrop-blur-sm border border-emerald-400 border-opacity-30 mystique-glow shadow-xl shadow-emerald-500/10">
+          {/* Enhanced Sign-up Form with Animations */}
+          <div className="max-w-md mx-auto animate-slide-up" style={{animationDelay: '0.6s'}}>
+            <Card className="bg-gray-800/80 backdrop-blur-sm border border-emerald-400 border-opacity-30 mystique-glow shadow-xl shadow-emerald-500/10 hover:shadow-emerald-500/20 transition-all duration-300 hover:transform hover:scale-105">
               <CardHeader className="text-center pb-2">
-                <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M21 2H3a1 1 0 0 0-1 1v18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1zm-1 18H4V4h16v16zM8 12h8v2H8v-2zm0-4h8v2H8V8z"/>
-                  </svg>
+                <div className="relative mb-4">
+                  {/* Pulsing background effect */}
+                  <div className="absolute inset-0 w-18 h-18 mx-auto bg-emerald-500/20 rounded-full blur-xl animate-breathing"></div>
+                  <div className="relative w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center mx-auto animate-breathing-slow">
+                    <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/>
+                    </svg>
+                  </div>
                 </div>
-                <CardTitle className="text-white text-xl font-serif">Get Your Free Meditation</CardTitle>
+                <CardTitle className="text-white text-xl font-serif mb-2">Get Your Free Meditation</CardTitle>
                 <p className="text-gray-400 text-sm">Instant access • No spam • Unsubscribe anytime</p>
               </CardHeader>
               <CardContent>
@@ -264,19 +295,25 @@ export default function FreeMeditation() {
             </Card>
           </div>
 
-          {/* Visual Additional Info Section */}
-          <div className="mt-16 text-center relative">
-            {/* Background decoration */}
-            <div className="absolute inset-0 opacity-5">
-              <div className="absolute top-10 left-1/4 w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full blur-2xl"></div>
-              <div className="absolute bottom-10 right-1/4 w-16 h-16 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full blur-xl"></div>
+          {/* Enhanced Visual Additional Info Section */}
+          <div className="mt-16 text-center relative animate-fade-in" style={{animationDelay: '0.8s'}}>
+            {/* Enhanced Background decoration with animations */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              <div className="absolute top-10 left-1/4 w-32 h-32 bg-gradient-to-br from-purple-500/20 to-pink-600/20 rounded-full blur-3xl animate-breathing"></div>
+              <div className="absolute bottom-10 right-1/4 w-24 h-24 bg-gradient-to-br from-pink-500/20 to-purple-600/20 rounded-full blur-2xl animate-breathing-reverse"></div>
+              <div className="absolute top-1/2 left-10 w-4 h-4 bg-emerald-400/40 rounded-full animate-float"></div>
+              <div className="absolute top-1/3 right-10 w-2 h-2 bg-purple-400/50 rounded-full animate-float-delayed"></div>
             </div>
             
             <div className="relative z-10">
-              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                </svg>
+              <div className="relative mb-8">
+                {/* Enhanced breathing glow animation */}
+                <div className="absolute inset-0 w-20 h-20 mx-auto bg-gradient-to-br from-purple-500/30 to-pink-600/30 rounded-full blur-xl animate-breathing"></div>
+                <div className="relative w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto animate-breathing-slow shadow-lg shadow-purple-500/30">
+                  <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                </div>
               </div>
               <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white mb-6">
                 Ready for deeper transformation?
@@ -286,13 +323,23 @@ export default function FreeMeditation() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Link href="/masterclass">
-                  <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 mystique-glow shadow-lg shadow-purple-500/30">
-                    Explore The Masterclass
+                  <Button className="group bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 mystique-glow shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 hover:transform hover:scale-105">
+                    <span className="flex items-center space-x-2">
+                      <span>Explore The Masterclass</span>
+                      <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                      </svg>
+                    </span>
                   </Button>
                 </Link>
                 <Link href="/quiz">
-                  <Button variant="outline" className="border-emerald-400 text-emerald-400 hover:bg-emerald-400 hover:text-black font-bold px-8 py-4 rounded-full text-lg transition-all duration-300">
-                    Take The Quiz
+                  <Button variant="outline" className="group border-emerald-400 text-emerald-400 hover:bg-emerald-400 hover:text-black font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 hover:transform hover:scale-105 hover:shadow-lg hover:shadow-emerald-400/30">
+                    <span className="flex items-center space-x-2">
+                      <span>Take The Quiz</span>
+                      <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                      </svg>
+                    </span>
                   </Button>
                 </Link>
               </div>
