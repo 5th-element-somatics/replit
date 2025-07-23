@@ -1,4 +1,4 @@
-import { users, purchases, applications, leads, type User, type InsertUser, type Purchase, type InsertPurchase, type Application, type InsertApplication, type Lead, type InsertLead } from "@shared/schema";
+import { users, purchases, applications, leads, magicLinks, adminSessions, type User, type InsertUser, type Purchase, type InsertPurchase, type Application, type InsertApplication, type Lead, type InsertLead, type MagicLink, type InsertMagicLink, type AdminSession, type InsertAdminSession } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc } from "drizzle-orm";
 
@@ -14,6 +14,14 @@ export interface IStorage {
   getApplication(id: number): Promise<Application | undefined>;
   createLead(lead: InsertLead): Promise<Lead>;
   getAllLeads(): Promise<Lead[]>;
+  // Magic link authentication methods
+  createMagicLink(magicLink: InsertMagicLink): Promise<MagicLink>;
+  getMagicLink(token: string): Promise<MagicLink | undefined>;
+  useMagicLink(token: string): Promise<void>;
+  // Admin session methods
+  createAdminSession(session: InsertAdminSession): Promise<AdminSession>;
+  getAdminSession(sessionToken: string): Promise<AdminSession | undefined>;
+  deleteAdminSession(sessionToken: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -80,6 +88,47 @@ export class DatabaseStorage implements IStorage {
 
   async getAllLeads(): Promise<Lead[]> {
     return await db.select().from(leads).orderBy(desc(leads.createdAt));
+  }
+
+  // Magic link authentication methods
+  async createMagicLink(insertMagicLink: InsertMagicLink): Promise<MagicLink> {
+    const [magicLink] = await db
+      .insert(magicLinks)
+      .values(insertMagicLink)
+      .returning();
+    return magicLink;
+  }
+
+  async getMagicLink(token: string): Promise<MagicLink | undefined> {
+    const [magicLink] = await db.select().from(magicLinks).where(eq(magicLinks.token, token));
+    return magicLink || undefined;
+  }
+
+  async useMagicLink(token: string): Promise<void> {
+    await db
+      .update(magicLinks)
+      .set({ used: true })
+      .where(eq(magicLinks.token, token));
+  }
+
+  // Admin session methods
+  async createAdminSession(insertAdminSession: InsertAdminSession): Promise<AdminSession> {
+    const [adminSession] = await db
+      .insert(adminSessions)
+      .values(insertAdminSession)
+      .returning();
+    return adminSession;
+  }
+
+  async getAdminSession(sessionToken: string): Promise<AdminSession | undefined> {
+    const [adminSession] = await db.select().from(adminSessions).where(eq(adminSessions.sessionToken, sessionToken));
+    return adminSession || undefined;
+  }
+
+  async deleteAdminSession(sessionToken: string): Promise<void> {
+    await db
+      .delete(adminSessions)
+      .where(eq(adminSessions.sessionToken, sessionToken));
   }
 }
 

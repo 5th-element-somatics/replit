@@ -396,6 +396,9 @@ export default function Home() {
             <p className="text-gray-400 text-sm">
               © 2025 Fifth Element Somatics. All rights reserved.
             </p>
+            <Link href="/admin-login" onClick={handleNavClick} className="text-xs text-gray-600 hover:text-gray-400 transition-colors mt-2 inline-block">
+              Admin
+            </Link>
           </div>
         </div>
       </footer>

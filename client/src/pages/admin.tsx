@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import { Link } from "wouter";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { Link, useLocation } from "wouter";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Mic, Upload, Play, Pause, Volume2 } from "lucide-react";
@@ -11,11 +11,45 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { type Application, type Lead } from "@shared/schema";
 
 export default function Admin() {
+  const [, setLocation] = useLocation();
+  const { toast } = useToast();
+
+  const logoutMutation = useMutation({
+    mutationFn: async () => {
+      const response = await fetch('/api/admin/logout', {
+        method: 'POST',
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error('Logout failed');
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Logged out",
+        description: "You have been successfully logged out."
+      });
+      setLocation('/admin-login');
+    },
+    onError: () => {
+      toast({
+        title: "Logout failed",
+        description: "There was an error logging you out.",
+        variant: "destructive"
+      });
+    }
+  });
+
   const { data: applications, isLoading: applicationsLoading, error: applicationsError } = useQuery({
     queryKey: ['applications'],
     queryFn: async () => {
       const response = await fetch('/api/applications');
       if (!response.ok) {
+        if (response.status === 401) {
+          setLocation('/admin-login');
+          throw new Error('Authentication required');
+        }
         throw new Error('Failed to fetch applications');
       }
       return response.json() as Promise<Application[]>;
@@ -27,6 +61,10 @@ export default function Admin() {
     queryFn: async () => {
       const response = await fetch('/api/leads');
       if (!response.ok) {
+        if (response.status === 401) {
+          setLocation('/admin-login');
+          throw new Error('Authentication required');
+        }
         throw new Error('Failed to fetch leads');
       }
       return response.json() as Promise<Lead[]>;
@@ -78,6 +116,15 @@ export default function Admin() {
         </Link>
         <div className="flex items-center space-x-4">
           <span className="text-purple-400 font-semibold">Admin Dashboard</span>
+          <Button 
+            onClick={() => logoutMutation.mutate()}
+            disabled={logoutMutation.isPending}
+            variant="outline"
+            size="sm"
+            className="text-gray-300 border-gray-600 hover:bg-gray-700"
+          >
+            {logoutMutation.isPending ? "Logging out..." : "Logout"}
+          </Button>
         </div>
       </nav>
 

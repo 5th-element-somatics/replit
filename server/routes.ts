@@ -4,6 +4,7 @@ import Stripe from "stripe";
 import { storage } from "./storage";
 import { insertPurchaseSchema, insertApplicationSchema, insertLeadSchema } from "@shared/schema";
 import sgMail from '@sendgrid/mail';
+import crypto from 'crypto';
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
@@ -334,8 +335,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get all applications (admin endpoint)
-  app.get("/api/applications", async (req, res) => {
+  // Admin session validation middleware (defined early for use below)
+  const requireAdminAuth = async (req: any, res: any, next: any) => {
+    try {
+      const sessionToken = req.cookies?.admin_session;
+      
+      if (!sessionToken) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const session = await storage.getAdminSession(sessionToken);
+      
+      if (!session) {
+        return res.status(401).json({ message: "Invalid session" });
+      }
+
+      if (new Date() > session.expiresAt) {
+        await storage.deleteAdminSession(sessionToken);
+        return res.status(401).json({ message: "Session expired" });
+      }
+
+      req.adminUser = { email: session.email };
+      next();
+    } catch (error) {
+      console.error("Admin auth middleware error:", error);
+      res.status(500).json({ message: "Authentication error" });
+    }
+  };
+
+  // Get all applications (admin endpoint - protected)
+  app.get("/api/applications", requireAdminAuth, async (req, res) => {
     try {
       const applications = await storage.getAllApplications();
       res.json(applications);
@@ -344,8 +373,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get specific application (admin endpoint)
-  app.get("/api/applications/:id", async (req, res) => {
+  // Get specific application (admin endpoint - protected)
+  app.get("/api/applications/:id", requireAdminAuth, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const application = await storage.getApplication(id);
@@ -432,8 +461,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get all leads (admin endpoint)
-  app.get("/api/leads", async (req, res) => {
+  // Get all leads (admin endpoint - protected)
+  app.get("/api/leads", requireAdminAuth, async (req, res) => {
     try {
       const leads = await storage.getAllLeads();
       res.json(leads);
@@ -491,6 +520,157 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error: any) {
       console.error("Text-to-speech error:", error);
       res.status(500).json({ message: "Error generating audio: " + error.message });
+    }
+  });
+
+  // Admin magic link authentication endpoints
+  const authorizedEmails = [
+    'hello@fifthelementsomatics.com',
+    'saint@fifthelementsomatics.com',
+    // Add more authorized admin emails here
+  ];
+
+  // Request magic link for admin login
+  app.post("/api/admin/request-magic-link", async (req, res) => {
+    try {
+      const { email } = req.body;
+      
+      if (!email) {
+        return res.status(400).json({ message: "Email is required" });
+      }
+
+      // Check if email is authorized
+      if (!authorizedEmails.includes(email.toLowerCase())) {
+        return res.status(403).json({ message: "Unauthorized email address" });
+      }
+
+      // Generate secure token
+      const token = crypto.randomBytes(32).toString('hex');
+      const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+
+      // Store magic link in database
+      await storage.createMagicLink({
+        email: email.toLowerCase(),
+        token,
+        expiresAt,
+      });
+
+      // Send magic link email
+      const baseUrl = process.env.NODE_ENV === 'development' 
+        ? 'http://localhost:5000' 
+        : 'https://fifthelementsomatics.com';
+      
+      const magicLink = `${baseUrl}/admin-verify?token=${token}`;
+
+      if (process.env.SENDGRID_API_KEY) {
+        const msg = {
+          to: email,
+          from: process.env.SENDGRID_FROM_EMAIL!,
+          subject: 'Fifth Element Somatics - Admin Login Link',
+          html: `
+            <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 100%); color: #ffffff; padding: 40px;">
+              <div style="text-align: center; margin-bottom: 40px;">
+                <h1 style="color: #C77DFF; font-size: 24px; margin-bottom: 10px;">Admin Access Request</h1>
+                <p style="color: #9CA3AF;">Click the link below to access your admin dashboard</p>
+              </div>
+              
+              <div style="background: linear-gradient(135deg, #C77DFF 0%, #E879F9 100%); border-radius: 12px; padding: 25px; text-align: center; margin-bottom: 30px;">
+                <a href="${magicLink}" 
+                   style="display: inline-block; background: #000000; color: #C77DFF; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
+                  Access Admin Dashboard
+                </a>
+                <p style="color: #000000; font-size: 14px; margin-top: 15px; margin-bottom: 0;">
+                  This link expires in 15 minutes for security.
+                </p>
+              </div>
+
+              <div style="text-align: center; color: #9CA3AF; font-size: 14px;">
+                <p>If you didn't request this login link, please ignore this email.</p>
+                <p style="margin-top: 20px;">
+                  <strong style="color: #C77DFF;">Fifth Element Somatics</strong><br>
+                  <a href="${baseUrl}" style="color: #C77DFF; text-decoration: none;">fifthelementsomatics.com</a>
+                </p>
+              </div>
+            </div>
+          `
+        };
+
+        await sgMail.send(msg);
+      }
+
+      res.json({ success: true, message: "Magic link sent to your email" });
+    } catch (error: any) {
+      console.error("Magic link request error:", error);
+      res.status(500).json({ message: "Error sending magic link: " + error.message });
+    }
+  });
+
+  // Verify magic link and create admin session
+  app.post("/api/admin/verify-magic-link", async (req, res) => {
+    try {
+      const { token } = req.body;
+      
+      if (!token) {
+        return res.status(400).json({ message: "Token is required" });
+      }
+
+      // Find and validate magic link
+      const magicLink = await storage.getMagicLink(token);
+      
+      if (!magicLink) {
+        return res.status(400).json({ message: "Invalid magic link" });
+      }
+
+      if (magicLink.used) {
+        return res.status(400).json({ message: "Magic link has already been used" });
+      }
+
+      if (new Date() > magicLink.expiresAt) {
+        return res.status(400).json({ message: "Magic link has expired" });
+      }
+
+      // Mark magic link as used
+      await storage.useMagicLink(token);
+
+      // Create admin session
+      const sessionToken = crypto.randomBytes(32).toString('hex');
+      const sessionExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
+      await storage.createAdminSession({
+        email: magicLink.email,
+        sessionToken,
+        expiresAt: sessionExpiresAt,
+      });
+
+      // Set session cookie
+      res.cookie('admin_session', sessionToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        sameSite: 'lax'
+      });
+
+      res.json({ success: true, message: "Login successful" });
+    } catch (error: any) {
+      console.error("Magic link verification error:", error);
+      res.status(500).json({ message: "Error verifying magic link: " + error.message });
+    }
+  });
+
+
+
+  // Logout endpoint
+  app.post("/api/admin/logout", requireAdminAuth, async (req: any, res) => {
+    try {
+      const sessionToken = req.cookies?.admin_session;
+      if (sessionToken) {
+        await storage.deleteAdminSession(sessionToken);
+      }
+      res.clearCookie('admin_session');
+      res.json({ success: true, message: "Logged out successfully" });
+    } catch (error: any) {
+      console.error("Logout error:", error);
+      res.status(500).json({ message: "Error logging out: " + error.message });
     }
   });
 

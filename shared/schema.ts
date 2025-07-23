@@ -39,6 +39,23 @@ export const leads = pgTable("leads", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const magicLinks = pgTable("magic_links", {
+  id: serial("id").primaryKey(),
+  email: text("email").notNull(),
+  token: text("token").notNull().unique(),
+  expiresAt: timestamp("expires_at").notNull(),
+  used: boolean("used").default(false),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const adminSessions = pgTable("admin_sessions", {
+  id: serial("id").primaryKey(),
+  email: text("email").notNull(),
+  sessionToken: text("session_token").notNull().unique(),
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
@@ -69,6 +86,18 @@ export const insertLeadSchema = createInsertSchema(leads).pick({
   quizAnswers: true,
 });
 
+export const insertMagicLinkSchema = createInsertSchema(magicLinks).pick({
+  email: true,
+  token: true,
+  expiresAt: true,
+});
+
+export const insertAdminSessionSchema = createInsertSchema(adminSessions).pick({
+  email: true,
+  sessionToken: true,
+  expiresAt: true,
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type InsertPurchase = z.infer<typeof insertPurchaseSchema>;
@@ -77,3 +106,7 @@ export type InsertApplication = z.infer<typeof insertApplicationSchema>;
 export type Application = typeof applications.$inferSelect;
 export type InsertLead = z.infer<typeof insertLeadSchema>;
 export type Lead = typeof leads.$inferSelect;
+export type InsertMagicLink = z.infer<typeof insertMagicLinkSchema>;
+export type MagicLink = typeof magicLinks.$inferSelect;
+export type InsertAdminSession = z.infer<typeof insertAdminSessionSchema>;
+export type AdminSession = typeof adminSessions.$inferSelect;
