@@ -1,0 +1,113 @@
+# Good Girl Paradox Masterclass — Landing Page Spec
+
+name: masterclass
+type: code/react
+content: |
+  import React from 'react'
+  import { Button } from "@/components/ui/button"
+
+  export default function MasterclassPage() {
+    return (
+      <main className="bg-neutral-50 text-gray-800 px-4 py-10 sm:px-8 md:px-20 max-w-5xl mx-auto font-sans">
+        
+        {/* HERO */}
+        <section className="text-center mb-14">
+          <h1 className="text-4xl sm:text-5xl font-serif font-semibold mb-4">
+            The Good Girl Paradox
+          </h1>
+          <p className="text-lg sm:text-xl max-w-xl mx-auto text-gray-600 mb-6">
+            A 90-minute masterclass to reclaim your body, your boundaries, and your erotic truth.
+          </p>
+          <p className="text-xl font-semibold mb-6 text-rose-700">$64 · Lifetime Access</p>
+          <Button className="text-white bg-rose-600 hover:bg-rose-700 px-6 py-3 text-lg rounded-xl">
+            Watch the Masterclass Now
+          </Button>
+        </section>
+
+        {/* WHY THIS MATTERS */}
+        <section className="mb-16 text-center max-w-3xl mx-auto">
+          <h2 className="text-2xl font-semibold mb-4">You don’t need to be fixed. You need to be felt.</h2>
+          <p className="text-gray-600">
+            You’ve spent a lifetime performing — being agreeable, adored, and accommodating.
+            Now, it’s time to come home to yourself. To stop outsourcing your power. To return to the body.
+          </p>
+        </section>
+
+        {/* BENEFITS */}
+        <section className="grid sm:grid-cols-2 gap-8 mb-20">
+          <div>
+            <h3 className="text-xl font-semibold mb-3">After this class, you’ll feel:</h3>
+            <ul className="space-y-2 list-disc list-inside text-gray-700">
+              <li>✓ Reconnected to your body’s truth</li>
+              <li>✓ Clearer on your boundaries and desires</li>
+              <li>✓ Rooted in self-trust, not external approval</li>
+              <li>✓ Safe in your sensuality</li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-xl font-semibold mb-3">What You’ll Receive:</h3>
+            <ul className="space-y-2 list-disc list-inside text-gray-700">
+              <li>✓ 90-minute video masterclass with Saint</li>
+              <li>✓ Somatic tools, breathwork & rituals</li>
+              <li>✓ Bonus prompts to integrate the teachings</li>
+              <li>✓ Lifetime on-demand access</li>
+            </ul>
+          </div>
+        </section>
+
+        {/* OPTIONAL ADD-ON */}
+        <section className="bg-rose-50 border border-rose-200 rounded-xl p-6 mb-20">
+          <h3 className="text-2xl font-bold text-rose-700 mb-2">Enhance Your Experience: Return to the Body</h3>
+          <p className="text-gray-700 mb-4">
+            Add 3 powerful audio rituals for deeper integration of the masterclass:
+          </p>
+          <ul className="list-disc list-inside text-gray-600 mb-4">
+            <li>🌬️ Boundary Tapping (EFT) – energetic clarity</li>
+            <li>🔥 Eros Energy Activation – breathwork to awaken aliveness</li>
+            <li>🌸 Sovereignty Ritual – reclaim your sacred body</li>
+          </ul>
+          <p className="font-semibold text-rose-600 mb-4">$25 — Available only with purchase</p>
+          <Button variant="outline" className="border-rose-600 text-rose-700 hover:bg-rose-100">
+            + Add to My Order
+          </Button>
+        </section>
+
+        {/* ABOUT SAINT */}
+        <section className="mb-20">
+          <h3 className="text-2xl font-semibold mb-4">Meet Your Guide: Saint</h3>
+          <p className="text-gray-700 mb-3">
+            Saint is a somatic sexologist and erotic embodiment guide. Her work blends sacred sexuality,
+            nervous system repair, and emotional depth to help women move from performance to presence.
+          </p>
+          <p className="text-gray-600">
+            Through softness, sovereignty, and sensation, she invites you back into your body — and your power.
+          </p>
+        </section>
+
+        {/* CTA */}
+        <section className="text-center mb-24">
+          <h2 className="text-3xl font-semibold mb-4">Are You Ready to Begin?</h2>
+          <p className="text-gray-600 mb-6">Watch the class instantly · Lifetime access · $64</p>
+          <Button className="text-white bg-rose-600 hover:bg-rose-700 px-6 py-3 text-lg rounded-xl">
+            Yes — I’m Ready to Reclaim
+          </Button>
+        </section>
+
+        {/* FAQ */}
+        <section className="max-w-2xl mx-auto mb-20">
+          <h4 className="text-xl font-semibold mb-4">Frequently Asked Questions</h4>
+          <ul className="space-y-3 text-gray-700">
+            <li><strong>Q: Is this live?</strong> — No, it’s a pre-recorded video you can watch anytime.</li>
+            <li><strong>Q: How long is the class?</strong> — 90 minutes.</li>
+            <li><strong>Q: Can I watch it more than once?</strong> — Yes! You have lifetime access.</li>
+            <li><strong>Q: Is it trauma-informed?</strong> — Yes, and rooted in somatic awareness.</li>
+          </ul>
+        </section>
+
+        {/* FOOTER */}
+        <footer className="text-center text-sm text-gray-400 mt-10 pt-10 border-t border-gray-200">
+          © {new Date().getFullYear()} Fifth Element Somatics · Designed with soul 🌀
+        </footer>
+      </main>
+    )
+  }
