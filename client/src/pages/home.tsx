@@ -6,6 +6,8 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import saintPhotoUrl from "@assets/saint_photo_1753245778552.png";
 
+import tiger_no_bg from "@assets/tiger_no_bg.png";
+
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -26,7 +28,7 @@ export default function Home() {
       <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
         <Link href="/" onClick={handleNavClick}>
           <img 
-            src="/tiger-logo.png" 
+            src={tiger_no_bg} 
             alt="Fifth Element Somatics" 
             className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
           />
@@ -63,7 +65,6 @@ export default function Home() {
           </div>
         )}
       </nav>
-
       {/* Hero Section */}
       <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
@@ -99,7 +100,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Intro Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-900/20 to-pink-900/20">
         <div className="max-w-4xl mx-auto text-center">
@@ -112,7 +112,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Ways to Work With Me */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
@@ -159,7 +158,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Philosophy Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-gray-800 to-black">
         <div className="max-w-4xl mx-auto text-center">
@@ -194,7 +192,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Client Praise */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
@@ -233,7 +230,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Personal Story */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-900/20 to-pink-900/20">
         <div className="max-w-4xl mx-auto text-center">
@@ -257,7 +253,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Origin Story */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
@@ -284,7 +279,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Free Meditation CTA */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-gray-800 to-black">
         <div className="max-w-4xl mx-auto text-center">
@@ -312,7 +306,6 @@ export default function Home() {
           </Link>
         </div>
       </section>
-
       {/* Footer */}
       <footer className="py-12 px-4 sm:px-6 lg:px-8 border-t border-gray-800">
         <div className="max-w-6xl mx-auto">
