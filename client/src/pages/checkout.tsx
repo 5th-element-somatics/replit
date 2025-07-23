@@ -123,7 +123,7 @@ const CheckoutForm = ({ email, setEmail, includeAddon, setIncludeAddon }: {
               <Checkbox
                 id="addon"
                 checked={includeAddon}
-                onCheckedChange={setIncludeAddon}
+                onCheckedChange={(checked) => setIncludeAddon(checked === true)}
                 className="border-purple-400"
               />
               <Label htmlFor="addon" className="text-gray-300 text-sm">

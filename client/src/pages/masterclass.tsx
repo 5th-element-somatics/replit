@@ -10,10 +10,10 @@ export default function Masterclass() {
   const [, setLocation] = useLocation();
 
   const handlePurchase = () => {
-    const searchParams = new URLSearchParams({
-      amount: "64",
-      hasAddon: includeAddon.toString()
-    });
+    const searchParams = new URLSearchParams();
+    if (includeAddon) {
+      searchParams.set('addon', 'true');
+    }
     setLocation(`/checkout?${searchParams.toString()}`);
   };
 
