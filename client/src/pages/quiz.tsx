@@ -6,7 +6,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Link } from "wouter";
-import { Share2, Copy, Heart, Sparkles, Volume2, VolumeX, Play, Pause, Loader2 } from "lucide-react";
+import { Share2, Copy, Heart, Sparkles, Volume2, VolumeX, Play, Pause, Loader2, Menu, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -143,6 +143,7 @@ export default function Quiz() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
   const [selectedVoice, setSelectedVoice] = useState("soul_sister");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleVoiceChange = async (voiceId: string) => {
     // Check if voice is disabled
@@ -220,6 +221,11 @@ export default function Quiz() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const lastAudioRequestRef = useRef<number>(0);
   const { toast } = useToast();
+
+  const handleNavClick = () => {
+    setIsMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const voiceOptions = [
     {
@@ -463,16 +469,46 @@ export default function Quiz() {
       <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           {/* Navigation */}
-          <div className="flex items-center justify-between mb-8">
-            <Link href="/">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
-                  <span className="text-white font-serif font-bold">5E</span>
-                </div>
-                <span className="text-lg font-serif font-semibold">Fifth Element Somatics</span>
-              </div>
+          <nav className="flex items-center justify-between mb-8">
+            <Link href="/" onClick={handleNavClick}>
+              <img 
+                src="/tiger-logo.png" 
+                alt="Fifth Element Somatics" 
+                className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
+              />
             </Link>
-          </div>
+            
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex space-x-8">
+              <Link href="/" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">HOME</Link>
+              <Link href="/about" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">ABOUT</Link>
+              <Link href="/quiz" onClick={handleNavClick} className="text-emerald-400 font-semibold">TAKE THE QUIZ</Link>
+              <Link href="/masterclass" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">MASTERCLASS</Link>
+              <Link href="/work-with-me" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">WORK WITH ME</Link>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button 
+              className="md:hidden text-white p-2"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+
+            {/* Mobile Navigation */}
+            {isMenuOpen && (
+              <div className="absolute top-20 left-0 right-0 bg-gray-900 bg-opacity-95 backdrop-blur-sm md:hidden z-50">
+                <div className="flex flex-col p-4 space-y-4">
+                  <Link href="/" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">HOME</Link>
+                  <Link href="/about" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">ABOUT</Link>
+                  <Link href="/quiz" onClick={handleNavClick} className="text-emerald-400 font-semibold text-lg">TAKE THE QUIZ</Link>
+                  <Link href="/masterclass" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">MASTERCLASS</Link>
+                  <Link href="/work-with-me" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">WORK WITH ME</Link>
+                </div>
+              </div>
+            )}
+          </nav>
 
           <Card className={`bg-gradient-to-r ${resultData.color} p-1 mb-8 mystique-glow`}>
             <div className="bg-black rounded-lg p-8">
@@ -605,16 +641,46 @@ export default function Quiz() {
       />
       <div className="max-w-3xl mx-auto">
         {/* Navigation */}
-        <div className="flex items-center justify-between mb-8">
-          <Link href="/">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
-                <span className="text-white font-serif font-bold">5E</span>
-              </div>
-              <span className="text-lg font-serif font-semibold">Fifth Element Somatics</span>
-            </div>
+        <nav className="flex items-center justify-between mb-8">
+          <Link href="/" onClick={handleNavClick}>
+            <img 
+              src="/tiger-logo.png" 
+              alt="Fifth Element Somatics" 
+              className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
+            />
           </Link>
-        </div>
+          
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex space-x-8">
+            <Link href="/" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">HOME</Link>
+            <Link href="/about" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">ABOUT</Link>
+            <Link href="/quiz" onClick={handleNavClick} className="text-white font-semibold">TAKE THE QUIZ</Link>
+            <Link href="/masterclass" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">MASTERCLASS</Link>
+            <Link href="/work-with-me" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">WORK WITH ME</Link>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button 
+            className="md:hidden text-white p-2"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+
+          {/* Mobile Navigation */}
+          {isMenuOpen && (
+            <div className="absolute top-20 left-0 right-0 bg-gray-900 bg-opacity-95 backdrop-blur-sm md:hidden z-50">
+              <div className="flex flex-col p-4 space-y-4">
+                <Link href="/" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">HOME</Link>
+                <Link href="/about" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">ABOUT</Link>
+                <Link href="/quiz" onClick={handleNavClick} className="text-white font-semibold text-lg">TAKE THE QUIZ</Link>
+                <Link href="/masterclass" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">MASTERCLASS</Link>
+                <Link href="/work-with-me" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">WORK WITH ME</Link>
+              </div>
+            </div>
+          )}
+        </nav>
 
         {/* Quiz Header */}
         {currentQuestion === 0 && (
