@@ -144,13 +144,24 @@ export default function Quiz() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { toast } = useToast();
 
-  const playQuestionAudio = async (questionText: string) => {
+  const playQuestionAudio = async (questionText: string, includeAnswers: boolean = true) => {
     if (!soundEnabled) return;
     
     setIsLoadingAudio(true);
     try {
+      let fullText = questionText;
+      
+      // Add answer options if requested
+      if (includeAnswers && quizQuestions[currentQuestion]) {
+        const options = quizQuestions[currentQuestion].options;
+        fullText += " Your options are: ";
+        options.forEach((option, index) => {
+          fullText += `Option ${index + 1}: ${option.text}. `;
+        });
+      }
+      
       const response = await apiRequest("POST", "/api/text-to-speech", {
-        text: questionText
+        text: fullText
       });
       
       if (response.ok) {
@@ -193,7 +204,18 @@ export default function Quiz() {
     } else if (audioRef.current) {
       audioRef.current.play();
     } else {
-      playQuestionAudio(quizQuestions[currentQuestion].question);
+      playQuestionAudio(quizQuestions[currentQuestion].question, true);
+    }
+  };
+
+  const playAnswersOnly = () => {
+    if (quizQuestions[currentQuestion]) {
+      const options = quizQuestions[currentQuestion].options;
+      let answersText = "Your answer options are: ";
+      options.forEach((option, index) => {
+        answersText += `Option ${index + 1}: ${option.text}. `;
+      });
+      playQuestionAudio(answersText, false);
     }
   };
 
@@ -215,11 +237,11 @@ export default function Quiz() {
     }
   };
 
-  // Auto-play question when it changes (if sound is enabled)
+  // Auto-play question with answers when it changes (if sound is enabled)
   useEffect(() => {
     if (soundEnabled && !showResult && quizQuestions[currentQuestion]) {
       const timer = setTimeout(() => {
-        playQuestionAudio(quizQuestions[currentQuestion].question);
+        playQuestionAudio(quizQuestions[currentQuestion].question, true);
       }, 500); // Small delay to let UI settle
       
       return () => clearTimeout(timer);
@@ -506,24 +528,37 @@ export default function Quiz() {
           </Button>
           
           {soundEnabled && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleAudio}
-              disabled={isLoadingAudio}
-              className="text-emerald-400 hover:text-emerald-300 flex items-center gap-2"
-            >
-              {isLoadingAudio ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : isPlaying ? (
-                <Pause className="w-4 h-4" />
-              ) : (
-                <Play className="w-4 h-4" />
-              )}
-              <span className="text-sm">
-                {isLoadingAudio ? "Loading..." : isPlaying ? "Pause" : "Play Question"}
-              </span>
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleAudio}
+                disabled={isLoadingAudio}
+                className="text-emerald-400 hover:text-emerald-300 flex items-center gap-2"
+              >
+                {isLoadingAudio ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : isPlaying ? (
+                  <Pause className="w-4 h-4" />
+                ) : (
+                  <Play className="w-4 h-4" />
+                )}
+                <span className="text-sm">
+                  {isLoadingAudio ? "Loading..." : isPlaying ? "Pause" : "Play All"}
+                </span>
+              </Button>
+              
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={playAnswersOnly}
+                disabled={isLoadingAudio}
+                className="text-purple-400 hover:text-purple-300 flex items-center gap-2"
+              >
+                <Volume2 className="w-4 h-4" />
+                <span className="text-sm">Replay Options</span>
+              </Button>
+            </div>
           )}
         </div>
 
