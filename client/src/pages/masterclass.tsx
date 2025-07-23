@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -7,6 +7,7 @@ import saintPhotoUrl from "@assets/saint_photo_1753245778552.png";
 
 export default function Masterclass() {
   const [includeAddon, setIncludeAddon] = useState(false);
+  const [showDemo, setShowDemo] = useState(false);
   const [, setLocation] = useLocation();
 
   const handlePurchase = () => {
@@ -70,7 +71,10 @@ export default function Masterclass() {
                 </div>
                 {/* Play Button Overlay */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-16 h-16 bg-white bg-opacity-90 rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all duration-300 cursor-pointer">
+                  <div 
+                    className="w-16 h-16 bg-white bg-opacity-90 rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all duration-300 cursor-pointer"
+                    onClick={() => setShowDemo(true)}
+                  >
                     <svg className="w-6 h-6 text-purple-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z"/>
                     </svg>
@@ -331,6 +335,178 @@ export default function Masterclass() {
           </div>
         </div>
       </footer>
+
+      {/* Interactive Demo Modal */}
+      {showDemo && (
+        <InteractiveDemo onClose={() => setShowDemo(false)} onJoinCourse={handlePurchase} />
+      )}
+    </div>
+  );
+}
+
+function InteractiveDemo({ onClose, onJoinCourse }: { onClose: () => void; onJoinCourse: () => void }) {
+  const [currentStep, setCurrentStep] = useState(0);
+  const [isAutoAdvancing, setIsAutoAdvancing] = useState(true);
+
+  const demoSteps = [
+    {
+      title: "Welcome to The Good Girl Paradox",
+      content: "Saint here. For too long, you've been living in a cage of your own making—one built from 'shoulds' and 'supposed to's.'",
+      visual: "🌟",
+      duration: 4000
+    },
+    {
+      title: "The Prison of Perfection",
+      content: "You've mastered being what everyone wants you to be. But what about what YOU want? What about your authentic desires?",
+      visual: "🏰",
+      duration: 4000
+    },
+    {
+      title: "Your Body Holds the Key",
+      content: "Your liberation isn't in your mind—it's in your body. We'll explore how to reconnect with your somatic wisdom.",
+      visual: "🔑",
+      duration: 4000
+    },
+    {
+      title: "Reclaiming Your Sexuality",
+      content: "Not performing it, not putting on a show—but truly EMBODYING your sensual, erotic self without shame.",
+      visual: "🔥",
+      duration: 4000
+    },
+    {
+      title: "Breaking Free from 'Good Girl' Conditioning",
+      content: "Learn the specific somatic practices that will help you shed layers of conditioning and step into your sovereign power.",
+      visual: "💃",
+      duration: 4000
+    },
+    {
+      title: "Integration & Embodiment",
+      content: "This isn't just theory. You'll have practical tools to integrate this work into your daily life and relationships.",
+      visual: "🌙",
+      duration: 4000
+    },
+    {
+      title: "Ready to Begin?",
+      content: "This 90-minute masterclass will guide you through a complete transformation. Are you ready to reclaim what's yours?",
+      visual: "✨",
+      duration: 0,
+      isCTA: true
+    }
+  ];
+
+  useEffect(() => {
+    if (isAutoAdvancing && currentStep < demoSteps.length - 1 && demoSteps[currentStep].duration > 0) {
+      const timer = setTimeout(() => {
+        setCurrentStep(prev => prev + 1);
+      }, demoSteps[currentStep].duration);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [currentStep, isAutoAdvancing]);
+
+  const handleNext = () => {
+    if (currentStep < demoSteps.length - 1) {
+      setCurrentStep(prev => prev + 1);
+      setIsAutoAdvancing(false);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentStep > 0) {
+      setCurrentStep(prev => prev - 1);
+      setIsAutoAdvancing(false);
+    }
+  };
+
+  const currentStepData = demoSteps[currentStep];
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-95 z-50 flex items-center justify-center p-4">
+      <div className="bg-gray-900 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden relative">
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-white z-10"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        {/* Progress Bar */}
+        <div className="w-full bg-gray-800 h-1">
+          <div 
+            className="bg-gradient-to-r from-purple-500 to-pink-600 h-1 transition-all duration-300"
+            style={{ width: `${((currentStep + 1) / demoSteps.length) * 100}%` }}
+          />
+        </div>
+
+        {/* Demo Content */}
+        <div className="p-8 text-center min-h-[400px] flex flex-col justify-center">
+          <div className="text-6xl mb-6">{currentStepData.visual}</div>
+          <h2 className="text-3xl font-serif font-bold text-white mb-6">
+            {currentStepData.title}
+          </h2>
+          <p className="text-xl text-gray-300 leading-relaxed max-w-2xl mx-auto mb-8">
+            {currentStepData.content}
+          </p>
+
+          {currentStepData.isCTA ? (
+            <div className="space-y-4">
+              <Button
+                onClick={onJoinCourse}
+                className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg mx-4"
+              >
+                Join The Masterclass - $64
+              </Button>
+              <Button
+                onClick={onClose}
+                variant="outline"
+                className="border-gray-600 text-gray-300 px-6 py-2 mx-4"
+              >
+                Maybe Later
+              </Button>
+            </div>
+          ) : (
+            <div className="flex justify-center items-center space-x-4">
+              <Button
+                onClick={handlePrevious}
+                disabled={currentStep === 0}
+                variant="outline"
+                className="border-gray-600 text-gray-300"
+              >
+                Previous
+              </Button>
+              
+              <span className="text-gray-400 text-sm">
+                {currentStep + 1} of {demoSteps.length}
+              </span>
+              
+              <Button
+                onClick={handleNext}
+                className="bg-purple-600 hover:bg-purple-700"
+              >
+                Next
+              </Button>
+            </div>
+          )}
+
+          {/* Auto-advance toggle */}
+          {!currentStepData.isCTA && (
+            <div className="mt-6">
+              <label className="flex items-center justify-center space-x-2 text-gray-400 text-sm cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={isAutoAdvancing}
+                  onChange={(e) => setIsAutoAdvancing(e.target.checked)}
+                  className="rounded"
+                />
+                <span>Auto-advance</span>
+              </label>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
