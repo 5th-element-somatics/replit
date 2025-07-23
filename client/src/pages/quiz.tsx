@@ -142,6 +142,65 @@ export default function Quiz() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
   const [selectedVoice, setSelectedVoice] = useState("soul_sister");
+
+  const handleVoiceChange = async (voiceId: string) => {
+    // Stop current audio
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    }
+    
+    setSelectedVoice(voiceId);
+    
+    // Give immediate feedback about voice change
+    const selectedVoiceOption = voiceOptions.find(v => v.id === voiceId);
+    toast({
+      title: "Voice Changed",
+      description: `Switched to ${selectedVoiceOption?.name}. Playing sample...`,
+      variant: "default"
+    });
+
+    // Play a quick sample with the new voice
+    if (soundEnabled) {
+      try {
+        setIsLoadingAudio(true);
+        const sampleTexts: Record<string, string> = {
+          soul_sister: "Hello beautiful soul, I'm your Soul Sister guide ready to support you.",
+          daddy: "Hey there, this is Daddy speaking. I'm here to ground and guide you.",
+          divine_priestess: "Blessed one, I am your Divine Feminine Priestess, here to illuminate your sacred path."
+        };
+        
+        const sampleText = sampleTexts[voiceId] || sampleTexts.soul_sister;
+        
+        const response = await apiRequest("POST", "/api/text-to-speech", {
+          text: sampleText,
+          voiceId: selectedVoiceOption?.elevenLabsId || "21m00Tcm4TlvDq8ikWAM"
+        });
+
+        if (response.ok) {
+          const audioBlob = await response.blob();
+          const audioUrl = URL.createObjectURL(audioBlob);
+          
+          audioRef.current = new Audio(audioUrl);
+          audioRef.current.onplay = () => setIsPlaying(true);
+          audioRef.current.onended = () => {
+            setIsPlaying(false);
+            URL.revokeObjectURL(audioUrl);
+          };
+          audioRef.current.onerror = () => {
+            setIsPlaying(false);
+            URL.revokeObjectURL(audioUrl);
+          };
+          
+          await audioRef.current.play();
+        }
+      } catch (error) {
+        console.error("Voice preview error:", error);
+      } finally {
+        setIsLoadingAudio(false);
+      }
+    }
+  };
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const lastAudioRequestRef = useRef<number>(0);
   const { toast } = useToast();
@@ -622,7 +681,7 @@ export default function Quiz() {
                     key={voice.id}
                     variant={selectedVoice === voice.id ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setSelectedVoice(voice.id)}
+                    onClick={() => handleVoiceChange(voice.id)}
                     className={`flex flex-col items-center gap-1 h-auto py-3 px-4 ${
                       selectedVoice === voice.id 
                         ? "bg-gradient-to-r from-purple-500 to-pink-600 text-white border-purple-400" 
