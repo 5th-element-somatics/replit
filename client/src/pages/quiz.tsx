@@ -144,6 +144,7 @@ export default function Quiz() {
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
   const [selectedVoice, setSelectedVoice] = useState("soul_sister");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showVoiceSelection, setShowVoiceSelection] = useState(true);
 
   const handleVoiceChange = async (voiceId: string) => {
     // Check if voice is disabled
@@ -640,6 +641,165 @@ export default function Quiz() {
     );
   }
 
+  // Voice Selection Screen
+  if (showVoiceSelection) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white py-12 px-4 sm:px-6 lg:px-8">
+        <SEOHead 
+          title="Good Girl Archetype Quiz - Discover Your Type | Fifth Element Somatics"
+          description="Are you a People-Pleaser, Perfectionist, or Awakened Rebel? Take this viral quiz with voice narration to discover your Good Girl archetype and get your personalized roadmap to authentic empowerment."
+          image="/quiz-share.svg"
+          url="https://fifthelementsomatics.com/quiz"
+          keywords="good girl syndrome quiz, archetype quiz, people pleaser quiz, perfectionist quiz, personality quiz, somatic healing, women's empowerment, self discovery quiz"
+        />
+        <div className="max-w-3xl mx-auto">
+          {/* Navigation */}
+          <nav className="flex items-center justify-between mb-8">
+            <Link href="/" onClick={handleNavClick}>
+              <img 
+                src="/tiger-logo.png" 
+                alt="Fifth Element Somatics" 
+                className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
+              />
+            </Link>
+            
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex space-x-8">
+              <Link href="/" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">HOME</Link>
+              <Link href="/free-meditation" onClick={handleNavClick} className="text-emerald-400 hover:text-emerald-300 transition-colors font-semibold">FREE MEDITATION</Link>
+              <Link href="/quiz" onClick={handleNavClick} className="text-white font-semibold">TAKE THE QUIZ</Link>
+              <Link href="/work-with-me" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">WORK WITH ME</Link>
+              <Link href="/masterclass" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">MASTERCLASS</Link>
+              <Link href="/about" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">ABOUT</Link>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button 
+              className="md:hidden text-white p-2"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+
+            {/* Mobile Navigation */}
+            {isMenuOpen && (
+              <div className="absolute top-20 left-0 right-0 bg-gray-900 bg-opacity-95 backdrop-blur-sm md:hidden z-50">
+                <div className="flex flex-col p-4 space-y-4">
+                  <Link href="/" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">HOME</Link>
+                  <Link href="/free-meditation" onClick={handleNavClick} className="text-emerald-400 hover:text-emerald-300 transition-colors font-semibold text-lg">FREE MEDITATION</Link>
+                  <Link href="/quiz" onClick={handleNavClick} className="text-white font-semibold text-lg">TAKE THE QUIZ</Link>
+                  <Link href="/work-with-me" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">WORK WITH ME</Link>
+                  <Link href="/masterclass" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">MASTERCLASS</Link>
+                  <Link href="/about" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">ABOUT</Link>
+                </div>
+              </div>
+            )}
+          </nav>
+
+          {/* Voice Selection Header */}
+          <div className="text-center mb-12">
+            <h1 className="text-4xl sm:text-5xl font-serif font-bold mb-6">
+              <span className="gradient-text">Choose Your Guide</span>
+            </h1>
+            <p className="text-xl text-gray-300 mb-6">
+              Select the voice that will narrate your quiz journey and guide you to your archetype.
+            </p>
+            <div className="bg-gray-800 bg-opacity-50 rounded-lg p-6 max-w-2xl mx-auto">
+              <p className="text-gray-300">
+                <strong className="text-white">Each voice offers a unique energy.</strong> Choose the one that resonates most with your soul right now.
+              </p>
+            </div>
+          </div>
+
+          {/* Voice Options */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            {voiceOptions.map((voice) => (
+              <Card 
+                key={voice.id} 
+                className={`cursor-pointer transition-all duration-300 ${
+                  voice.disabled 
+                    ? "bg-gray-800 border-gray-600 opacity-50 cursor-not-allowed"
+                    : selectedVoice === voice.id 
+                    ? "bg-gradient-to-r from-purple-500/20 to-pink-600/20 border-purple-400 mystique-glow" 
+                    : "bg-gray-800 border-purple-400/20 hover:border-purple-400/60"
+                }`}
+                onClick={() => voice.disabled ? null : handleVoiceChange(voice.id)}
+              >
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Volume2 className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-serif font-bold text-white mb-2">{voice.name}</h3>
+                  <p className="text-gray-300 text-sm mb-4">{voice.description}</p>
+                  {voice.disabled && (
+                    <div className="text-gray-500 text-xs">Coming Soon</div>
+                  )}
+                  {selectedVoice === voice.id && !voice.disabled && (
+                    <div className="flex items-center justify-center gap-2 text-purple-400">
+                      <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+                      <span className="text-sm">Selected</span>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Audio Controls */}
+          <div className="flex justify-center items-center gap-4 mb-8">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSoundEnabled(!soundEnabled)}
+              className="text-gray-300 hover:text-white flex items-center gap-2"
+            >
+              {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+              <span className="text-sm">{soundEnabled ? "Sound On" : "Sound Off"}</span>
+            </Button>
+            
+            {soundEnabled && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  const selectedVoiceOption = voiceOptions.find(v => v.id === selectedVoice);
+                  if (selectedVoiceOption && !selectedVoiceOption.disabled) {
+                    handleVoiceChange(selectedVoice);
+                  }
+                }}
+                disabled={isLoadingAudio}
+                className="text-emerald-400 hover:text-emerald-300 flex items-center gap-2"
+              >
+                {isLoadingAudio ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Play className="w-4 h-4" />
+                )}
+                <span className="text-sm">
+                  {isLoadingAudio ? "Loading..." : "Preview Voice"}
+                </span>
+              </Button>
+            )}
+          </div>
+
+          {/* Start Quiz Button */}
+          <div className="text-center">
+            <Button 
+              onClick={() => setShowVoiceSelection(false)}
+              className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 mystique-glow"
+            >
+              Begin Quiz Journey
+            </Button>
+            <p className="text-gray-400 text-sm mt-4">
+              You can change your voice selection at any time during the quiz
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white py-12 px-4 sm:px-6 lg:px-8">
       <SEOHead 
@@ -773,30 +933,24 @@ export default function Quiz() {
             )}
           </div>
 
-          {/* Voice Selection */}
+          {/* Voice Change Option */}
           {soundEnabled && (
-            <div className="bg-gray-800/50 border border-purple-400/20 rounded-lg p-4 max-w-2xl mx-auto">
-              <h4 className="text-white text-sm font-medium mb-3 text-center">Choose Your Guide's Voice</h4>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                {voiceOptions.map((voice) => (
-                  <Button
-                    key={voice.id}
-                    variant={selectedVoice === voice.id ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => voice.disabled ? null : handleVoiceChange(voice.id)}
-                    disabled={voice.disabled}
-                    className={`flex flex-col items-center gap-1 h-auto py-3 px-4 ${
-                      voice.disabled 
-                        ? "border-gray-600 text-gray-500 cursor-not-allowed opacity-50"
-                        : selectedVoice === voice.id 
-                        ? "bg-gradient-to-r from-purple-500 to-pink-600 text-white border-purple-400" 
-                        : "border-purple-400/30 text-purple-300 hover:border-purple-400 hover:text-purple-200"
-                    }`}
-                  >
-                    <span className="font-medium text-sm">{voice.name}</span>
-                    <span className="text-xs opacity-80">{voice.description}</span>
-                  </Button>
-                ))}
+            <div className="bg-gray-800/50 border border-purple-400/20 rounded-lg p-3 max-w-lg mx-auto">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Volume2 className="w-4 h-4 text-purple-400" />
+                  <span className="text-white text-sm font-medium">
+                    Guide: {voiceOptions.find(v => v.id === selectedVoice)?.name}
+                  </span>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowVoiceSelection(true)}
+                  className="text-purple-400 hover:text-purple-300 text-xs"
+                >
+                  Change Voice
+                </Button>
               </div>
             </div>
           )}
