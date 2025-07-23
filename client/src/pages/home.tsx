@@ -110,9 +110,11 @@ export default function Home() {
               <CardContent className="p-6">
                 <h3 className="text-xl font-serif font-bold text-white mb-3">FREE GROUNDING MEDITATION</h3>
                 <p className="text-gray-400 text-sm mb-4">10-minute somatic drop-in to reconnect</p>
-                <Button className="bg-gray-600 hover:bg-gray-700 text-white w-full">
-                  Download Free
-                </Button>
+                <Link href="/free-meditation">
+                  <Button className="bg-gray-600 hover:bg-gray-700 text-white w-full">
+                    Download Free
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           </div>

@@ -126,6 +126,79 @@ async function sendQuizResultEmail(email: string, name: string, quizResult: stri
   await sgMail.send(msg);
 }
 
+async function sendMeditationDownloadEmail(email: string, name: string) {
+  const msg = {
+    to: email,
+    from: process.env.SENDGRID_FROM_EMAIL!,
+    subject: `Your Free Grounding Meditation - Fifth Element Somatics 🌟`,
+    html: `
+      <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 100%); color: #ffffff; padding: 40px;">
+        <div style="text-align: center; margin-bottom: 40px;">
+          <h1 style="color: #C77DFF; font-size: 28px; margin-bottom: 10px;">Your Meditation Is Ready</h1>
+          <p style="color: #E879F9; font-size: 18px; margin: 0;">Feel Safe In Your Skin Again</p>
+        </div>
+        
+        <div style="background: rgba(199, 125, 255, 0.1); border: 1px solid #C77DFF; border-radius: 12px; padding: 30px; margin-bottom: 30px;">
+          <h3 style="color: #F3E8FF; font-size: 20px; margin-bottom: 15px;">Hello Beautiful ${name} 💜</h3>
+          <p style="color: #E5E7EB; line-height: 1.6; font-size: 16px; margin-bottom: 20px;">
+            Your free 10-minute grounding meditation is waiting for you. This practice will help you regulate your nervous system, reconnect with your body's wisdom, and feel deeply grounded in your skin.
+          </p>
+          
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : 'https://fifthelementsomatics.com'}/free-meditation" 
+               style="display: inline-block; background: linear-gradient(135deg, #C77DFF 0%, #E879F9 100%); color: #000000; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
+              🎧 Listen & Download Your Meditation
+            </a>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 30px;">
+          <h3 style="color: #C77DFF; font-size: 18px; margin-bottom: 15px;">What You'll Experience</h3>
+          <ul style="color: #E5E7EB; line-height: 1.6; font-size: 16px; padding-left: 20px;">
+            <li style="margin-bottom: 8px;">Deep nervous system regulation in real time</li>
+            <li style="margin-bottom: 8px;">Reconnection with your body's inherent wisdom</li>
+            <li style="margin-bottom: 8px;">Release of stored tension and chronic stress</li>
+            <li style="margin-bottom: 8px;">Grounded presence and inner calm</li>
+            <li style="margin-bottom: 8px;">Enhanced body awareness and felt safety</li>
+          </ul>
+        </div>
+
+        <div style="margin-bottom: 30px;">
+          <h3 style="color: #C77DFF; font-size: 18px; margin-bottom: 15px;">How to Use</h3>
+          <p style="color: #E5E7EB; line-height: 1.6; font-size: 16px;">
+            • Find a quiet, comfortable space where you won't be disturbed<br>
+            • Use headphones for the most immersive experience<br>
+            • Allow yourself to fully receive without judgment<br>
+            • Practice regularly for the deepest benefits<br>
+            • Be gentle with whatever arises
+          </p>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #C77DFF 0%, #E879F9 100%); border-radius: 12px; padding: 25px; text-align: center; margin-bottom: 30px;">
+          <h3 style="color: #000000; font-size: 20px; margin-bottom: 15px;">Ready to Go Deeper?</h3>
+          <p style="color: #000000; font-size: 16px; margin-bottom: 20px;">
+            If this meditation resonates with you, explore The Good Girl Paradox Masterclass for a complete transformation journey.
+          </p>
+          <a href="${process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : 'https://fifthelementsomatics.com'}/masterclass" 
+             style="display: inline-block; background: #000000; color: #C77DFF; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
+            Explore the Masterclass
+          </a>
+        </div>
+
+        <div style="text-align: center; color: #9CA3AF; font-size: 14px;">
+          <p>With love and light,<br><strong style="color: #C77DFF;">Saint</strong><br>Fifth Element Somatics</p>
+          <p style="margin-top: 20px;">
+            <a href="${process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : 'https://fifthelementsomatics.com'}" 
+               style="color: #C77DFF; text-decoration: none;">fifthelementsomatics.com</a>
+          </p>
+        </div>
+      </div>
+    `
+  };
+
+  await sgMail.send(msg);
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   console.log("🚀 Registering API routes...");
   // Stripe payment route for one-time payments
@@ -252,22 +325,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const lead = await storage.createLead(parsedLeadData);
       
-      // Send quiz results email if this is a quiz submission
-      if (quizResult && process.env.SENDGRID_API_KEY && process.env.SENDGRID_FROM_EMAIL) {
-        console.log(`📧 Attempting to send quiz result email to ${leadData.email} for archetype: ${quizResult}`);
+      // Send appropriate email based on source type
+      if (process.env.SENDGRID_API_KEY && process.env.SENDGRID_FROM_EMAIL) {
         try {
-          await sendQuizResultEmail(leadData.email, leadData.name, quizResult);
-          console.log(`✅ Quiz result email sent successfully to ${leadData.email}`);
+          if (quizResult) {
+            // Quiz submission - send quiz results
+            console.log(`📧 Attempting to send quiz result email to ${leadData.email} for archetype: ${quizResult}`);
+            await sendQuizResultEmail(leadData.email, leadData.name, quizResult);
+            console.log(`✅ Quiz result email sent successfully to ${leadData.email}`);
+          } else if (leadData.source === 'meditation-download') {
+            // Meditation download - send meditation access email
+            console.log(`🧘 Attempting to send meditation download email to ${leadData.email}`);
+            await sendMeditationDownloadEmail(leadData.email, leadData.name);
+            console.log(`✅ Meditation download email sent successfully to ${leadData.email}`);
+          } else {
+            console.log(`📝 Lead captured from source: ${leadData.source}, no automated email configured`);
+          }
         } catch (emailError) {
-          console.error("❌ Error sending quiz result email:", emailError);
+          console.error("❌ Error sending email:", emailError);
           return res.status(500).json({ 
             message: "Lead saved but email failed to send. Please try again or contact support.",
             leadId: lead.id 
           });
         }
       } else {
-        console.log("⚠️ Email not sent - missing quiz result or SendGrid config");
-        console.log(`QuizResult: ${quizResult}, SendGrid API Key: ${process.env.SENDGRID_API_KEY ? 'EXISTS' : 'MISSING'}, From Email: ${process.env.SENDGRID_FROM_EMAIL ? 'EXISTS' : 'MISSING'}`);
+        console.log("⚠️ Email not sent - SendGrid not configured");
+        console.log(`SendGrid API Key: ${process.env.SENDGRID_API_KEY ? 'EXISTS' : 'MISSING'}, From Email: ${process.env.SENDGRID_FROM_EMAIL ? 'EXISTS' : 'MISSING'}`);
       }
       
       res.json({ success: true, id: lead.id });

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Play, Pause, Download, Volume2 } from "lucide-react";
+import meditationAudioUrl from "@assets/Grounding Into The Body - Guided Meditation_1753289930696.mp3";
 
 const leadFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -62,52 +64,7 @@ export default function FreeMeditation() {
   };
 
   if (isSubmitted) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
-        {/* Navigation */}
-        <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
-          <Link href="/">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
-                <span className="text-white font-serif font-bold">5E</span>
-              </div>
-              <span className="text-lg font-serif font-semibold">Fifth Element Somatics</span>
-            </div>
-          </Link>
-        </nav>
-
-        <div className="min-h-[80vh] flex items-center justify-center px-4">
-          <Card className="bg-gray-800 border border-purple-400 border-opacity-30 max-w-md w-full mystique-glow">
-            <CardHeader className="text-center">
-              <CardTitle className="text-white text-2xl">Check Your Email!</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center space-y-4">
-              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto">
-                <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                  <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                </svg>
-              </div>
-              <p className="text-gray-300">
-                Your free grounding meditation is on its way! Check your email inbox for the download link.
-              </p>
-              <div className="space-y-2">
-                <Link href="/">
-                  <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 w-full">
-                    Return to Home
-                  </Button>
-                </Link>
-                <Link href="/masterclass">
-                  <Button variant="outline" className="border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-white w-full">
-                    Explore the Masterclass
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    );
+    return <MeditationAccess />;
   }
 
   return (
@@ -230,6 +187,269 @@ export default function FreeMeditation() {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function MeditationAccess() {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  const togglePlayPause = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime);
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (audioRef.current) {
+      setDuration(audioRef.current.duration);
+    }
+  };
+
+  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (audioRef.current) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const newTime = (clickX / rect.width) * duration;
+      audioRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
+    }
+  };
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  const handleDownload = () => {
+    const link = document.createElement('a');
+    link.href = meditationAudioUrl;
+    link.download = 'Grounding Into The Body - Guided Meditation.mp3';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
+      {/* Navigation */}
+      <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
+        <Link href="/">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
+              <span className="text-white font-serif font-bold">5E</span>
+            </div>
+            <span className="text-lg font-serif font-semibold">Fifth Element Somatics</span>
+          </div>
+        </Link>
+        <div className="hidden md:flex space-x-8">
+          <Link href="/" className="text-gray-300 hover:text-white transition-colors">Home</Link>
+          <Link href="/about" className="text-gray-300 hover:text-white transition-colors">About</Link>
+          <Link href="/masterclass" className="text-gray-300 hover:text-white transition-colors">Masterclass</Link>
+          <Link href="/work-with-me" className="text-gray-300 hover:text-white transition-colors">Work With Me</Link>
+        </div>
+      </nav>
+
+      {/* Success Content */}
+      <div className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-4">
+              Your Meditation Is Ready!
+            </h1>
+            <p className="text-xl text-gray-300 mb-8">
+              Listen now or download to your device for anytime access.
+            </p>
+          </div>
+
+          {/* Audio Player */}
+          <Card className="bg-gray-800 border border-purple-400 border-opacity-30 mb-8 mystique-glow">
+            <CardContent className="p-8">
+              <div className="text-center mb-6">
+                <h2 className="text-2xl font-serif font-bold text-white mb-2">
+                  Grounding Into The Body
+                </h2>
+                <p className="text-gray-400">A 10-minute guided meditation with Saint</p>
+              </div>
+
+              {/* Audio Element */}
+              <audio
+                ref={audioRef}
+                src={meditationAudioUrl}
+                onTimeUpdate={handleTimeUpdate}
+                onLoadedMetadata={handleLoadedMetadata}
+                onEnded={() => setIsPlaying(false)}
+                preload="metadata"
+              />
+
+              {/* Player Controls */}
+              <div className="space-y-4">
+                {/* Play/Pause Button */}
+                <div className="flex justify-center">
+                  <button
+                    onClick={togglePlayPause}
+                    className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300"
+                  >
+                    {isPlaying ? (
+                      <Pause className="w-6 h-6 text-white" />
+                    ) : (
+                      <Play className="w-6 h-6 text-white ml-1" />
+                    )}
+                  </button>
+                </div>
+
+                {/* Progress Bar */}
+                <div className="space-y-2">
+                  <div 
+                    className="w-full h-2 bg-gray-700 rounded-full cursor-pointer"
+                    onClick={handleSeek}
+                  >
+                    <div 
+                      className="h-2 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full transition-all duration-300"
+                      style={{ width: duration ? `${(currentTime / duration) * 100}%` : '0%' }}
+                    />
+                  </div>
+                  <div className="flex justify-between text-sm text-gray-400">
+                    <span>{formatTime(currentTime)}</span>
+                    <span>{formatTime(duration)}</span>
+                  </div>
+                </div>
+
+                {/* Download Button */}
+                <div className="flex justify-center pt-4">
+                  <Button
+                    onClick={handleDownload}
+                    className="bg-gray-700 hover:bg-gray-600 text-white flex items-center space-x-2"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span>Download to Device</span>
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Benefits Section */}
+          <div className="grid md:grid-cols-2 gap-8 mb-8">
+            <Card className="bg-gray-800 border border-purple-400 border-opacity-20">
+              <CardContent className="p-6">
+                <h3 className="text-xl font-serif font-bold text-white mb-4">What You'll Experience</h3>
+                <ul className="space-y-2 text-gray-300">
+                  <li>• Deep nervous system regulation</li>
+                  <li>• Reconnection with your body's wisdom</li>
+                  <li>• Release of stored tension and stress</li>
+                  <li>• Grounded presence and inner calm</li>
+                  <li>• Enhanced body awareness and safety</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gray-800 border border-pink-400 border-opacity-20">
+              <CardContent className="p-6">
+                <h3 className="text-xl font-serif font-bold text-white mb-4">How to Use</h3>
+                <ul className="space-y-2 text-gray-300">
+                  <li>• Find a quiet, comfortable space</li>
+                  <li>• Use headphones for best experience</li>
+                  <li>• Allow yourself to fully receive</li>
+                  <li>• Practice regularly for deepest benefits</li>
+                  <li>• Be gentle with whatever arises</li>
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Call to Action */}
+          <Card className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 border border-purple-400 border-opacity-30">
+            <CardContent className="p-8 text-center">
+              <h3 className="text-2xl font-serif font-bold text-white mb-4">
+                Ready to Go Deeper?
+              </h3>
+              <p className="text-gray-300 mb-6">
+                If this meditation resonates with you, explore The Good Girl Paradox Masterclass for a complete transformation.
+              </p>
+              <div className="space-y-3">
+                <Link href="/masterclass">
+                  <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-3 rounded-full">
+                    Explore the Masterclass
+                  </Button>
+                </Link>
+                <div>
+                  <Link href="/work-with-me">
+                    <Button variant="outline" className="border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-white">
+                      Work With Me 1:1
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer className="py-12 px-4 sm:px-6 lg:px-8 border-t border-gray-800">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 text-center md:text-left">
+            <div>
+              <div className="flex items-center justify-center md:justify-start space-x-3 mb-4">
+                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
+                  <span className="text-white font-serif font-bold">5E</span>
+                </div>
+                <span className="text-lg font-serif font-semibold text-white">Fifth Element Somatics</span>
+              </div>
+              <p className="text-gray-400 text-sm">
+                Sacred embodiment and erotic reclamation for the modern woman.
+              </p>
+            </div>
+            
+            <div>
+              <h5 className="font-semibold text-white mb-4">Connect</h5>
+              <div className="space-y-2">
+                <a href="https://instagram.com/fifthelementsomatics" target="_blank" rel="noopener noreferrer" className="block text-gray-400 hover:text-purple-400 transition-colors">Instagram</a>
+                <Link href="/about" className="block text-gray-400 hover:text-purple-400 transition-colors">About Saint</Link>
+                <Link href="/work-with-me" className="block text-gray-400 hover:text-purple-400 transition-colors">Work With Me</Link>
+              </div>
+            </div>
+            
+            <div>
+              <h5 className="font-semibold text-white mb-4">Support</h5>
+              <p className="text-gray-400 text-sm mb-2">
+                Questions about your purchase?
+              </p>
+              <a href="mailto:hello@fifthelementsomatics.com" className="text-purple-400 hover:text-pink-600 transition-colors">
+                hello@fifthelementsomatics.com
+              </a>
+            </div>
+          </div>
+          
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center">
+            <p className="text-gray-400 text-sm">
+              © 2025 Fifth Element Somatics. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
