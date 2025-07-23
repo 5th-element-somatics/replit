@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import Stripe from "stripe";
 import { storage } from "./storage";
 import { insertPurchaseSchema, insertApplicationSchema, insertLeadSchema } from "@shared/schema";
+import sgMail from '@sendgrid/mail';
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
@@ -11,6 +12,119 @@ if (!process.env.STRIPE_SECRET_KEY) {
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2025-06-30.basil",
 });
+
+// Initialize SendGrid
+if (process.env.SENDGRID_API_KEY) {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+}
+
+// Quiz result email templates
+const resultTemplates = {
+  people_pleaser: {
+    title: "The People-Pleaser",
+    description: "You're naturally compassionate and deeply attuned to others' needs, but sometimes this gift becomes a burden when you lose sight of your own desires.",
+    transformation: "Your journey involves learning to honor your own needs while maintaining your beautiful capacity for empathy. You're discovering that setting boundaries actually allows you to give more authentically.",
+    gift: "Your superpower is creating harmony and seeing everyone's perspective. When balanced, you become a masterful leader who can unite people while staying true to yourself.",
+    practices: [
+      "Practice saying 'let me think about it' instead of automatic yes",
+      "Set one small boundary each day",
+      "Check in with your body before making decisions",
+      "Celebrate moments when you choose yourself"
+    ]
+  },
+  perfectionist: {
+    title: "The Perfectionist", 
+    description: "You have incredibly high standards and a gift for excellence, but the inner critic can be relentless, making you feel like nothing is ever quite good enough.",
+    transformation: "Your path involves embracing 'good enough' as sacred and learning that your worth isn't tied to your achievements. You're discovering the beauty in imperfection and process over outcome.",
+    gift: "Your superpower is your attention to detail and ability to create beautiful, meaningful work. When balanced, you become a visionary who inspires others through authentic excellence.",
+    practices: [
+      "Set timers for tasks to practice 'good enough'",
+      "Celebrate progress over perfection",
+      "Practice self-compassion when things don't go as planned", 
+      "Share your messy, imperfect moments with trusted friends"
+    ]
+  },
+  rebel: {
+    title: "The Awakened Rebel",
+    description: "You see through societal programming and have a fierce desire for authentic living, but sometimes the anger at systems can feel overwhelming or isolating.",
+    transformation: "Your journey involves channeling your revolutionary spirit into sustainable change and finding your tribe of fellow truth-seekers. You're learning to be fierce AND soft.",
+    gift: "Your superpower is seeing what others can't and having the courage to challenge the status quo. When balanced, you become a powerful catalyst for positive change in the world.",
+    practices: [
+      "Channel anger into creative expression or activism",
+      "Find your community of fellow rebels and change-makers",
+      "Practice discernment about which battles to fight",
+      "Honor your sensitivity as a strength, not a weakness"
+    ]
+  }
+};
+
+async function sendQuizResultEmail(email: string, name: string, quizResult: string) {
+  const template = resultTemplates[quizResult as keyof typeof resultTemplates];
+  if (!template) return;
+
+  const msg = {
+    to: email,
+    from: process.env.SENDGRID_FROM_EMAIL!,
+    subject: `Your Good Girl Archetype: ${template.title} 💫`,
+    html: `
+      <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 100%); color: #ffffff; padding: 40px;">
+        <div style="text-align: center; margin-bottom: 40px;">
+          <h1 style="color: #C77DFF; font-size: 28px; margin-bottom: 10px;">Your Sacred Archetype</h1>
+          <h2 style="color: #E879F9; font-size: 24px; margin: 0;">${template.title}</h2>
+        </div>
+        
+        <div style="background: rgba(199, 125, 255, 0.1); border: 1px solid #C77DFF; border-radius: 12px; padding: 30px; margin-bottom: 30px;">
+          <h3 style="color: #F3E8FF; font-size: 20px; margin-bottom: 15px;">Hello Beautiful ${name} 💜</h3>
+          <p style="color: #E5E7EB; line-height: 1.6; font-size: 16px; margin-bottom: 20px;">
+            ${template.description}
+          </p>
+        </div>
+
+        <div style="margin-bottom: 30px;">
+          <h3 style="color: #C77DFF; font-size: 18px; margin-bottom: 15px;">Your Transformation Journey</h3>
+          <p style="color: #E5E7EB; line-height: 1.6; font-size: 16px;">
+            ${template.transformation}
+          </p>
+        </div>
+
+        <div style="margin-bottom: 30px;">
+          <h3 style="color: #C77DFF; font-size: 18px; margin-bottom: 15px;">Your Sacred Gift</h3>
+          <p style="color: #E5E7EB; line-height: 1.6; font-size: 16px;">
+            ${template.gift}
+          </p>
+        </div>
+
+        <div style="margin-bottom: 30px;">
+          <h3 style="color: #C77DFF; font-size: 18px; margin-bottom: 15px;">Sacred Practices for You</h3>
+          <ul style="color: #E5E7EB; line-height: 1.6; font-size: 16px; padding-left: 20px;">
+            ${template.practices.map(practice => `<li style="margin-bottom: 8px;">${practice}</li>`).join('')}
+          </ul>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #C77DFF 0%, #E879F9 100%); border-radius: 12px; padding: 25px; text-align: center; margin-bottom: 30px;">
+          <h3 style="color: #000000; font-size: 20px; margin-bottom: 15px;">Ready to Go Deeper?</h3>
+          <p style="color: #000000; font-size: 16px; margin-bottom: 20px;">
+            The Good Girl Paradox Masterclass will guide you through the complete transformation from good girl conditioning to authentic empowerment.
+          </p>
+          <a href="${process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : 'https://fifthelementsomatics.com'}/masterclass" 
+             style="display: inline-block; background: #000000; color: #C77DFF; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
+            Explore the Masterclass
+          </a>
+        </div>
+
+        <div style="text-align: center; color: #9CA3AF; font-size: 14px;">
+          <p>With love and light,<br><strong style="color: #C77DFF;">Saint</strong><br>Fifth Element Somatics</p>
+          <p style="margin-top: 20px;">
+            <a href="${process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : 'https://fifthelementsomatics.com'}" 
+               style="color: #C77DFF; text-decoration: none;">fifthelementsomatics.com</a>
+          </p>
+        </div>
+      </div>
+    `
+  };
+
+  await sgMail.send(msg);
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Stripe payment route for one-time payments
@@ -128,7 +242,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Submit lead for free meditation or quiz
   app.post("/api/leads", async (req, res) => {
     try {
-      const { quizAnswers, ...leadData } = req.body;
+      const { quizAnswers, quizResult, ...leadData } = req.body;
       
       const parsedLeadData = insertLeadSchema.parse({
         ...leadData,
@@ -136,6 +250,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       const lead = await storage.createLead(parsedLeadData);
+      
+      // Send quiz results email if this is a quiz submission
+      if (quizResult && process.env.SENDGRID_API_KEY && process.env.SENDGRID_FROM_EMAIL) {
+        try {
+          await sendQuizResultEmail(leadData.email, leadData.name, quizResult);
+        } catch (emailError) {
+          console.error("Error sending quiz result email:", emailError);
+          // Don't fail the lead creation if email fails
+        }
+      }
+      
       res.json({ success: true, id: lead.id });
     } catch (error: any) {
       res.status(400).json({ message: "Error submitting lead: " + error.message });
