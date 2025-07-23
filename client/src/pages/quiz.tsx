@@ -141,9 +141,31 @@ export default function Quiz() {
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
+  const [selectedVoice, setSelectedVoice] = useState("soul_sister");
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const lastAudioRequestRef = useRef<number>(0);
   const { toast } = useToast();
+
+  const voiceOptions = [
+    {
+      id: "soul_sister",
+      name: "Soul Sister",
+      elevenLabsId: "21m00Tcm4TlvDq8ikWAM", // Current voice
+      description: "Warm & nurturing"
+    },
+    {
+      id: "daddy",
+      name: "Daddy",
+      elevenLabsId: "pNInz6obpgDQGcFmaJgB", // Adam voice
+      description: "Strong & grounding"
+    },
+    {
+      id: "divine_priestess",
+      name: "Divine Feminine Priestess",
+      elevenLabsId: "custom_saint_voice", // Will be Saint's custom voice
+      description: "Sacred & mystical"
+    }
+  ];
 
   const playQuestionAudio = async (questionText: string, includeAnswers: boolean = true) => {
     if (!soundEnabled) return;
@@ -179,8 +201,10 @@ export default function Quiz() {
         });
       }
       
+      const selectedVoiceOption = voiceOptions.find(v => v.id === selectedVoice);
       const response = await apiRequest("POST", "/api/text-to-speech", {
-        text: fullText
+        text: fullText,
+        voiceId: selectedVoiceOption?.elevenLabsId || "21m00Tcm4TlvDq8ikWAM"
       });
       
       if (response.ok) {
@@ -541,48 +565,75 @@ export default function Quiz() {
         </div>
 
         {/* Audio Controls */}
-        <div className="flex justify-center items-center gap-4 mb-6">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setSoundEnabled(!soundEnabled)}
-            className="text-gray-300 hover:text-white flex items-center gap-2"
-          >
-            {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-            <span className="text-sm">{soundEnabled ? "Sound On" : "Sound Off"}</span>
-          </Button>
-          
+        <div className="flex flex-col gap-4 mb-6">
+          <div className="flex justify-center items-center gap-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSoundEnabled(!soundEnabled)}
+              className="text-gray-300 hover:text-white flex items-center gap-2"
+            >
+              {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+              <span className="text-sm">{soundEnabled ? "Sound On" : "Sound Off"}</span>
+            </Button>
+            
+            {soundEnabled && (
+              <div className="flex gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={toggleAudio}
+                  disabled={isLoadingAudio}
+                  className="text-emerald-400 hover:text-emerald-300 flex items-center gap-2"
+                >
+                  {isLoadingAudio ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : isPlaying ? (
+                    <Pause className="w-4 h-4" />
+                  ) : (
+                    <Play className="w-4 h-4" />
+                  )}
+                  <span className="text-sm">
+                    {isLoadingAudio ? "Loading..." : isPlaying ? "Pause" : "Play All"}
+                  </span>
+                </Button>
+                
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={playAnswersOnly}
+                  disabled={isLoadingAudio}
+                  className="text-purple-400 hover:text-purple-300 flex items-center gap-2"
+                >
+                  <Volume2 className="w-4 h-4" />
+                  <span className="text-sm">Repeat Choices</span>
+                </Button>
+              </div>
+            )}
+          </div>
+
+          {/* Voice Selection */}
           {soundEnabled && (
-            <div className="flex gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={toggleAudio}
-                disabled={isLoadingAudio}
-                className="text-emerald-400 hover:text-emerald-300 flex items-center gap-2"
-              >
-                {isLoadingAudio ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : isPlaying ? (
-                  <Pause className="w-4 h-4" />
-                ) : (
-                  <Play className="w-4 h-4" />
-                )}
-                <span className="text-sm">
-                  {isLoadingAudio ? "Loading..." : isPlaying ? "Pause" : "Play All"}
-                </span>
-              </Button>
-              
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={playAnswersOnly}
-                disabled={isLoadingAudio}
-                className="text-purple-400 hover:text-purple-300 flex items-center gap-2"
-              >
-                <Volume2 className="w-4 h-4" />
-                <span className="text-sm">Repeat Choices</span>
-              </Button>
+            <div className="bg-gray-800/50 border border-purple-400/20 rounded-lg p-4 max-w-2xl mx-auto">
+              <h4 className="text-white text-sm font-medium mb-3 text-center">Choose Your Guide's Voice</h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                {voiceOptions.map((voice) => (
+                  <Button
+                    key={voice.id}
+                    variant={selectedVoice === voice.id ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setSelectedVoice(voice.id)}
+                    className={`flex flex-col items-center gap-1 h-auto py-3 px-4 ${
+                      selectedVoice === voice.id 
+                        ? "bg-gradient-to-r from-purple-500 to-pink-600 text-white border-purple-400" 
+                        : "border-purple-400/30 text-purple-300 hover:border-purple-400 hover:text-purple-200"
+                    }`}
+                  >
+                    <span className="font-medium text-sm">{voice.name}</span>
+                    <span className="text-xs opacity-80">{voice.description}</span>
+                  </Button>
+                ))}
+              </div>
             </div>
           )}
         </div>

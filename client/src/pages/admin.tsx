@@ -1,5 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
+import { Mic, Upload, Play, Pause, Volume2 } from "lucide-react";
+import { useState, useRef } from "react";
+import { apiRequest } from "@/lib/queryClient";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -98,12 +103,15 @@ export default function Admin() {
           </div>
 
           <Tabs defaultValue="applications" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 bg-gray-800">
+            <TabsList className="grid w-full grid-cols-3 bg-gray-800">
               <TabsTrigger value="applications" className="data-[state=active]:bg-purple-600">
                 Applications
               </TabsTrigger>
               <TabsTrigger value="leads" className="data-[state=active]:bg-pink-600">
                 Lead Capture
+              </TabsTrigger>
+              <TabsTrigger value="voices" className="data-[state=active]:bg-emerald-600">
+                Voice Management
               </TabsTrigger>
             </TabsList>
 
@@ -263,9 +271,208 @@ export default function Admin() {
                 </div>
               )}
             </TabsContent>
+
+            <TabsContent value="voices" className="mt-8">
+              <VoiceManagement />
+            </TabsContent>
           </Tabs>
         </div>
       </div>
+    </div>
+  );
+}
+
+function VoiceManagement() {
+  const { toast } = useToast();
+  const [isUploading, setIsUploading] = useState(false);
+  const [testVoiceId, setTestVoiceId] = useState("");
+  const [isTestingAudio, setIsTestingAudio] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const testVoice = async () => {
+    if (!testVoiceId.trim()) {
+      toast({
+        title: "Voice ID Required",
+        description: "Please enter a voice ID to test.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsTestingAudio(true);
+    try {
+      const response = await apiRequest("POST", "/api/text-to-speech", {
+        text: "Hello beautiful soul. This is your Divine Feminine Priestess guide speaking. Welcome to your sacred journey of awakening.",
+        voiceId: testVoiceId.trim()
+      });
+
+      if (response.ok) {
+        const audioBlob = await response.blob();
+        const audioUrl = URL.createObjectURL(audioBlob);
+        
+        if (audioRef.current) {
+          audioRef.current.pause();
+        }
+        
+        audioRef.current = new Audio(audioUrl);
+        audioRef.current.onplay = () => setIsPlaying(true);
+        audioRef.current.onended = () => {
+          setIsPlaying(false);
+          URL.revokeObjectURL(audioUrl);
+        };
+        
+        await audioRef.current.play();
+        
+        toast({
+          title: "Voice Test Successful",
+          description: "Playing test audio with the provided voice ID.",
+          variant: "default"
+        });
+      } else {
+        throw new Error("Failed to generate audio");
+      }
+    } catch (error) {
+      console.error("Voice test error:", error);
+      toast({
+        title: "Voice Test Failed",
+        description: "Unable to generate audio with this voice ID. Please check the ID and try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsTestingAudio(false);
+    }
+  };
+
+  const stopAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <Card className="bg-gray-800 border border-emerald-400 border-opacity-20">
+        <CardHeader>
+          <CardTitle className="text-emerald-400 flex items-center gap-2">
+            <Mic className="w-5 h-5" />
+            Voice Management System
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="bg-emerald-900/20 border border-emerald-400/30 rounded-lg p-4">
+            <h3 className="text-white font-semibold mb-2">Current Voice Configuration</h3>
+            <div className="space-y-3">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-gray-700/50 rounded-lg p-3">
+                  <h4 className="text-emerald-400 font-medium text-sm">Soul Sister</h4>
+                  <p className="text-gray-300 text-xs">ID: 21m00Tcm4TlvDq8ikWAM</p>
+                  <p className="text-gray-400 text-xs">Warm & nurturing</p>
+                </div>
+                <div className="bg-gray-700/50 rounded-lg p-3">
+                  <h4 className="text-emerald-400 font-medium text-sm">Daddy</h4>
+                  <p className="text-gray-300 text-xs">ID: pNInz6obpgDQGcFmaJgB</p>
+                  <p className="text-gray-400 text-xs">Strong & grounding</p>
+                </div>
+                <div className="bg-gray-700/50 rounded-lg p-3">
+                  <h4 className="text-emerald-400 font-medium text-sm">Divine Feminine Priestess</h4>
+                  <p className="text-gray-300 text-xs">ID: custom_saint_voice</p>
+                  <p className="text-gray-400 text-xs">Sacred & mystical (Saint's voice)</p>
+                  <div className="mt-2">
+                    <Button
+                      size="sm"
+                      className="bg-emerald-600 hover:bg-emerald-700 text-xs"
+                      onClick={() => {
+                        window.open("https://elevenlabs.io/voice-cloning", "_blank");
+                      }}
+                    >
+                      Upload Your Voice
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-blue-900/20 border border-blue-400/30 rounded-lg p-4">
+            <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
+              <Volume2 className="w-4 h-4" />
+              Test Voice Configuration
+            </h3>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Voice ID to Test
+                </label>
+                <Input
+                  value={testVoiceId}
+                  onChange={(e) => setTestVoiceId(e.target.value)}
+                  placeholder="Enter Eleven Labs Voice ID (e.g., 21m00Tcm4TlvDq8ikWAM)"
+                  className="bg-gray-700 border-gray-600 text-white"
+                />
+              </div>
+              <div className="flex gap-3">
+                <Button
+                  onClick={testVoice}
+                  disabled={isTestingAudio || !testVoiceId.trim()}
+                  className="bg-blue-600 hover:bg-blue-700 flex items-center gap-2"
+                >
+                  {isTestingAudio ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Testing...
+                    </>
+                  ) : (
+                    <>
+                      <Play className="w-4 h-4" />
+                      Test Voice
+                    </>
+                  )}
+                </Button>
+                {isPlaying && (
+                  <Button
+                    onClick={stopAudio}
+                    variant="outline"
+                    className="border-gray-600 text-gray-300 flex items-center gap-2"
+                  >
+                    <Pause className="w-4 h-4" />
+                    Stop
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-purple-900/20 border border-purple-400/30 rounded-lg p-4">
+            <h3 className="text-white font-semibold mb-3">Instructions for Saint</h3>
+            <div className="space-y-3 text-sm text-gray-300">
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 bg-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold">1</div>
+                <div>
+                  <p className="font-medium text-white">Visit Eleven Labs Voice Cloning</p>
+                  <p>Go to <a href="https://elevenlabs.io/voice-cloning" target="_blank" className="text-purple-400 hover:underline">elevenlabs.io/voice-cloning</a> and create a custom voice using your recordings.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 bg-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold">2</div>
+                <div>
+                  <p className="font-medium text-white">Get Your Voice ID</p>
+                  <p>After creating your voice, copy the Voice ID (it will look like "abc123def456").</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 bg-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold">3</div>
+                <div>
+                  <p className="font-medium text-white">Test and Update</p>
+                  <p>Use the test tool above to verify your voice works, then update the code to replace "custom_saint_voice" with your actual Voice ID.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

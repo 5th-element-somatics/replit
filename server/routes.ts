@@ -315,7 +315,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Text-to-speech endpoint using Eleven Labs
   app.post("/api/text-to-speech", async (req, res) => {
     try {
-      const { text } = req.body;
+      const { text, voiceId } = req.body;
       
       if (!text) {
         return res.status(400).json({ message: "Text is required" });
@@ -325,7 +325,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(500).json({ message: "Eleven Labs API key not configured" });
       }
 
-      const response = await fetch("https://api.elevenlabs.io/v1/text-to-speech/21m00Tcm4TlvDq8ikWAM", {
+      const finalVoiceId = voiceId || "21m00Tcm4TlvDq8ikWAM"; // Default to Soul Sister
+      const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${finalVoiceId}`, {
         method: "POST",
         headers: {
           "Accept": "audio/mpeg",
