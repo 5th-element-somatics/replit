@@ -144,6 +144,17 @@ export default function Quiz() {
   const [selectedVoice, setSelectedVoice] = useState("soul_sister");
 
   const handleVoiceChange = async (voiceId: string) => {
+    // Check if voice is disabled
+    const selectedVoiceOption = voiceOptions.find(v => v.id === voiceId);
+    if (selectedVoiceOption?.disabled) {
+      toast({
+        title: "Voice Not Available",
+        description: "This voice is coming soon! Stay tuned.",
+        variant: "default"
+      });
+      return;
+    }
+
     // Stop current audio
     if (audioRef.current) {
       audioRef.current.pause();
@@ -153,7 +164,6 @@ export default function Quiz() {
     setSelectedVoice(voiceId);
     
     // Give immediate feedback about voice change
-    const selectedVoiceOption = voiceOptions.find(v => v.id === voiceId);
     toast({
       title: "Voice Changed",
       description: `Switched to ${selectedVoiceOption?.name}. Playing sample...`,
@@ -196,6 +206,11 @@ export default function Quiz() {
         }
       } catch (error) {
         console.error("Voice preview error:", error);
+        toast({
+          title: "Audio Error",
+          description: "Unable to play voice sample. The voice will be used for future audio.",
+          variant: "default"
+        });
       } finally {
         setIsLoadingAudio(false);
       }
@@ -222,7 +237,8 @@ export default function Quiz() {
       id: "divine_priestess",
       name: "Divine Feminine Priestess",
       elevenLabsId: "custom_saint_voice", // Will be Saint's custom voice
-      description: "Sacred & mystical"
+      description: "Coming Soon",
+      disabled: true
     }
   ];
 
@@ -681,9 +697,12 @@ export default function Quiz() {
                     key={voice.id}
                     variant={selectedVoice === voice.id ? "default" : "outline"}
                     size="sm"
-                    onClick={() => handleVoiceChange(voice.id)}
+                    onClick={() => voice.disabled ? null : handleVoiceChange(voice.id)}
+                    disabled={voice.disabled}
                     className={`flex flex-col items-center gap-1 h-auto py-3 px-4 ${
-                      selectedVoice === voice.id 
+                      voice.disabled 
+                        ? "border-gray-600 text-gray-500 cursor-not-allowed opacity-50"
+                        : selectedVoice === voice.id 
                         ? "bg-gradient-to-r from-purple-500 to-pink-600 text-white border-purple-400" 
                         : "border-purple-400/30 text-purple-300 hover:border-purple-400 hover:text-purple-200"
                     }`}
