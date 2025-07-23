@@ -48,10 +48,11 @@ export default function Masterclass() {
         {/* Desktop Navigation */}
         <div className="hidden md:flex space-x-8">
           <Link href="/" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">HOME</Link>
-          <Link href="/about" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">ABOUT</Link>
-          <Link href="/quiz" onClick={handleNavClick} className="text-emerald-400 hover:text-emerald-300 transition-colors font-semibold">TAKE THE QUIZ</Link>
-          <Link href="/masterclass" onClick={handleNavClick} className="text-white font-semibold">MASTERCLASS</Link>
+          <Link href="/free-meditation" onClick={handleNavClick} className="text-emerald-400 hover:text-emerald-300 transition-colors font-semibold">FREE MEDITATION</Link>
+          <Link href="/quiz" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">TAKE THE QUIZ</Link>
           <Link href="/work-with-me" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">WORK WITH ME</Link>
+          <Link href="/masterclass" onClick={handleNavClick} className="text-white font-semibold">MASTERCLASS</Link>
+          <Link href="/about" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">ABOUT</Link>
         </div>
 
         {/* Mobile Menu Button */}
@@ -68,10 +69,11 @@ export default function Masterclass() {
           <div className="absolute top-20 left-0 right-0 bg-gray-900 bg-opacity-95 backdrop-blur-sm md:hidden z-50">
             <div className="flex flex-col p-4 space-y-4">
               <Link href="/" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">HOME</Link>
-              <Link href="/about" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">ABOUT</Link>
-              <Link href="/quiz" onClick={handleNavClick} className="text-emerald-400 hover:text-emerald-300 transition-colors font-semibold text-lg">TAKE THE QUIZ</Link>
-              <Link href="/masterclass" onClick={handleNavClick} className="text-white font-semibold text-lg">MASTERCLASS</Link>
+              <Link href="/free-meditation" onClick={handleNavClick} className="text-emerald-400 hover:text-emerald-300 transition-colors font-semibold text-lg">FREE MEDITATION</Link>
+              <Link href="/quiz" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">TAKE THE QUIZ</Link>
               <Link href="/work-with-me" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">WORK WITH ME</Link>
+              <Link href="/masterclass" onClick={handleNavClick} className="text-white font-semibold text-lg">MASTERCLASS</Link>
+              <Link href="/about" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">ABOUT</Link>
             </div>
           </div>
         )}
