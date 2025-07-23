@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { SEOHead } from "@/components/SEOHead";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
 import saintPhotoUrl from "@assets/saint_photo_1753245778552.png";
@@ -6,6 +7,12 @@ import saintPhotoUrl from "@assets/saint_photo_1753245778552.png";
 export default function About() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
+      <SEOHead 
+        title="About Saint - Somatic Sexologist & Reclamation Guide | Fifth Element Somatics"
+        description="Meet Saint, a somatic sexologist and body whisperer who helps women remember what their bodies already know. Learn about her journey and approach to sacred embodiment and erotic reclamation."
+        url="https://fifthelementsomatics.com/about"
+        keywords="Saint Fifth Element Somatics, somatic sexologist, body whisperer, reclamation guide, embodiment practitioner, trauma healing, sacred sexuality"
+      />
       {/* Navigation */}
       <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
         <Link href="/">

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SEOHead } from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 
 export default function Watch() {
@@ -65,6 +66,12 @@ export default function Watch() {
 
   return (
     <div className="min-h-screen bg-black text-gray-100">
+      <SEOHead 
+        title="The Good Girl Paradox Masterclass - Your Access Portal | Fifth Element Somatics"
+        description="Access your purchased Good Girl Paradox Masterclass content. Stream the complete somatic journey to reclaim your authentic self and break free from conditioning patterns."
+        url="https://fifthelementsomatics.com/watch"
+        keywords="good girl paradox masterclass, somatic healing, trauma recovery, women's empowerment, masterclass access, video content"
+      />
       {/* Header */}
       <header className="py-6 px-4 sm:px-6 lg:px-8 border-b border-gray-800">
         <div className="max-w-4xl mx-auto flex items-center justify-between">

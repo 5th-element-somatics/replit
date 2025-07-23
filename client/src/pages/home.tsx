@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { SEOHead } from "@/components/SEOHead";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
 import saintPhotoUrl from "@assets/saint_photo_1753245778552.png";
@@ -6,6 +7,12 @@ import saintPhotoUrl from "@assets/saint_photo_1753245778552.png";
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
+      <SEOHead 
+        title="Fifth Element Somatics - Sensual. Sovereign. Sacred."
+        description="I help women reclaim their erotic truth & build unshakable intimacy with themselves, their bodies, and the people they love. Sacred embodiment and erotic reclamation for the modern woman."
+        image="/social-share.svg"
+        url="https://fifthelementsomatics.com/"
+      />
       {/* Navigation */}
       <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
         <Link href="/">

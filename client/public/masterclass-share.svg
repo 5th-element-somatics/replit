@@ -1,0 +1,43 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a0a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a0a1a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#C77DFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E879F9;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="ctaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#C77DFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E879F9;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
+  
+  <!-- Brand Circle -->
+  <circle cx="100" cy="100" r="40" fill="url(#textGradient)"/>
+  <text x="100" y="110" text-anchor="middle" fill="#000000" font-family="serif" font-size="24" font-weight="bold">5E</text>
+  
+  <!-- Main Content -->
+  <text x="600" y="180" text-anchor="middle" fill="url(#textGradient)" font-family="serif" font-size="56" font-weight="bold">THE GOOD GIRL</text>
+  <text x="600" y="240" text-anchor="middle" fill="url(#textGradient)" font-family="serif" font-size="56" font-weight="bold">PARADOX</text>
+  <text x="600" y="300" text-anchor="middle" fill="#FFFFFF" font-family="serif" font-size="32" font-weight="300">MASTERCLASS</text>
+  
+  <!-- Subtitle -->
+  <text x="600" y="360" text-anchor="middle" fill="#E5E7EB" font-family="sans-serif" font-size="28">Break free from people-pleasing</text>
+  <text x="600" y="395" text-anchor="middle" fill="#E5E7EB" font-family="sans-serif" font-size="28">&amp; reclaim your authentic power</text>
+  
+  <!-- Price -->
+  <text x="600" y="450" text-anchor="middle" fill="#FFFFFF" font-family="sans-serif" font-size="32" font-weight="bold">$64</text>
+  <text x="670" y="450" text-anchor="start" fill="#E5E7EB" font-family="sans-serif" font-size="20">+ optional $25 Return to Body meditation</text>
+  
+  <!-- CTA -->
+  <rect x="450" y="480" width="300" height="60" rx="30" fill="url(#ctaGradient)"/>
+  <text x="600" y="520" text-anchor="middle" fill="#000000" font-family="sans-serif" font-size="20" font-weight="bold">JOIN MASTERCLASS</text>
+  
+  <!-- Website -->
+  <text x="600" y="580" text-anchor="middle" fill="#C77DFF" font-family="sans-serif" font-size="18">fifthelementsomatics.com</text>
+</svg>

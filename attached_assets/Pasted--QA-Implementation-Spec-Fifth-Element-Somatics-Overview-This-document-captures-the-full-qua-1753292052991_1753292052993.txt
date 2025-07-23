@@ -1,0 +1,121 @@
+# QA Implementation Spec: Fifth Element Somatics 🌹
+
+## Overview
+This document captures the full quality assurance feedback and creative upgrades discussed during our live QA review. It covers navigation, visuals, checkout, audio, testimonial CMS, and interactive media enhancements.
+
+---
+
+## ✅ GLOBAL SITE CHANGES
+
+### 🔁 Header + Navigation
+
+- [ ] Replace top-left "580" placeholder with **Saint’s tiger logo** (SVG or PNG). Ensure it scales well across mobile and desktop.
+- [ ] Change all navigation labels in the top-right menu to **ALL CAPS**.
+  - `HOME`, `ABOUT`, `MASTERCLASS`, `TAKE THE QUIZ`
+- [ ] Ensure navigation is **visible on all pages**, including:
+  - Checkout
+  - Quiz
+  - Application pages
+- [ ] When a user clicks a navigation item, the page should **scroll to the top** of that section (not the middle).
+
+---
+
+## 💳 CHECKOUT FLOW
+
+### 🛠️ Stripe / Apple Pay Fixes
+
+- [ ] Confirm **Apple Pay / Link** is enabled in Stripe settings.
+- [ ] Display Apple Pay and Link buttons if available.
+- [ ] Show these buttons **above or beside credit card input**.
+- [ ] Ensure a **persistent site header** is displayed on the checkout page to allow easy navigation back to site content.
+
+---
+
+## 🎧 MEDITATION EXPERIENCE UPGRADE
+
+### Interactive Audio + Visual Enhancements
+
+- [ ] Add **toggleable captions** synced to Saint’s meditation voiceover.
+- [ ] Add **simple visual slides or animations** that align with each part of the meditation (e.g., breath, grounding, body scan).
+- [ ] When a user **navigates to a different page**, **stop the meditation audio** automatically.
+- [ ] Add a **Download button** to let users save the meditation and transcript locally.
+- [ ] Add **“Share this Meditation”** CTA to copy link or post to socials with a prefilled caption.
+
+#### Suggested Visual Theme:
+- Earthy palettes (rose, indigo, violet)
+- Symbolic animation (leaves breathing, grounding roots, heart radiance)
+- Option to turn visuals off for minimalists
+
+---
+
+## 💬 TESTIMONIALS SECTION
+
+### Add CMS Management & Motion
+
+- [ ] Create a **CMS admin panel** (email-based login for hello@fifthelementsomatics.com) to:
+  - Add / edit / delete testimonials
+  - Upload user names, photos (optional), quote text, and role/title
+- [ ] Change static testimonial section to a **rotating carousel**:
+  - Smooth fade animation
+  - Auto-rotate every 6–8 seconds
+  - Manual scroll controls
+
+---
+
+## 📸 VISUAL UPGRADES
+
+- [ ] Each standalone page (e.g., Work With Me, Quiz, etc.) should feature a **unique photo of Saint** or relevant visual header
+- [ ] Create a **media asset directory** in the Replit structure to store all site-wide photos
+
+---
+
+## 🌟 MASTERCLASS PAGE
+
+### Media Preview Enhancements
+
+- [ ] Add a **thumbnail preview image** for the masterclass
+  - Optional: “Click to preview” overlay
+  - Placeholder if Saint video isn’t ready
+- [ ] Consider adding **audio narration** or **slideshow voiceover** that gives a preview of the class experience
+
+---
+
+## 📥 MISCELLANEOUS IMPROVEMENTS
+
+- [ ] On pages like “Apply for Mentorship,” **remove duplicate CTAs** (i.e., don’t say “Apply” twice on the same screen)
+- [ ] Add **Saint’s portrait** to the "Work With Me" application page for consistency
+- [ ] All form pages should maintain **site header + footer**
+- [ ] On quiz and meditation pages, ensure **audio/video doesn’t continue playing** once the user navigates away
+
+---
+
+## ✅ READY TO IMPLEMENT
+
+| Feature                      | Status       |
+|-----------------------------|--------------|
+| Logo replacement            | ⏳ To do      |
+| Nav capitalization          | ⏳ To do      |
+| Scroll-to-top fix           | ⏳ To do      |
+| Header on checkout          | ⏳ To do      |
+| Apple Pay display           | ⏳ To verify  |
+| Meditation captions         | ⏳ To build   |
+| Meditation visuals          | ⏳ To animate |
+| Auto-stop audio on nav      | ⏳ To add     |
+| Testimonials CMS            | ⏳ To build   |
+| Rotating carousel           | ⏳ To animate |
+| Per-page Saint visuals      | ⏳ To assign  |
+| Masterclass preview image   | ⏳ To insert  |
+
+---
+
+## ✨ Notes
+- All visual assets (Saint photos, meditation images, logos) will be provided or linked in a shared drive if needed.
+- Audio sync for captions and visuals can be handled with HTML5 `<audio>` and `WebVTT` captions or similar library like `Howler.js`.
+
+---
+
+## ❤️ Final Call
+
+This QA pass reflects Saint’s essence, Raj’s vision, and our shared commitment to create the **most embodied, elegant, and frictionless experience possible.**
+
+Let’s build it 🔥🌀🌸

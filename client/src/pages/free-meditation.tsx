@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { SEOHead } from "@/components/SEOHead";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -87,6 +88,13 @@ export default function FreeMeditation() {
         </div>
       </nav>
 
+      <SEOHead 
+        title="Free Grounding Meditation Download - Feel Safe In Your Skin Again | Fifth Element Somatics"
+        description="Download this free 10-minute grounding meditation to regulate your nervous system, reconnect with your body's wisdom, and shift from disconnection to embodied presence. Instant access with email signup."
+        url="https://fifthelementsomatics.com/free-meditation"
+        keywords="free meditation download, grounding meditation, nervous system regulation, somatic healing, embodiment practice, body safety, meditation audio"
+        image="/meditation-share.svg"
+      />
       {/* Hero Section */}
       <div className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
@@ -265,6 +273,13 @@ function MeditationAccess() {
         </div>
       </nav>
 
+      <SEOHead 
+        title="Your Meditation Is Ready! - Stream & Download | Fifth Element Somatics"
+        description="Your free 10-minute grounding meditation is ready to stream or download. Regulate your nervous system, reconnect with your body's wisdom, and feel deeply grounded in your skin."
+        image="/meditation-share.svg"
+        url="https://fifthelementsomatics.com/free-meditation"
+        keywords="meditation download, grounding meditation, nervous system regulation, embodiment practice, body safety, audio meditation, free meditation"
+      />
       {/* Success Content */}
       <div className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">

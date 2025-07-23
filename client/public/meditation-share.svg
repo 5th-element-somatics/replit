@@ -1,0 +1,42 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a0a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a0a1a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#C77DFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E879F9;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="ctaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#C77DFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E879F9;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
+  
+  <!-- Brand Circle -->
+  <circle cx="100" cy="100" r="40" fill="url(#textGradient)"/>
+  <text x="100" y="110" text-anchor="middle" fill="#000000" font-family="serif" font-size="24" font-weight="bold">5E</text>
+  
+  <!-- Main Content -->
+  <text x="600" y="160" text-anchor="middle" fill="url(#textGradient)" font-family="serif" font-size="48" font-weight="bold">FREE GROUNDING</text>
+  <text x="600" y="220" text-anchor="middle" fill="url(#textGradient)" font-family="serif" font-size="48" font-weight="bold">MEDITATION</text>
+  
+  <!-- Subtitle -->
+  <text x="600" y="280" text-anchor="middle" fill="#FFFFFF" font-family="serif" font-size="32" font-weight="300">Feel Safe In Your Skin Again</text>
+  
+  <!-- Features -->
+  <text x="600" y="340" text-anchor="middle" fill="#E5E7EB" font-family="sans-serif" font-size="24">• 10-minute guided audio experience</text>
+  <text x="600" y="375" text-anchor="middle" fill="#E5E7EB" font-family="sans-serif" font-size="24">• Regulate your nervous system in real time</text>
+  <text x="600" y="410" text-anchor="middle" fill="#E5E7EB" font-family="sans-serif" font-size="24">• Stream instantly or download to your device</text>
+  
+  <!-- CTA -->
+  <rect x="450" y="460" width="300" height="60" rx="30" fill="url(#ctaGradient)"/>
+  <text x="600" y="500" text-anchor="middle" fill="#000000" font-family="sans-serif" font-size="20" font-weight="bold">DOWNLOAD FOR FREE</text>
+  
+  <!-- Website -->
+  <text x="600" y="570" text-anchor="middle" fill="#C77DFF" font-family="sans-serif" font-size="18">fifthelementsomatics.com/free-meditation</text>
+</svg>

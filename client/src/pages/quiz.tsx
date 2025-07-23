@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { SEOHead } from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -595,6 +596,13 @@ export default function Quiz() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white py-12 px-4 sm:px-6 lg:px-8">
+      <SEOHead 
+        title="Good Girl Archetype Quiz - Discover Your Type | Fifth Element Somatics"
+        description="Are you a People-Pleaser, Perfectionist, or Awakened Rebel? Take this viral quiz with voice narration to discover your Good Girl archetype and get your personalized roadmap to authentic empowerment."
+        image="/quiz-share.svg"
+        url="https://fifthelementsomatics.com/quiz"
+        keywords="good girl syndrome quiz, archetype quiz, people pleaser quiz, perfectionist quiz, personality quiz, somatic healing, women's empowerment, self discovery quiz"
+      />
       <div className="max-w-3xl mx-auto">
         {/* Navigation */}
         <div className="flex items-center justify-between mb-8">

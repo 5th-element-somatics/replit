@@ -1,10 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { SEOHead } from "@/components/SEOHead";
 import { Link } from "wouter";
 
 export default function WorkWithMe() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
+      <SEOHead 
+        title="Work With Me - 1:1 Mentorship & Deep Body Work | Fifth Element Somatics"
+        description="Ready for deep somatic transformation? Apply for 1:1 mentorship with Saint. Sacred space, trauma-informed approach, and embodied reclamation work for women ready to trust their bodies again."
+        url="https://fifthelementsomatics.com/work-with-me"
+        keywords="1:1 mentorship, somatic practitioner, trauma-informed therapy, embodiment coach, body work, nervous system healing, women's empowerment"
+      />
       {/* Navigation */}
       <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
         <Link href="/">

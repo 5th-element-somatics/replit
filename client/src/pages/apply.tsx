@@ -6,6 +6,7 @@ import { Link, useLocation } from "wouter";
 import { insertApplicationSchema, type InsertApplication } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { SEOHead } from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -101,6 +102,12 @@ export default function Apply() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
+      <SEOHead 
+        title="Apply for 1:1 Mentorship - Work With Saint | Fifth Element Somatics"
+        description="Ready for deep somatic transformation? Apply for 1:1 mentorship with Saint. Submit your application for personalized guidance in reclaiming your erotic truth and embodied sovereignty."
+        url="https://fifthelementsomatics.com/apply"
+        keywords="1:1 mentorship application, somatic practitioner, trauma-informed therapy, embodiment coach, women's empowerment"
+      />
       {/* Navigation */}
       <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
         <Link href="/">

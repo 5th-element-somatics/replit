@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { SEOHead } from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -20,6 +21,13 @@ export default function Masterclass() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
+      <SEOHead 
+        title="The Good Girl Paradox Masterclass - Fifth Element Somatics"
+        description="Break free from people-pleasing and reclaim your authentic power. A transformative masterclass on somatic healing and embodied empowerment for women ready to stop performing and start living authentically. $64 + optional $25 Return to Body meditation."
+        image="/masterclass-share.svg"
+        url="https://fifthelementsomatics.com/masterclass"
+        keywords="good girl syndrome, people pleasing, perfectionism, somatic healing, embodiment, women's empowerment, authentic self, nervous system healing, trauma recovery, feminine power"
+      />
       {/* Navigation */}
       <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
         <Link href="/">
