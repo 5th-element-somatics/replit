@@ -146,7 +146,7 @@ export default function Quiz() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showVoiceSelection, setShowVoiceSelection] = useState(true);
 
-  const handleVoiceChange = async (voiceId: string) => {
+  const handleVoiceChange = (voiceId: string) => {
     // Check if voice is disabled
     const selectedVoiceOption = voiceOptions.find(v => v.id === voiceId);
     if (selectedVoiceOption?.disabled) {
@@ -166,14 +166,19 @@ export default function Quiz() {
     
     setSelectedVoice(voiceId);
     
-    // Give immediate feedback about voice change
+    // Give immediate feedback about voice change (no auto-play)
     toast({
-      title: "Voice Changed",
-      description: `Switched to ${selectedVoiceOption?.name}. Playing sample...`,
+      title: "Voice Selected",
+      description: `${selectedVoiceOption?.name} selected. Click preview to hear a sample.`,
       variant: "default"
     });
+  };
 
-    // Play a quick sample with the new voice
+  const previewVoice = async () => {
+    const selectedVoiceOption = voiceOptions.find(v => v.id === selectedVoice);
+    if (!selectedVoiceOption || selectedVoiceOption.disabled) return;
+
+    // Play a quick sample with the selected voice
     if (soundEnabled) {
       try {
         setIsLoadingAudio(true);
@@ -183,7 +188,7 @@ export default function Quiz() {
           divine_priestess: "Blessed one, I am your Divine Feminine Priestess, here to illuminate your sacred path."
         };
         
-        const sampleText = sampleTexts[voiceId] || sampleTexts.soul_sister;
+        const sampleText = sampleTexts[selectedVoice] || sampleTexts.soul_sister;
         
         const response = await apiRequest("POST", "/api/text-to-speech", {
           text: sampleText,
@@ -762,12 +767,7 @@ export default function Quiz() {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => {
-                  const selectedVoiceOption = voiceOptions.find(v => v.id === selectedVoice);
-                  if (selectedVoiceOption && !selectedVoiceOption.disabled) {
-                    handleVoiceChange(selectedVoice);
-                  }
-                }}
+                onClick={previewVoice}
                 disabled={isLoadingAudio}
                 className="text-emerald-400 hover:text-emerald-300 flex items-center gap-2"
               >
