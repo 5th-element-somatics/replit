@@ -125,32 +125,74 @@ export default function FreeMeditation() {
         keywords="free meditation download, grounding meditation, nervous system regulation, somatic healing, embodiment practice, body safety, meditation audio"
         image="/meditation-share.svg"
       />
-      {/* Hero Section */}
-      <div className="py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
+      {/* Hero Section with Visual Background */}
+      <div className="py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full blur-2xl animate-pulse" style={{animationDelay: '1s'}}></div>
+          <div className="absolute bottom-20 left-1/3 w-40 h-40 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
+        </div>
+        
+        <div className="max-w-4xl mx-auto relative z-10">
+          {/* Visual Header with Icon */}
           <div className="text-center mb-12">
-            <p className="text-purple-400 font-semibold mb-2">FREE GROUNDING MEDITATION</p>
-            <h1 className="text-3xl sm:text-5xl font-serif font-bold text-white mb-6">
+            <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-500/30">
+              <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 7.5V9M15 11.5V9.5L21 9V11L15 11.5ZM11 12H13V18H11M9 18H15V20H9V18Z"/>
+              </svg>
+            </div>
+            <p className="text-emerald-400 font-semibold mb-2 tracking-wide">FREE GROUNDING MEDITATION</p>
+            <h1 className="text-3xl sm:text-5xl font-serif font-bold text-white mb-6 leading-tight">
               FEEL SAFE IN YOUR SKIN AGAIN.
             </h1>
-            <p className="text-xl text-gray-300 mb-8">
+            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
               DOWNLOAD THIS FREE GROUNDING MEDITATION & ROOT INTO YOUR BODY
             </p>
             
+            {/* Visual Benefits Section */}
             <div className="mb-12">
-              <h3 className="text-lg font-serif font-bold text-white mb-4">Inside this guided audio you will:</h3>
-              <div className="space-y-2 text-gray-300 max-w-md mx-auto">
-                <p>• Regulate your nervous system in real time</p>
-                <p>• Feel your body as a safe, powerful place to be</p>
-                <p>• Shift from disconnection to embodied presence</p>
+              <h3 className="text-lg font-serif font-bold text-white mb-6">Inside this guided audio you will:</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-emerald-500/20">
+                  <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                  </div>
+                  <p className="text-gray-300 text-sm">Regulate your nervous system in real time</p>
+                </div>
+                <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-purple-500/20">
+                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                  </div>
+                  <p className="text-gray-300 text-sm">Feel your body as a safe, powerful place to be</p>
+                </div>
+                <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-pink-500/20">
+                  <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/>
+                    </svg>
+                  </div>
+                  <p className="text-gray-300 text-sm">Shift from disconnection to embodied presence</p>
+                </div>
               </div>
             </div>
           </div>
 
+          {/* Enhanced Sign-up Form */}
           <div className="max-w-md mx-auto">
-            <Card className="bg-gray-800 border border-purple-400 border-opacity-30 mystique-glow">
-              <CardHeader>
-                <CardTitle className="text-white text-center">Get Your Free Meditation</CardTitle>
+            <Card className="bg-gray-800/80 backdrop-blur-sm border border-emerald-400 border-opacity-30 mystique-glow shadow-xl shadow-emerald-500/10">
+              <CardHeader className="text-center pb-2">
+                <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M21 2H3a1 1 0 0 0-1 1v18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1zm-1 18H4V4h16v16zM8 12h8v2H8v-2zm0-4h8v2H8V8z"/>
+                  </svg>
+                </div>
+                <CardTitle className="text-white text-xl font-serif">Get Your Free Meditation</CardTitle>
+                <p className="text-gray-400 text-sm">Instant access • No spam • Unsubscribe anytime</p>
               </CardHeader>
               <CardContent>
                 <Form {...form}>
@@ -195,9 +237,21 @@ export default function FreeMeditation() {
                     <Button 
                       type="submit" 
                       disabled={submitLead.isPending}
-                      className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold py-4 px-8 rounded-xl text-lg transition-all duration-300 mystique-glow"
+                      className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-teal-600 hover:to-emerald-500 text-white font-bold py-4 px-8 rounded-xl text-lg transition-all duration-300 shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50"
                     >
-                      {submitLead.isPending ? "Sending..." : "DOWNLOAD FOR FREE"}
+                      {submitLead.isPending ? (
+                        <div className="flex items-center justify-center space-x-2">
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                          <span>Sending...</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center space-x-2">
+                          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/>
+                          </svg>
+                          <span>DOWNLOAD FOR FREE</span>
+                        </div>
+                      )}
                     </Button>
 
                     <p className="text-xs text-gray-400 text-center">
@@ -209,19 +263,39 @@ export default function FreeMeditation() {
             </Card>
           </div>
 
-          {/* Additional Info */}
-          <div className="mt-16 text-center">
-            <h2 className="text-2xl font-serif font-bold text-white mb-6">
-              Ready for deeper transformation?
-            </h2>
-            <p className="text-gray-300 mb-8">
-              This meditation is just the beginning. Explore our full masterclass for complete somatic healing.
-            </p>
-            <Link href="/masterclass">
-              <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 mystique-glow">
-                Learn About The Masterclass
-              </Button>
-            </Link>
+          {/* Visual Additional Info Section */}
+          <div className="mt-16 text-center relative">
+            {/* Background decoration */}
+            <div className="absolute inset-0 opacity-5">
+              <div className="absolute top-10 left-1/4 w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full blur-2xl"></div>
+              <div className="absolute bottom-10 right-1/4 w-16 h-16 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full blur-xl"></div>
+            </div>
+            
+            <div className="relative z-10">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white mb-6">
+                Ready for deeper transformation?
+              </h2>
+              <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
+                This meditation is just the beginning. Explore our full masterclass for complete somatic healing and embodied transformation.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Link href="/masterclass">
+                  <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 mystique-glow shadow-lg shadow-purple-500/30">
+                    Explore The Masterclass
+                  </Button>
+                </Link>
+                <Link href="/quiz">
+                  <Button variant="outline" className="border-emerald-400 text-emerald-400 hover:bg-emerald-400 hover:text-black font-bold px-8 py-4 rounded-full text-lg transition-all duration-300">
+                    Take The Quiz
+                  </Button>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -368,14 +442,34 @@ function MeditationAccess() {
             </p>
           </div>
 
-          {/* Audio Player */}
-          <Card className="bg-gray-800 border border-purple-400 border-opacity-30 mb-8 mystique-glow">
+          {/* Enhanced Audio Player */}
+          <Card className="bg-gray-800/80 backdrop-blur-sm border border-emerald-400 border-opacity-30 mb-8 shadow-xl shadow-emerald-500/10">
             <CardContent className="p-8">
-              <div className="text-center mb-6">
+              {/* Visual Header */}
+              <div className="text-center mb-8">
+                <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-500/30">
+                  <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 7.5V9M15 11.5V9.5L21 9V11L15 11.5ZM11 12H13V18H11M9 18H15V20H9V18Z"/>
+                  </svg>
+                </div>
                 <h2 className="text-2xl font-serif font-bold text-white mb-2">
                   Grounding Into The Body
                 </h2>
                 <p className="text-gray-400">A 10-minute guided meditation with Saint</p>
+                <div className="mt-4 flex items-center justify-center space-x-4 text-sm text-gray-500">
+                  <span className="flex items-center space-x-1">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>10 minutes</span>
+                  </span>
+                  <span className="flex items-center space-x-1">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+                    </svg>
+                    <span>High Quality Audio</span>
+                  </span>
+                </div>
               </div>
 
               {/* Audio Element */}
@@ -390,16 +484,20 @@ function MeditationAccess() {
 
               {/* Player Controls */}
               <div className="space-y-4">
-                {/* Play/Pause Button */}
+                {/* Enhanced Play/Pause Button */}
                 <div className="flex justify-center">
                   <button
                     onClick={togglePlayPause}
-                    className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300"
+                    className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center hover:shadow-xl hover:shadow-emerald-500/50 transition-all duration-300 transform hover:scale-105 relative group"
                   >
+                    {/* Pulsing ring when playing */}
+                    {isPlaying && (
+                      <div className="absolute inset-0 rounded-full bg-emerald-500 opacity-20 animate-ping"></div>
+                    )}
                     {isPlaying ? (
-                      <Pause className="w-6 h-6 text-white" />
+                      <Pause className="w-8 h-8 text-white" />
                     ) : (
-                      <Play className="w-6 h-6 text-white ml-1" />
+                      <Play className="w-8 h-8 text-white ml-1" />
                     )}
                   </button>
                 </div>
@@ -407,13 +505,16 @@ function MeditationAccess() {
                 {/* Progress Bar */}
                 <div className="space-y-2">
                   <div 
-                    className="w-full h-2 bg-gray-700 rounded-full cursor-pointer"
+                    className="w-full h-3 bg-gray-700 rounded-full cursor-pointer relative group"
                     onClick={handleSeek}
                   >
                     <div 
-                      className="h-2 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full transition-all duration-300"
+                      className="h-3 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full transition-all duration-300 relative"
                       style={{ width: duration ? `${(currentTime / duration) * 100}%` : '0%' }}
-                    />
+                    >
+                      {/* Progress indicator */}
+                      <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-4 h-4 bg-white rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+                    </div>
                   </div>
                   <div className="flex justify-between text-sm text-gray-400">
                     <span>{formatTime(currentTime)}</span>
@@ -421,15 +522,45 @@ function MeditationAccess() {
                   </div>
                 </div>
 
-                {/* Download Button */}
-                <div className="flex justify-center pt-4">
+                {/* Enhanced Download Button */}
+                <div className="flex justify-center pt-6">
                   <Button
                     onClick={handleDownload}
-                    className="bg-gray-700 hover:bg-gray-600 text-white flex items-center space-x-2"
+                    className="bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-white px-8 py-3 rounded-xl transition-all duration-300 flex items-center space-x-3 shadow-lg hover:shadow-xl transform hover:scale-105"
                   >
-                    <Download className="w-4 h-4" />
-                    <span>Download to Device</span>
+                    <div className="w-6 h-6 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                      <Download className="w-4 h-4" />
+                    </div>
+                    <span className="font-semibold">Download to Device</span>
                   </Button>
+                </div>
+                
+                {/* Additional Features */}
+                <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                  <div className="bg-gray-700/30 rounded-lg p-3">
+                    <div className="w-8 h-8 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-2">
+                      <svg className="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                      </svg>
+                    </div>
+                    <p className="text-xs text-gray-400">Offline Access</p>
+                  </div>
+                  <div className="bg-gray-700/30 rounded-lg p-3">
+                    <div className="w-8 h-8 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-2">
+                      <svg className="w-4 h-4 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+                      </svg>
+                    </div>
+                    <p className="text-xs text-gray-400">High Quality</p>
+                  </div>
+                  <div className="bg-gray-700/30 rounded-lg p-3">
+                    <div className="w-8 h-8 bg-pink-500/20 rounded-full flex items-center justify-center mx-auto mb-2">
+                      <svg className="w-4 h-4 text-pink-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                      </svg>
+                    </div>
+                    <p className="text-xs text-gray-400">Guided by Saint</p>
+                  </div>
                 </div>
               </div>
             </CardContent>
