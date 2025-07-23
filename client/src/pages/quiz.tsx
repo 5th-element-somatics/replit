@@ -227,6 +227,16 @@ export default function Quiz() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Cleanup audio when component unmounts or user navigates away
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      setIsPlaying(false);
+    };
+  }, []);
+
   const voiceOptions = [
     {
       id: "soul_sister",
