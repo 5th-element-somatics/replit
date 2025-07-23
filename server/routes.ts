@@ -127,6 +127,7 @@ async function sendQuizResultEmail(email: string, name: string, quizResult: stri
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  console.log("🚀 Registering API routes...");
   // Stripe payment route for one-time payments
   app.post("/api/create-payment-intent", async (req, res) => {
     try {
@@ -253,16 +254,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Send quiz results email if this is a quiz submission
       if (quizResult && process.env.SENDGRID_API_KEY && process.env.SENDGRID_FROM_EMAIL) {
+        console.log(`📧 Attempting to send quiz result email to ${leadData.email} for archetype: ${quizResult}`);
         try {
           await sendQuizResultEmail(leadData.email, leadData.name, quizResult);
-          console.log(`Quiz result email sent to ${leadData.email} for ${quizResult}`);
+          console.log(`✅ Quiz result email sent successfully to ${leadData.email}`);
         } catch (emailError) {
-          console.error("Error sending quiz result email:", emailError);
+          console.error("❌ Error sending quiz result email:", emailError);
           return res.status(500).json({ 
             message: "Lead saved but email failed to send. Please try again or contact support.",
             leadId: lead.id 
           });
         }
+      } else {
+        console.log("⚠️ Email not sent - missing quiz result or SendGrid config");
+        console.log(`QuizResult: ${quizResult}, SendGrid API Key: ${process.env.SENDGRID_API_KEY ? 'EXISTS' : 'MISSING'}, From Email: ${process.env.SENDGRID_FROM_EMAIL ? 'EXISTS' : 'MISSING'}`);
       }
       
       res.json({ success: true, id: lead.id });
@@ -273,21 +278,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Send quiz result email (direct endpoint for testing)
   app.post("/api/send-quiz-email", async (req, res) => {
+    console.log("🔧 Direct email endpoint hit with body:", req.body);
     try {
       const { email, name, quizResult } = req.body;
       
       if (!email || !name || !quizResult) {
+        console.log("❌ Missing required fields");
         return res.status(400).json({ message: "Email, name, and quiz result are required" });
       }
       
       if (!process.env.SENDGRID_API_KEY || !process.env.SENDGRID_FROM_EMAIL) {
+        console.log("❌ SendGrid not configured");
         return res.status(500).json({ message: "Email service not configured" });
       }
       
+      console.log("📧 Attempting to send email...");
       await sendQuizResultEmail(email, name, quizResult);
+      console.log("✅ Email sent successfully!");
       res.json({ success: true, message: "Email sent successfully" });
     } catch (error: any) {
-      console.error("Direct email send error:", error);
+      console.error("❌ Direct email send error:", error);
       res.status(500).json({ message: "Error sending email: " + error.message });
     }
   });
