@@ -201,6 +201,53 @@ async function sendMeditationDownloadEmail(email: string, name: string) {
 
 export async function registerRoutes(app: Express): Promise<Server> {
   console.log("🚀 Registering API routes...");
+
+  // Voice generation endpoint using Eleven Labs
+  app.post("/api/generate-voice", async (req, res) => {
+    try {
+      const { text, voice_id = "21m00Tcm4TlvDq8ikWAM", model_id = "eleven_multilingual_v2" } = req.body;
+      
+      if (!process.env.ELEVEN_LABS_API_KEY) {
+        return res.status(500).json({ error: "Voice generation service not configured" });
+      }
+
+      const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice_id}`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'audio/mpeg',
+          'Content-Type': 'application/json',
+          'xi-api-key': process.env.ELEVEN_LABS_API_KEY
+        },
+        body: JSON.stringify({
+          text,
+          model_id,
+          voice_settings: {
+            stability: 0.5,
+            similarity_boost: 0.75,
+            style: 0.0,
+            use_speaker_boost: true
+          }
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Eleven Labs API error: ${response.status}`);
+      }
+
+      const audioBuffer = await response.arrayBuffer();
+      
+      res.set({
+        'Content-Type': 'audio/mpeg',
+        'Content-Length': audioBuffer.byteLength
+      });
+      
+      res.send(Buffer.from(audioBuffer));
+    } catch (error: any) {
+      console.error("Voice generation error:", error);
+      res.status(500).json({ error: "Failed to generate voice" });
+    }
+  });
+
   // Stripe payment route for one-time payments
   app.post("/api/create-payment-intent", async (req, res) => {
     try {

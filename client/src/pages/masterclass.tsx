@@ -1,10 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { SEOHead } from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Link, useLocation } from "wouter";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Volume2, VolumeX, Play, Pause, Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 import saintPhotoUrl from "@assets/saint_photo_1753245778552.png";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
 
@@ -388,54 +390,118 @@ export default function Masterclass() {
 function InteractiveDemo({ onClose, onJoinCourse }: { onClose: () => void; onJoinCourse: () => void }) {
   const [currentStep, setCurrentStep] = useState(0);
   const [isAutoAdvancing, setIsAutoAdvancing] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoadingAudio, setIsLoadingAudio] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { toast } = useToast();
 
   const demoSteps = [
     {
       title: "Welcome to The Good Girl Paradox",
-      content: "Saint here. For too long, you've been living in a cage of your own making—one built from 'shoulds' and 'supposed to's.'",
-      visual: "🌟",
-      duration: 4000
+      content: "Saint here. For too long, you've been living in a cage of your own making—one built from 'shoulds' and 'supposed to's.' This 90-minute masterclass is your key to freedom.",
+      voiceText: "Saint here. For too long, you've been living in a cage of your own making, one built from shoulds and supposed tos. This 90 minute masterclass is your key to freedom. Welcome to The Good Girl Paradox.",
+      visual: "gradient-orb",
+      bgColor: "from-purple-900/40 to-pink-900/40",
+      duration: 8000
     },
     {
-      title: "The Prison of Perfection",
-      content: "You've mastered being what everyone wants you to be. But what about what YOU want? What about your authentic desires?",
-      visual: "🏰",
-      duration: 4000
+      title: "Module 1: The Prison of Performance",
+      content: "You've mastered being what everyone wants you to be. But what about what YOU want? We'll explore how people-pleasing became your survival strategy and why it's no longer serving you.",
+      voiceText: "You've mastered being what everyone wants you to be. But what about what you want? In module one, we'll explore how people pleasing became your survival strategy and why it's no longer serving you.",
+      visual: "broken-chains",
+      bgColor: "from-red-900/30 to-orange-900/30",
+      duration: 8000
     },
     {
-      title: "Your Body Holds the Key",
-      content: "Your liberation isn't in your mind—it's in your body. We'll explore how to reconnect with your somatic wisdom.",
-      visual: "🔑",
-      duration: 4000
+      title: "Module 2: Your Body Holds the Key",
+      content: "Your liberation isn't in your mind—it's in your body. Learn somatic practices to reconnect with your body's wisdom and break free from mental loops that keep you stuck.",
+      voiceText: "Your liberation isn't in your mind, it's in your body. Learn somatic practices to reconnect with your body's wisdom and break free from mental loops that keep you stuck.",
+      visual: "body-energy",
+      bgColor: "from-emerald-900/30 to-teal-900/30",
+      duration: 8000
     },
     {
-      title: "Reclaiming Your Sexuality",
-      content: "Not performing it, not putting on a show—but truly EMBODYING your sensual, erotic self without shame.",
-      visual: "🔥",
-      duration: 4000
+      title: "Module 3: Reclaiming Your Erotic Self",
+      content: "Not performing sexuality, but truly EMBODYING your sensual, erotic self without shame. Discover how to feel safe in your own desire and express your authentic sexuality.",
+      voiceText: "Not performing sexuality, but truly embodying your sensual, erotic self without shame. Discover how to feel safe in your own desire and express your authentic sexuality.",
+      visual: "flame-lotus",
+      bgColor: "from-rose-900/30 to-pink-900/30",
+      duration: 8000
     },
     {
-      title: "Breaking Free from 'Good Girl' Conditioning",
-      content: "Learn the specific somatic practices that will help you shed layers of conditioning and step into your sovereign power.",
-      visual: "💃",
-      duration: 4000
+      title: "Module 4: Nervous System Recalibration",
+      content: "Learn specific breathwork and somatic techniques to shift your nervous system from survival mode to thriving. Feel safe enough in your body to soften into your power.",
+      voiceText: "Learn specific breathwork and somatic techniques to shift your nervous system from survival mode to thriving. Feel safe enough in your body to soften into your power.",
+      visual: "breathing-waves",
+      bgColor: "from-blue-900/30 to-indigo-900/30",
+      duration: 8000
     },
     {
-      title: "Integration & Embodiment",
-      content: "This isn't just theory. You'll have practical tools to integrate this work into your daily life and relationships.",
-      visual: "🌙",
-      duration: 4000
+      title: "Module 5: Integration & Daily Practice",
+      content: "This isn't just theory. You'll receive practical tools, daily practices, and somatic exercises to integrate this transformation into your relationships and daily life.",
+      voiceText: "This isn't just theory. You'll receive practical tools, daily practices, and somatic exercises to integrate this transformation into your relationships and daily life.",
+      visual: "sacred-geometry",
+      bgColor: "from-violet-900/30 to-purple-900/30",
+      duration: 8000
     },
     {
-      title: "Ready to Begin?",
-      content: "This 90-minute masterclass will guide you through a complete transformation. Are you ready to reclaim what's yours?",
-      visual: "✨",
+      title: "Ready to Reclaim Your Truth?",
+      content: "90 minutes of transformational content. Lifetime access. Instant download. Trauma-informed practices. Are you ready to step into your sovereign, sensual, sacred self?",
+      voiceText: "90 minutes of transformational content. Lifetime access. Instant download. Trauma informed practices. Are you ready to step into your sovereign, sensual, sacred self?",
+      visual: "crown-chakra",
+      bgColor: "from-gold-900/30 to-yellow-900/30",
       duration: 0,
       isCTA: true
     }
   ];
 
+  // Generate AI voice narration
+  const generateVoiceNarration = async (text: string) => {
+    try {
+      setIsLoadingAudio(true);
+      const response = await apiRequest("POST", "/api/generate-voice", {
+        text,
+        voice_id: "21m00Tcm4TlvDq8ikWAM", // Professional female voice
+        model_id: "eleven_multilingual_v2"
+      });
+      
+      if (response.ok) {
+        const audioBlob = await response.blob();
+        const audioUrl = URL.createObjectURL(audioBlob);
+        
+        if (audioRef.current) {
+          audioRef.current.src = audioUrl;
+          audioRef.current.load();
+        }
+        return audioUrl;
+      }
+    } catch (error) {
+      console.error("Voice generation error:", error);
+      toast({
+        title: "Audio Error",
+        description: "Voice narration unavailable. Demo will continue silently.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoadingAudio(false);
+    }
+  };
+
+  // Auto-advance with voice narration
   useEffect(() => {
+    const playStepAudio = async () => {
+      if (soundEnabled && demoSteps[currentStep].voiceText) {
+        await generateVoiceNarration(demoSteps[currentStep].voiceText);
+        if (audioRef.current) {
+          audioRef.current.play().catch(console.error);
+          setIsPlaying(true);
+        }
+      }
+    };
+
+    playStepAudio();
+
     if (isAutoAdvancing && currentStep < demoSteps.length - 1 && demoSteps[currentStep].duration > 0) {
       const timer = setTimeout(() => {
         setCurrentStep(prev => prev + 1);
@@ -443,7 +509,28 @@ function InteractiveDemo({ onClose, onJoinCourse }: { onClose: () => void; onJoi
       
       return () => clearTimeout(timer);
     }
-  }, [currentStep, isAutoAdvancing]);
+  }, [currentStep, isAutoAdvancing, soundEnabled]);
+
+  // Audio event handlers
+  useEffect(() => {
+    if (audioRef.current) {
+      const audio = audioRef.current;
+      
+      const handleEnded = () => setIsPlaying(false);
+      const handlePlay = () => setIsPlaying(true);
+      const handlePause = () => setIsPlaying(false);
+      
+      audio.addEventListener('ended', handleEnded);
+      audio.addEventListener('play', handlePlay);
+      audio.addEventListener('pause', handlePause);
+      
+      return () => {
+        audio.removeEventListener('ended', handleEnded);
+        audio.removeEventListener('play', handlePlay);
+        audio.removeEventListener('pause', handlePause);
+      };
+    }
+  }, []);
 
   const handleNext = () => {
     if (currentStep < demoSteps.length - 1) {
@@ -459,38 +546,187 @@ function InteractiveDemo({ onClose, onJoinCourse }: { onClose: () => void; onJoi
     }
   };
 
+  const toggleAudio = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play().catch(console.error);
+      }
+    }
+  };
+
+  const renderVisual = (visualType: string, bgColor: string) => {
+    const visualClasses = `absolute inset-0 bg-gradient-to-br ${bgColor} opacity-20`;
+    
+    switch (visualType) {
+      case 'gradient-orb':
+        return (
+          <div className={visualClasses}>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+              <div className="w-48 h-48 bg-gradient-to-br from-purple-400 to-pink-600 rounded-full opacity-60 animate-pulse"></div>
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-gradient-to-br from-white to-purple-200 rounded-full opacity-40 animate-ping"></div>
+            </div>
+          </div>
+        );
+      case 'broken-chains':
+        return (
+          <div className={visualClasses}>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-6xl opacity-30">⛓️‍💥</div>
+            </div>
+          </div>
+        );
+      case 'body-energy':
+        return (
+          <div className={visualClasses}>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="relative">
+                <div className="w-40 h-64 bg-gradient-to-t from-emerald-500/30 to-transparent rounded-full animate-pulse"></div>
+                <div className="absolute top-1/4 left-1/2 transform -translate-x-1/2 w-20 h-32 bg-gradient-to-t from-teal-400/40 to-transparent rounded-full animate-ping"></div>
+              </div>
+            </div>
+          </div>
+        );
+      case 'flame-lotus':
+        return (
+          <div className={visualClasses}>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="relative">
+                <div className="w-32 h-32 bg-gradient-to-t from-rose-500/40 to-pink-600/40 rounded-full animate-pulse"></div>
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-40 bg-gradient-to-t from-orange-500/30 to-transparent rounded-full animate-bounce"></div>
+              </div>
+            </div>
+          </div>
+        );
+      case 'breathing-waves':
+        return (
+          <div className={visualClasses}>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="space-y-4">
+                {[...Array(5)].map((_, i) => (
+                  <div 
+                    key={i}
+                    className="w-64 h-2 bg-blue-400/30 rounded-full animate-pulse" 
+                    style={{ animationDelay: `${i * 0.2}s` }}
+                  ></div>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      case 'sacred-geometry':
+        return (
+          <div className={visualClasses}>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="relative">
+                <div className="w-40 h-40 border-2 border-violet-400/40 rounded-full animate-spin"></div>
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-28 h-28 border-2 border-purple-400/40 rounded-full animate-ping"></div>
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-gradient-to-br from-violet-500/30 to-purple-600/30 rounded-full"></div>
+              </div>
+            </div>
+          </div>
+        );
+      case 'crown-chakra':
+        return (
+          <div className={visualClasses}>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="relative">
+                <div className="w-48 h-16 bg-gradient-to-r from-gold-400/40 to-yellow-500/40 rounded-full animate-pulse"></div>
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-32 bg-gradient-to-br from-yellow-300/30 to-gold-500/30 rounded-full animate-ping"></div>
+              </div>
+            </div>
+          </div>
+        );
+      default:
+        return <div className={visualClasses}></div>;
+    }
+  };
+
   const currentStepData = demoSteps[currentStep];
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-95 z-50 flex items-center justify-center p-4">
-      <div className="bg-gray-900 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden relative">
+      <div className="bg-gray-900 rounded-lg max-w-5xl w-full max-h-[90vh] overflow-hidden relative">
+        {/* Background Visual */}
+        <div className="absolute inset-0 overflow-hidden rounded-lg">
+          {renderVisual(currentStepData.visual, currentStepData.bgColor)}
+        </div>
+
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-white z-10"
+          className="absolute top-4 right-4 text-gray-400 hover:text-white z-20 bg-black/50 rounded-full p-2"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
 
+        {/* Audio Controls */}
+        <div className="absolute top-4 left-4 flex items-center gap-2 z-20">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setSoundEnabled(!soundEnabled)}
+            className="text-white/80 hover:text-white bg-black/50 backdrop-blur-sm"
+          >
+            {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+          </Button>
+          
+          {soundEnabled && !currentStepData.isCTA && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleAudio}
+              disabled={isLoadingAudio}
+              className="text-white/80 hover:text-white bg-black/50 backdrop-blur-sm"
+            >
+              {isLoadingAudio ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : isPlaying ? (
+                <Pause className="w-4 h-4" />
+              ) : (
+                <Play className="w-4 h-4" />
+              )}
+            </Button>
+          )}
+        </div>
+
         {/* Progress Bar */}
-        <div className="w-full bg-gray-800 h-1">
+        <div className="relative z-10 w-full bg-gray-800/80 h-2 backdrop-blur-sm">
           <div 
-            className="bg-gradient-to-r from-purple-500 to-pink-600 h-1 transition-all duration-300"
+            className="bg-gradient-to-r from-purple-500 to-pink-600 h-2 transition-all duration-500"
             style={{ width: `${((currentStep + 1) / demoSteps.length) * 100}%` }}
           />
         </div>
 
         {/* Demo Content */}
-        <div className="p-8 text-center min-h-[400px] flex flex-col justify-center">
-          <div className="text-6xl mb-6">{currentStepData.visual}</div>
-          <h2 className="text-3xl font-serif font-bold text-white mb-6">
-            {currentStepData.title}
-          </h2>
-          <p className="text-xl text-gray-300 leading-relaxed max-w-2xl mx-auto mb-8">
-            {currentStepData.content}
-          </p>
+        <div className="relative z-10 p-8 text-center min-h-[500px] flex flex-col justify-center bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+          <div className="bg-black/60 backdrop-blur-sm rounded-2xl p-8 mx-auto max-w-3xl">
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-6 leading-tight">
+              {currentStepData.title}
+            </h2>
+            <p className="text-xl sm:text-2xl text-gray-200 leading-relaxed mb-8 font-light">
+              {currentStepData.content}
+            </p>
+
+            {/* Audio Visualization */}
+            {soundEnabled && isPlaying && !currentStepData.isCTA && (
+              <div className="flex justify-center items-center gap-1 mb-6">
+                {[...Array(5)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="w-1 bg-gradient-to-t from-purple-500 to-pink-600 rounded animate-pulse"
+                    style={{
+                      height: `${Math.random() * 20 + 10}px`,
+                      animationDelay: `${i * 0.1}s`,
+                      animationDuration: '0.8s'
+                    }}
+                  />
+                ))}
+              </div>
+            )}
 
           {currentStepData.isCTA ? (
             <div className="space-y-4">
@@ -546,7 +782,11 @@ function InteractiveDemo({ onClose, onJoinCourse }: { onClose: () => void; onJoi
               </label>
             </div>
           )}
+          </div>
         </div>
+
+        {/* Hidden Audio Element */}
+        <audio ref={audioRef} preload="metadata" className="hidden" />
       </div>
     </div>
   );
