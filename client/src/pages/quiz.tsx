@@ -146,6 +146,7 @@ export default function Quiz() {
   const [selectedVoice, setSelectedVoice] = useState("soul_sister");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showVoiceSelection, setShowVoiceSelection] = useState(true);
+  const [quizStarted, setQuizStarted] = useState(false);
 
   const handleVoiceChange = (voiceId: string) => {
     // Check if voice is disabled
@@ -385,16 +386,16 @@ export default function Quiz() {
     }
   };
 
-  // Auto-play question with answers when it changes (if sound is enabled)
+  // Auto-play question with answers when it changes (only after quiz has started)
   useEffect(() => {
-    if (soundEnabled && !showResult && quizQuestions[currentQuestion]) {
+    if (soundEnabled && !showResult && quizStarted && quizQuestions[currentQuestion] && !showVoiceSelection) {
       const timer = setTimeout(() => {
         playQuestionAudio(quizQuestions[currentQuestion].question, true);
       }, 800); // Slightly longer delay to avoid rate limits
       
       return () => clearTimeout(timer);
     }
-  }, [currentQuestion, soundEnabled, showResult]);
+  }, [currentQuestion, soundEnabled, showResult, quizStarted, showVoiceSelection]);
 
   const calculateResult = () => {
     const scores = { people_pleaser: 0, perfectionist: 0, rebel: 0 };
@@ -787,7 +788,10 @@ export default function Quiz() {
           {/* Start Quiz Button */}
           <div className="text-center">
             <Button 
-              onClick={() => setShowVoiceSelection(false)}
+              onClick={() => {
+                setShowVoiceSelection(false);
+                setQuizStarted(true);
+              }}
               className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 mystique-glow"
             >
               Begin Quiz Journey
