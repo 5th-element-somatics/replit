@@ -231,17 +231,58 @@ export default function Quiz() {
   const { toast } = useToast();
 
   const handleNavClick = () => {
+    // Stop any playing audio when navigating away
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+    setIsPlaying(false);
     setIsMenuOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Cleanup audio when component unmounts or user navigates away
   useEffect(() => {
-    return () => {
+    const handleBeforeUnload = () => {
       if (audioRef.current) {
         audioRef.current.pause();
+        audioRef.current.currentTime = 0;
       }
       setIsPlaying(false);
+    };
+
+    const handlePopState = () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+      setIsPlaying(false);
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden && audioRef.current) {
+        audioRef.current.pause(); 
+        setIsPlaying(false);
+      }
+    };
+
+    // Add event listeners for page navigation and visibility changes
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('popstate', handlePopState);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      // Cleanup on component unmount
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+      setIsPlaying(false);
+      
+      // Remove event listeners
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('popstate', handlePopState);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
 
