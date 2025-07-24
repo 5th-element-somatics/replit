@@ -289,9 +289,11 @@ export default function WorkWithMe() {
           <div className="grid md:grid-cols-3 gap-8 text-center md:text-left">
             <div>
               <div className="flex items-center justify-center md:justify-start space-x-3 mb-4">
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
-                  <span className="text-white font-serif font-bold">5E</span>
-                </div>
+                <img 
+                  src={tiger_no_bg} 
+                  alt="Fifth Element Somatics" 
+                  className="h-10 w-auto"
+                />
                 <span className="text-lg font-serif font-semibold text-white">Fifth Element Somatics</span>
               </div>
               <p className="text-gray-400 text-sm">

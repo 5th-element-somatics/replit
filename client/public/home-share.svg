@@ -23,11 +23,20 @@
   <circle cx="200" cy="150" r="100" fill="url(#glowGradient)"/>
   <circle cx="1000" cy="480" r="80" fill="url(#glowGradient)"/>
   
-  <!-- Logo circle -->
+  <!-- Tiger silhouette logo -->
   <circle cx="300" cy="315" r="80" fill="url(#logoGradient)" opacity="0.9"/>
-  <text x="300" y="335" font-family="serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">
-    5E
-  </text>
+  <g transform="translate(240, 275)">
+    <!-- Simplified tiger head silhouette -->
+    <path d="M60 20C70 15 80 20 85 30C88 35 85 40 80 42C85 45 90 50 85 55C80 60 70 58 65 55
+             C60 58 50 60 45 55C40 50 45 45 50 42C45 40 42 35 45 30C50 20 55 15 60 20Z
+             M50 25C52 23 54 25 52 27C50 25 50 25 50 25Z
+             M70 25C72 23 74 25 72 27C70 25 70 25 70 25Z
+             M60 35C58 35 58 37 60 37C62 37 62 35 60 35Z" 
+          fill="white"/>
+    <!-- Tiger stripes -->
+    <path d="M48 28L52 28M68 28L72 28M46 32L50 32M70 32L74 32M48 36L52 36M68 36L72 36" 
+          stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
   
   <!-- Main title -->
   <text x="450" y="200" font-family="serif" font-size="54" font-weight="bold" fill="white">
