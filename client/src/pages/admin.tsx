@@ -44,7 +44,9 @@ export default function Admin() {
   const { data: applications, isLoading: applicationsLoading, error: applicationsError } = useQuery({
     queryKey: ['applications'],
     queryFn: async () => {
-      const response = await fetch('/api/applications');
+      const response = await fetch('/api/applications', {
+        credentials: 'include'
+      });
       if (!response.ok) {
         if (response.status === 401) {
           setLocation('/admin-login');
@@ -59,7 +61,9 @@ export default function Admin() {
   const { data: leads, isLoading: leadsLoading, error: leadsError } = useQuery({
     queryKey: ['leads'],
     queryFn: async () => {
-      const response = await fetch('/api/leads');
+      const response = await fetch('/api/leads', {
+        credentials: 'include'
+      });
       if (!response.ok) {
         if (response.status === 401) {
           setLocation('/admin-login');

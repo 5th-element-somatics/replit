@@ -35,6 +35,7 @@ export default function AdminVerify() {
           headers: {
             'Content-Type': 'application/json',
           },
+          credentials: 'include',
           body: JSON.stringify({ token }),
         });
 
