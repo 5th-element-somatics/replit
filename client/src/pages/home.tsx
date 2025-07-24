@@ -54,13 +54,18 @@ export default function Home() {
       />
       {/* Navigation */}
       <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
-        <Link href="/" onClick={handleNavClick}>
-          <img 
-            src={tiger_no_bg} 
-            alt="Fifth Element Somatics" 
-            className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
-          />
-        </Link>
+        <div className="flex items-center space-x-3">
+          <Link href="/" onClick={handleNavClick}>
+            <img 
+              src={tiger_no_bg} 
+              alt="Fifth Element Somatics" 
+              className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
+            />
+          </Link>
+          <Link href="/" onClick={handleNavClick} className="md:hidden">
+            <span className="text-white font-bold text-lg tracking-wide">FIFTH ELEMENT SOMATICS</span>
+          </Link>
+        </div>
         
         {/* Desktop Navigation */}
         <div className="hidden md:flex space-x-8">

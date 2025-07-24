@@ -529,13 +529,18 @@ export default function Quiz() {
         <div className="max-w-4xl mx-auto">
           {/* Navigation */}
           <nav className="flex items-center justify-between mb-8">
-            <Link href="/" onClick={handleNavClick}>
-              <img 
-                src="/tiger-logo.png" 
-                alt="Fifth Element Somatics" 
-                className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
-              />
-            </Link>
+            <div className="flex items-center space-x-3">
+              <Link href="/" onClick={handleNavClick}>
+                <img 
+                  src={tiger_no_bg} 
+                  alt="Fifth Element Somatics" 
+                  className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
+                />
+              </Link>
+              <Link href="/" onClick={handleNavClick} className="md:hidden">
+                <span className="text-white font-bold text-lg tracking-wide">FIFTH ELEMENT SOMATICS</span>
+              </Link>
+            </div>
             
             {/* Desktop Navigation */}
             <div className="hidden md:flex space-x-8">
@@ -858,13 +863,18 @@ export default function Quiz() {
       <div className="max-w-3xl mx-auto">
         {/* Navigation */}
         <nav className="flex items-center justify-between mb-8">
-          <Link href="/" onClick={handleNavClick}>
-            <img 
-              src={tiger_no_bg} 
-              alt="Fifth Element Somatics" 
-              className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
-            />
-          </Link>
+          <div className="flex items-center space-x-3">
+            <Link href="/" onClick={handleNavClick}>
+              <img 
+                src={tiger_no_bg} 
+                alt="Fifth Element Somatics" 
+                className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
+              />
+            </Link>
+            <Link href="/" onClick={handleNavClick} className="md:hidden">
+              <span className="text-white font-bold text-lg tracking-wide">FIFTH ELEMENT SOMATICS</span>
+            </Link>
+          </div>
           
           {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-8">

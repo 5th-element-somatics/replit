@@ -13,6 +13,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Play, Pause, Download, Volume2, Menu, X } from "lucide-react";
 import meditationAudioUrl from "@assets/Grounding Into The Body - Guided Meditation_1753289930696.mp3";
+import tiger_no_bg from "@assets/tiger_no_bg.png";
 
 const leadFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -78,13 +79,18 @@ export default function FreeMeditation() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
       {/* Navigation */}
       <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
-        <Link href="/" onClick={handleNavClick}>
-          <img 
-            src="/tiger-logo.png" 
-            alt="Fifth Element Somatics" 
-            className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
-          />
-        </Link>
+        <div className="flex items-center space-x-3">
+          <Link href="/" onClick={handleNavClick}>
+            <img 
+              src={tiger_no_bg} 
+              alt="Fifth Element Somatics" 
+              className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
+            />
+          </Link>
+          <Link href="/" onClick={handleNavClick} className="md:hidden">
+            <span className="text-white font-bold text-lg tracking-wide">FIFTH ELEMENT SOMATICS</span>
+          </Link>
+        </div>
         
         {/* Desktop Navigation */}
         <div className="hidden md:flex space-x-8">
@@ -428,13 +434,18 @@ function MeditationAccess() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
       {/* Navigation */}
       <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
-        <Link href="/" onClick={handleNavClick}>
-          <img 
-            src="/tiger-logo.png" 
-            alt="Fifth Element Somatics" 
-            className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
-          />
-        </Link>
+        <div className="flex items-center space-x-3">
+          <Link href="/" onClick={handleNavClick}>
+            <img 
+              src={tiger_no_bg} 
+              alt="Fifth Element Somatics" 
+              className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
+            />
+          </Link>
+          <Link href="/" onClick={handleNavClick} className="md:hidden">
+            <span className="text-white font-bold text-lg tracking-wide">FIFTH ELEMENT SOMATICS</span>
+          </Link>
+        </div>
         
         {/* Desktop Navigation */}
         <div className="hidden md:flex space-x-8">
