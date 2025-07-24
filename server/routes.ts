@@ -555,21 +555,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         expiresAt,
       });
 
-      // Send magic link email - use the current request's origin
-      console.log('Request headers for magic link:', {
-        'x-forwarded-proto': req.headers['x-forwarded-proto'],
-        'x-forwarded-host': req.headers['x-forwarded-host'],
-        'host': req.headers.host,
-        'protocol': req.protocol,
-        'origin': req.headers.origin,
-        'referer': req.headers.referer
-      });
+      // Send magic link email - use the origin header if available, fallback to constructed URL
+      let baseUrl;
       
-      const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'https';
-      const host = req.headers['x-forwarded-host'] || req.headers.host;
-      const baseUrl = `${protocol}://${host}`;
+      if (req.headers.origin) {
+        // Use the origin header which contains the correct protocol and host
+        baseUrl = req.headers.origin;
+      } else if (req.headers.referer) {
+        // Fallback to referer and extract base URL
+        const refererUrl = new URL(req.headers.referer);
+        baseUrl = `${refererUrl.protocol}//${refererUrl.host}`;
+      } else {
+        // Last resort - construct from headers
+        const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'https';
+        const host = req.headers['x-forwarded-host'] || req.headers.host;
+        baseUrl = `${protocol}://${host}`;
+      }
       
-      console.log('Generated baseUrl:', baseUrl);
+      console.log('Using baseUrl for magic link:', baseUrl);
       
       const magicLink = `${baseUrl}/admin-verify?token=${token}`;
 
