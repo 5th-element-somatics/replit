@@ -532,6 +532,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Request magic link for admin login
   app.post("/api/admin/request-magic-link", async (req, res) => {
+    console.log('Magic link request headers:', JSON.stringify({
+      origin: req.headers.origin,
+      referer: req.headers.referer,
+      host: req.headers.host,
+      'x-forwarded-host': req.headers['x-forwarded-host'],
+      'x-forwarded-proto': req.headers['x-forwarded-proto']
+    }, null, 2));
+    
     try {
       const { email } = req.body;
       
