@@ -704,6 +704,231 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Advanced Admin API Endpoints
+
+  // Analytics Dashboard
+  app.get("/api/admin/analytics", requireAdminAuth, async (req, res) => {
+    try {
+      const analytics = await storage.getAnalytics();
+      res.json(analytics);
+    } catch (error: any) {
+      console.error("Analytics error:", error);
+      res.status(500).json({ message: "Error fetching analytics: " + error.message });
+    }
+  });
+
+  // Affiliate Management
+  app.get("/api/admin/affiliates", requireAdminAuth, async (req, res) => {
+    try {
+      const affiliates = await storage.getAffiliates();
+      res.json(affiliates);
+    } catch (error: any) {
+      console.error("Affiliates error:", error);
+      res.status(500).json({ message: "Error fetching affiliates: " + error.message });
+    }
+  });
+
+  app.post("/api/admin/affiliates", requireAdminAuth, async (req, res) => {
+    try {
+      const { name, email, commissionRate } = req.body;
+      const code = name.toLowerCase().replace(/\s+/g, '') + Math.random().toString(36).substr(2, 4);
+      
+      const affiliate = await storage.createAffiliate({
+        name,
+        email,
+        code,
+        commissionRate: commissionRate || '0.3000'
+      });
+      
+      res.json(affiliate);
+    } catch (error: any) {
+      console.error("Create affiliate error:", error);
+      res.status(500).json({ message: "Error creating affiliate: " + error.message });
+    }
+  });
+
+  // Email Marketing
+  app.get("/api/admin/email-sequences", requireAdminAuth, async (req, res) => {
+    try {
+      const sequences = await storage.getEmailSequences();
+      res.json(sequences);
+    } catch (error: any) {
+      console.error("Email sequences error:", error);
+      res.status(500).json({ message: "Error fetching email sequences: " + error.message });
+    }
+  });
+
+  app.post("/api/admin/email-sequences", requireAdminAuth, async (req, res) => {
+    try {
+      const { name, description, triggerType, triggerValue } = req.body;
+      
+      const sequence = await storage.createEmailSequence({
+        name,
+        description,
+        triggerType,
+        triggerValue
+      });
+      
+      res.json(sequence);
+    } catch (error: any) {
+      console.error("Create email sequence error:", error);
+      res.status(500).json({ message: "Error creating email sequence: " + error.message });
+    }
+  });
+
+  // CMS Content Management
+  app.get("/api/admin/content-pages", requireAdminAuth, async (req, res) => {
+    try {
+      const pages = await storage.getContentPages();
+      res.json(pages);
+    } catch (error: any) {
+      console.error("Content pages error:", error);
+      res.status(500).json({ message: "Error fetching content pages: " + error.message });
+    }
+  });
+
+  app.post("/api/admin/content-pages", requireAdminAuth, async (req, res) => {
+    try {
+      const { title, slug, content, metaDescription, isPublished } = req.body;
+      
+      const page = await storage.createContentPage({
+        title,
+        slug,
+        content,
+        metaDescription,
+        isPublished: isPublished || false
+      });
+      
+      res.json(page);
+    } catch (error: any) {
+      console.error("Create content page error:", error);
+      res.status(500).json({ message: "Error creating content page: " + error.message });
+    }
+  });
+
+  // Conversion Tracking
+  app.post("/api/track-conversion", async (req, res) => {
+    try {
+      const { eventType, eventValue, userEmail, metadata } = req.body;
+      
+      await storage.trackConversion({
+        eventType,
+        eventValue,
+        userEmail,
+        metadata
+      });
+      
+      res.json({ success: true });
+    } catch (error: any) {
+      console.error("Conversion tracking error:", error);
+      res.status(500).json({ message: "Error tracking conversion: " + error.message });
+    }
+  });
+
+  // Page View Tracking
+  app.post("/api/track-page-view", async (req, res) => {
+    try {
+      const { path, referrer, sessionId } = req.body;
+      
+      await storage.trackPageView({
+        path,
+        userAgent: req.headers['user-agent'],
+        ipAddress: req.ip || req.connection.remoteAddress,
+        referrer,
+        sessionId
+      });
+      
+      res.json({ success: true });
+    } catch (error: any) {
+      console.error("Page view tracking error:", error);
+      res.status(500).json({ message: "Error tracking page view: " + error.message });
+    }
+  });
+
+  // Lead Notes and Status Management
+  app.post("/api/admin/leads/:leadId/notes", requireAdminAuth, async (req: any, res) => {
+    try {
+      const { leadId } = req.params;
+      const { note } = req.body;
+      const adminEmail = req.adminEmail;
+      
+      const leadNote = await storage.addLeadNote({
+        leadId: parseInt(leadId),
+        note,
+        adminEmail
+      });
+      
+      res.json(leadNote);
+    } catch (error: any) {
+      console.error("Add lead note error:", error);
+      res.status(500).json({ message: "Error adding lead note: " + error.message });
+    }
+  });
+
+  app.post("/api/admin/leads/:leadId/status", requireAdminAuth, async (req: any, res) => {
+    try {
+      const { leadId } = req.params;
+      const { status } = req.body;
+      const adminEmail = req.adminEmail;
+      
+      const statusEntry = await storage.updateLeadStatus({
+        leadId: parseInt(leadId),
+        status,
+        changedBy: adminEmail
+      });
+      
+      res.json(statusEntry);
+    } catch (error: any) {
+      console.error("Update lead status error:", error);
+      res.status(500).json({ message: "Error updating lead status: " + error.message });
+    }
+  });
+
+  // Customer Tagging System
+  app.get("/api/admin/customer-tags", requireAdminAuth, async (req, res) => {
+    try {
+      const tags = await storage.getCustomerTags();
+      res.json(tags);
+    } catch (error: any) {
+      console.error("Customer tags error:", error);
+      res.status(500).json({ message: "Error fetching customer tags: " + error.message });
+    }
+  });
+
+  app.post("/api/admin/customer-tags", requireAdminAuth, async (req, res) => {
+    try {
+      const { name, description, color } = req.body;
+      
+      const tag = await storage.createCustomerTag({
+        name,
+        description,
+        color: color || '#6B7280'
+      });
+      
+      res.json(tag);
+    } catch (error: any) {
+      console.error("Create customer tag error:", error);
+      res.status(500).json({ message: "Error creating customer tag: " + error.message });
+    }
+  });
+
+  app.post("/api/admin/customers/:email/tags", requireAdminAuth, async (req, res) => {
+    try {
+      const { email } = req.params;
+      const { tagId } = req.body;
+      
+      const assignment = await storage.assignCustomerTag({
+        customerEmail: email,
+        tagId: parseInt(tagId)
+      });
+      
+      res.json(assignment);
+    } catch (error: any) {
+      console.error("Assign customer tag error:", error);
+      res.status(500).json({ message: "Error assigning customer tag: " + error.message });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

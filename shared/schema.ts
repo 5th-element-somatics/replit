@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, varchar, jsonb, decimal, date, real } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -56,6 +56,152 @@ export const adminSessions = pgTable("admin_sessions", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+// CMS Content Management
+export const contentPages = pgTable("content_pages", {
+  id: serial("id").primaryKey(),
+  slug: varchar("slug", { length: 255 }).notNull().unique(),
+  title: text("title").notNull(),
+  content: text("content").notNull(), // Rich text content
+  metaDescription: text("meta_description"),
+  isPublished: boolean("is_published").default(false),
+  publishedAt: timestamp("published_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const mediaLibrary = pgTable("media_library", {
+  id: serial("id").primaryKey(),
+  fileName: text("file_name").notNull(),
+  originalName: text("original_name").notNull(),
+  mimeType: text("mime_type").notNull(),
+  fileSize: integer("file_size").notNull(),
+  url: text("url").notNull(),
+  alt: text("alt"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// Email Marketing & Nurture Sequences
+export const emailSequences = pgTable("email_sequences", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description"),
+  triggerType: text("trigger_type").notNull(), // 'quiz_result', 'lead_source', 'purchase', 'manual'
+  triggerValue: text("trigger_value"), // specific quiz result, source name, etc.
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const emailTemplates = pgTable("email_templates", {
+  id: serial("id").primaryKey(),
+  sequenceId: integer("sequence_id").references(() => emailSequences.id),
+  stepNumber: integer("step_number").notNull(),
+  subject: text("subject").notNull(),
+  htmlContent: text("html_content").notNull(),
+  textContent: text("text_content"),
+  delayDays: integer("delay_days").default(0),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const emailDeliveries = pgTable("email_deliveries", {
+  id: serial("id").primaryKey(),
+  templateId: integer("template_id").references(() => emailTemplates.id),
+  recipientEmail: text("recipient_email").notNull(),
+  recipientName: text("recipient_name"),
+  status: text("status").notNull(), // 'queued', 'sent', 'delivered', 'opened', 'clicked', 'bounced', 'failed'
+  sentAt: timestamp("sent_at"),
+  openedAt: timestamp("opened_at"),
+  clickedAt: timestamp("clicked_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// Analytics & Tracking
+export const pageViews = pgTable("page_views", {
+  id: serial("id").primaryKey(),
+  path: text("path").notNull(),
+  userAgent: text("user_agent"),
+  ipAddress: text("ip_address"),
+  referrer: text("referrer"),
+  sessionId: text("session_id"),
+  viewedAt: timestamp("viewed_at").defaultNow().notNull(),
+});
+
+export const conversionEvents = pgTable("conversion_events", {
+  id: serial("id").primaryKey(),
+  eventType: text("event_type").notNull(), // 'quiz_completed', 'email_captured', 'purchase', 'application_submitted'
+  eventValue: decimal("event_value", { precision: 10, scale: 2 }),
+  userEmail: text("user_email"),
+  metadata: jsonb("metadata"), // Additional event data
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// Affiliate Management
+export const affiliates = pgTable("affiliates", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
+  code: varchar("code", { length: 50 }).notNull().unique(),
+  commissionRate: decimal("commission_rate", { precision: 5, scale: 4 }).default("0.3000"), // 30% default
+  paypalEmail: text("paypal_email"),
+  isActive: boolean("is_active").default(true),
+  totalEarnings: decimal("total_earnings", { precision: 10, scale: 2 }).default("0.00"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const affiliateClicks = pgTable("affiliate_clicks", {
+  id: serial("id").primaryKey(),
+  affiliateId: integer("affiliate_id").references(() => affiliates.id),
+  ipAddress: text("ip_address"),
+  userAgent: text("user_agent"),
+  referrer: text("referrer"),
+  landingPage: text("landing_page").notNull(),
+  clickedAt: timestamp("clicked_at").defaultNow().notNull(),
+});
+
+export const affiliateCommissions = pgTable("affiliate_commissions", {
+  id: serial("id").primaryKey(),
+  affiliateId: integer("affiliate_id").references(() => affiliates.id),
+  purchaseId: integer("purchase_id").references(() => purchases.id),
+  commissionAmount: decimal("commission_amount", { precision: 10, scale: 2 }).notNull(),
+  commissionRate: decimal("commission_rate", { precision: 5, scale: 4 }).notNull(),
+  status: text("status").notNull().default("pending"), // 'pending', 'approved', 'paid'
+  paidAt: timestamp("paid_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// Customer Segmentation & Tags
+export const customerTags = pgTable("customer_tags", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull().unique(),
+  description: text("description"),
+  color: varchar("color", { length: 7 }).default("#6B7280"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const customerTagAssignments = pgTable("customer_tag_assignments", {
+  id: serial("id").primaryKey(),
+  customerEmail: text("customer_email").notNull(),
+  tagId: integer("tag_id").references(() => customerTags.id),
+  assignedAt: timestamp("assigned_at").defaultNow().notNull(),
+});
+
+// Advanced Lead Management
+export const leadNotes = pgTable("lead_notes", {
+  id: serial("id").primaryKey(),
+  leadId: integer("lead_id").references(() => leads.id),
+  note: text("note").notNull(),
+  adminEmail: text("admin_email").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const leadStatus = pgTable("lead_status", {
+  id: serial("id").primaryKey(),
+  leadId: integer("lead_id").references(() => leads.id),
+  status: text("status").notNull(), // 'new', 'contacted', 'qualified', 'converted', 'lost'
+  changedBy: text("changed_by").notNull(),
+  changedAt: timestamp("changed_at").defaultNow().notNull(),
+});
+
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
@@ -110,3 +256,17 @@ export type InsertMagicLink = z.infer<typeof insertMagicLinkSchema>;
 export type MagicLink = typeof magicLinks.$inferSelect;
 export type InsertAdminSession = z.infer<typeof insertAdminSessionSchema>;
 export type AdminSession = typeof adminSessions.$inferSelect;
+
+// New advanced types
+export type ContentPage = typeof contentPages.$inferSelect;
+export type EmailSequence = typeof emailSequences.$inferSelect;
+export type EmailTemplate = typeof emailTemplates.$inferSelect;
+export type EmailDelivery = typeof emailDeliveries.$inferSelect;
+export type PageView = typeof pageViews.$inferSelect;
+export type ConversionEvent = typeof conversionEvents.$inferSelect;
+export type Affiliate = typeof affiliates.$inferSelect;
+export type AffiliateClick = typeof affiliateClicks.$inferSelect;
+export type AffiliateCommission = typeof affiliateCommissions.$inferSelect;
+export type CustomerTag = typeof customerTags.$inferSelect;
+export type LeadNote = typeof leadNotes.$inferSelect;
+export type LeadStatusEntry = typeof leadStatus.$inferSelect;

@@ -14,6 +14,10 @@ export default function Admin() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
 
+  const handleNavClick = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const logoutMutation = useMutation({
     mutationFn: async () => {
       const response = await fetch('/api/admin/logout', {
@@ -119,6 +123,11 @@ export default function Admin() {
           </div>
         </Link>
         <div className="flex items-center space-x-4">
+          <Link href="/admin-advanced" onClick={handleNavClick}>
+            <Button variant="outline" size="sm" className="text-gray-300 border-gray-600 hover:bg-gray-700">
+              Advanced Dashboard
+            </Button>
+          </Link>
           <span className="text-purple-400 font-semibold">Admin Dashboard</span>
           <Button 
             onClick={() => logoutMutation.mutate()}

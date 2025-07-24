@@ -11,6 +11,7 @@ import Checkout from "@/pages/checkout";
 import Watch from "@/pages/watch";
 import Apply from "@/pages/apply";
 import Admin from "@/pages/admin";
+import AdminAdvanced from "@/pages/admin-advanced";
 import AdminLogin from "@/pages/admin-login";
 import AdminVerify from "@/pages/admin-verify";
 import Quiz from "@/pages/quiz";
@@ -28,6 +29,7 @@ function Router() {
       <Route path="/watch" component={Watch} />
       <Route path="/apply" component={Apply} />
       <Route path="/admin" component={Admin} />
+      <Route path="/admin-advanced" component={AdminAdvanced} />
       <Route path="/admin-login" component={AdminLogin} />
       <Route path="/admin-verify" component={AdminVerify} />
       <Route path="/free-meditation" component={FreeMeditation} />
