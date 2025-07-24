@@ -555,10 +555,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         expiresAt,
       });
 
-      // Send magic link email
-      const baseUrl = process.env.NODE_ENV === 'development' 
-        ? 'http://localhost:5000' 
-        : 'https://fifthelementsomatics.com';
+      // Send magic link email - use the current request's origin
+      const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'https';
+      const host = req.headers['x-forwarded-host'] || req.headers.host;
+      const baseUrl = `${protocol}://${host}`;
       
       const magicLink = `${baseUrl}/admin-verify?token=${token}`;
 
