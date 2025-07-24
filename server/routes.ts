@@ -527,7 +527,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const authorizedEmails = [
     'hello@fifthelementsomatics.com',
     'saint@fifthelementsomatics.com',
-    // Add more authorized admin emails here
+    'raj@raj.net' // Development access
   ];
 
   // Request magic link for admin login
