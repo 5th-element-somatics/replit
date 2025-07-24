@@ -340,6 +340,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const sessionToken = req.cookies?.admin_session;
       
+      console.log('Auth middleware - checking session token:', sessionToken ? sessionToken.substring(0, 8) + '...' : 'NO TOKEN');
+      console.log('Available cookies:', Object.keys(req.cookies || {}));
+      
       if (!sessionToken) {
         return res.status(401).json({ message: "Authentication required" });
       }
@@ -347,14 +350,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const session = await storage.getAdminSession(sessionToken);
       
       if (!session) {
+        console.log('Session not found in database for token:', sessionToken.substring(0, 8) + '...');
         return res.status(401).json({ message: "Invalid session" });
       }
 
       if (new Date() > session.expiresAt) {
+        console.log('Session expired for:', session.email);
         await storage.deleteAdminSession(sessionToken);
         return res.status(401).json({ message: "Session expired" });
       }
 
+      console.log('Auth successful for:', session.email);
       req.adminUser = { email: session.email };
       next();
     } catch (error) {
@@ -667,10 +673,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Set session cookie
       res.cookie('admin_session', sessionToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: true, // Always use secure cookies since we're on HTTPS
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
-        sameSite: 'lax'
+        sameSite: 'none' // Required for cross-origin cookies
       });
+      
+      console.log('Admin session created for:', magicLink.email, 'with token:', sessionToken.substring(0, 8) + '...');
 
       res.json({ success: true, message: "Login successful" });
     } catch (error: any) {
