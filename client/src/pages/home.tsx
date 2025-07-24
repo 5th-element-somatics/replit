@@ -221,9 +221,12 @@ export default function Home() {
           
           <div className="mt-12">
             <Link href="/masterclass" onClick={handleNavClick}>
-              <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-12 py-5 rounded-full text-xl transition-all duration-300 mystique-glow">
-                JOIN MASTERCLASS<br />
-                <span className="text-sm">THE GOOD GIRL PARADOX</span>
+              <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 sm:px-12 py-4 sm:py-5 rounded-full text-lg sm:text-xl transition-all duration-300 mystique-glow max-w-xs sm:max-w-none mx-auto">
+                <span className="text-center leading-tight">
+                  JOIN MASTERCLASS<br className="hidden sm:block" />
+                  <span className="sm:hidden"> </span>
+                  <span className="text-sm sm:text-sm block sm:inline">THE GOOD GIRL PARADOX</span>
+                </span>
               </Button>
             </Link>
           </div>
