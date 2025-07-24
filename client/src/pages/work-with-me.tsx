@@ -35,7 +35,7 @@ export default function WorkWithMe() {
             />
           </Link>
           <Link href="/" onClick={handleNavClick} className="md:hidden">
-            <span className="text-white font-bold text-lg tracking-wide">FIFTH ELEMENT SOMATICS</span>
+            <span className="text-lg font-serif font-semibold text-white">FIFTH ELEMENT SOMATICS</span>
           </Link>
         </div>
         
