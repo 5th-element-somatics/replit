@@ -556,9 +556,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       // Send magic link email - use the current request's origin
+      console.log('Request headers for magic link:', {
+        'x-forwarded-proto': req.headers['x-forwarded-proto'],
+        'x-forwarded-host': req.headers['x-forwarded-host'],
+        'host': req.headers.host,
+        'protocol': req.protocol,
+        'origin': req.headers.origin,
+        'referer': req.headers.referer
+      });
+      
       const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'https';
       const host = req.headers['x-forwarded-host'] || req.headers.host;
       const baseUrl = `${protocol}://${host}`;
+      
+      console.log('Generated baseUrl:', baseUrl);
       
       const magicLink = `${baseUrl}/admin-verify?token=${token}`;
 
