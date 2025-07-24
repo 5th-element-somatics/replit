@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Play, Pause, Download, Volume2, Menu, X } from "lucide-react";
 import meditationAudioUrl from "@assets/Grounding Into The Body - Guided Meditation_1753289930696.mp3";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
+import MeditationVisuals from "@/components/MeditationVisuals";
 
 const leadFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -48,6 +49,7 @@ export default function FreeMeditation() {
     },
     onSuccess: () => {
       setIsSubmitted(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       toast({
         title: "Success!",
         description: "Check your email for the download link.",
@@ -504,9 +506,19 @@ function MeditationAccess() {
             </p>
           </div>
 
-          {/* Enhanced Audio Player */}
-          <Card className="bg-gray-800/80 backdrop-blur-sm border border-emerald-400 border-opacity-30 mb-8 shadow-xl shadow-emerald-500/10">
-            <CardContent className="p-8">
+          {/* Enhanced Audio Player with Visual Background */}
+          <div className="relative mb-8">
+            {/* Meditation Visuals Background */}
+            <div className="absolute inset-0 rounded-lg overflow-hidden pointer-events-none">
+              <MeditationVisuals 
+                isPlaying={isPlaying}
+                currentTime={currentTime}
+                duration={duration}
+              />
+            </div>
+            
+            <Card className="relative bg-gray-800/80 backdrop-blur-sm border border-emerald-400 border-opacity-30 shadow-xl shadow-emerald-500/10">
+              <CardContent className="p-8 relative z-10">
               {/* Visual Header */}
               <div className="text-center mb-8">
                 <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-500/30">
@@ -627,6 +639,7 @@ function MeditationAccess() {
               </div>
             </CardContent>
           </Card>
+          </div>
 
           {/* Benefits Section */}
           <div className="grid md:grid-cols-2 gap-8 mb-8">

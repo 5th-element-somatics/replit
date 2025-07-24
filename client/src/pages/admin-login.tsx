@@ -45,6 +45,7 @@ export default function AdminLogin() {
     },
     onSuccess: () => {
       setIsSubmitted(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       toast({
         title: "Magic link sent!",
         description: "Check your email for the login link. It will expire in 15 minutes.",

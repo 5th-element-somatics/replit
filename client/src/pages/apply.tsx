@@ -306,6 +306,7 @@ export default function Apply() {
     },
     onSuccess: () => {
       setIsSubmitted(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       toast({
         title: "Application Submitted!",
         description: "Thank you for your application. Saint will be in touch soon.",

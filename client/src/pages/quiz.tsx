@@ -479,6 +479,7 @@ export default function Quiz() {
         quizAnswers: answers
       });
 
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       toast({
         title: "Results saved!",
         description: "Check your email for your personalized transformation guide.",

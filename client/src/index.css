@@ -207,4 +207,37 @@
   .animate-float-slow {
     animation: float-slow 5s ease-in-out infinite 2s;
   }
+
+  /* Additional meditation visual animations */
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 20s linear infinite;
+  }
+
+  .animate-gradient {
+    animation: gradient-shift 8s ease infinite;
+  }
+
+  /* Gradient utilities for meditation */
+  .bg-gradient-radial {
+    background: radial-gradient(circle, var(--tw-gradient-from), var(--tw-gradient-to));
+  }
+
+  .bg-gradient-conic {
+    background: conic-gradient(from 0deg, var(--tw-gradient-from), var(--tw-gradient-to), var(--tw-gradient-from));
+  }
+
+  /* Duration utilities */
+  .duration-4000 { transition-duration: 4000ms; }
+  .duration-2000 { transition-duration: 2000ms; }
+  .duration-3000 { transition-duration: 3000ms; }
 }
