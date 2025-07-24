@@ -44,15 +44,38 @@ export function SEOHead({
     updateMetaTag('og:url', url);
     updateMetaTag('og:type', type);
 
-    // Twitter tags
+    // Twitter/X Card tags
+    updateMetaTag('twitter:card', 'summary_large_image');
+    updateMetaTag('twitter:site', '@fifthelementsomatics');
+    updateMetaTag('twitter:creator', '@fifthelementsomatics');
     updateMetaTag('twitter:title', title);
     updateMetaTag('twitter:description', description);
     updateMetaTag('twitter:image', `https://fifthelementsomatics.com${image}`);
+    updateMetaTag('twitter:image:alt', 'Fifth Element Somatics - Sacred Embodiment & Erotic Reclamation');
 
-    // WhatsApp tags
+    // WhatsApp optimization tags
     updateMetaTag('whatsapp:title', title.split(' - ')[0]);
     updateMetaTag('whatsapp:description', description);
     updateMetaTag('whatsapp:image', `https://fifthelementsomatics.com${image}`);
+
+    // iMessage/Apple specific tags
+    updateMetaTag('apple-mobile-web-app-title', title.split(' - ')[0]);
+    updateMetaTag('apple-mobile-web-app-capable', 'yes', true);
+    updateMetaTag('apple-mobile-web-app-status-bar-style', 'black-translucent', true);
+
+    // Additional social platform tags
+    updateMetaTag('og:site_name', 'Fifth Element Somatics');
+    updateMetaTag('og:locale', 'en_US');
+    updateMetaTag('og:image:width', '1200');
+    updateMetaTag('og:image:height', '630');
+    updateMetaTag('og:image:alt', 'Fifth Element Somatics - Sacred Embodiment & Erotic Reclamation');
+
+    // LinkedIn specific tags
+    updateMetaTag('linkedin:owner', 'Fifth Element Somatics');
+
+    // Rich snippet structured data
+    updateMetaTag('article:author', 'Saint');
+    updateMetaTag('article:publisher', 'Fifth Element Somatics');
 
     // Update canonical URL
     let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;

@@ -1,0 +1,70 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a1a"/>
+      <stop offset="50%" style="stop-color:#4c1d95"/>
+      <stop offset="100%" style="stop-color:#000000"/>
+    </linearGradient>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#c77dff"/>
+      <stop offset="100%" style="stop-color:#f97316"/>
+    </linearGradient>
+    <radialGradient id="glowGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#c77dff" stop-opacity="0.3"/>
+      <stop offset="100%" style="stop-color:#c77dff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
+  
+  <!-- Subtle glow effects -->
+  <circle cx="200" cy="150" r="100" fill="url(#glowGradient)"/>
+  <circle cx="1000" cy="480" r="80" fill="url(#glowGradient)"/>
+  
+  <!-- Logo circle -->
+  <circle cx="300" cy="315" r="80" fill="url(#logoGradient)" opacity="0.9"/>
+  <text x="300" y="335" font-family="serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">
+    5E
+  </text>
+  
+  <!-- Main title -->
+  <text x="450" y="200" font-family="serif" font-size="54" font-weight="bold" fill="white">
+    Fifth Element Somatics
+  </text>
+  
+  <!-- Tagline -->
+  <text x="450" y="260" font-family="serif" font-size="32" fill="#e2e8f0">
+    Sacred embodiment and erotic reclamation
+  </text>
+  <text x="450" y="300" font-family="serif" font-size="32" fill="#e2e8f0">
+    for the modern woman
+  </text>
+  
+  <!-- Key offerings -->
+  <text x="450" y="370" font-family="sans-serif" font-size="24" fill="#c77dff">
+    ✨ Take the Good Girl Paradox Quiz
+  </text>
+  <text x="450" y="405" font-family="sans-serif" font-size="24" fill="#c77dff">
+    🧘‍♀️ Free Grounding Meditation
+  </text>
+  <text x="450" y="440" font-family="sans-serif" font-size="24" fill="#c77dff">
+    💫 Transformational Masterclass
+  </text>
+  
+  <!-- CTA -->
+  <rect x="450" y="480" width="280" height="55" rx="27" fill="url(#logoGradient)"/>
+  <text x="590" y="515" font-family="sans-serif" font-size="22" font-weight="bold" fill="white" text-anchor="middle">
+    Start Your Journey
+  </text>
+  
+  <!-- Decorative elements -->
+  <circle cx="950" cy="180" r="4" fill="#c77dff" opacity="0.7"/>
+  <circle cx="920" cy="200" r="3" fill="#f97316" opacity="0.6"/>
+  <circle cx="980" cy="160" r="2" fill="#c77dff" opacity="0.8"/>
+  
+  <circle cx="850" cy="470" r="4" fill="#c77dff" opacity="0.7"/>
+  <circle cx="880" cy="450" r="3" fill="#f97316" opacity="0.6"/>
+  <circle cx="820" cy="490" r="2" fill="#c77dff" opacity="0.8"/>
+</svg>

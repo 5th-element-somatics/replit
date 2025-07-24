@@ -1,43 +1,77 @@
 <svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
   <defs>
     <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#0a0a0a;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#1a0a1a;stop-opacity:1" />
+      <stop offset="0%" style="stop-color:#1a1a1a"/>
+      <stop offset="50%" style="stop-color:#3730a3"/>
+      <stop offset="100%" style="stop-color:#000000"/>
     </linearGradient>
-    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#10B981;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#34D399;stop-opacity:1" />
+    <linearGradient id="circleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a855f7"/>
+      <stop offset="100%" style="stop-color:#ec4899"/>
     </linearGradient>
-    <linearGradient id="ctaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#10B981;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#34D399;stop-opacity:1" />
-    </linearGradient>
+    <radialGradient id="glowGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#a855f7" stop-opacity="0.3"/>
+      <stop offset="100%" style="stop-color:#a855f7" stop-opacity="0"/>
+    </radialGradient>
   </defs>
   
   <!-- Background -->
   <rect width="1200" height="630" fill="url(#bgGradient)"/>
   
-  <!-- Brand Circle -->
-  <circle cx="100" cy="100" r="40" fill="url(#textGradient)"/>
-  <text x="100" y="110" text-anchor="middle" fill="#000000" font-family="serif" font-size="24" font-weight="bold">5E</text>
+  <!-- Subtle glow effects -->
+  <circle cx="200" cy="150" r="100" fill="url(#glowGradient)"/>
+  <circle cx="1000" cy="480" r="80" fill="url(#glowGradient)"/>
   
-  <!-- Main Content -->
-  <text x="600" y="160" text-anchor="middle" fill="url(#textGradient)" font-family="serif" font-size="48" font-weight="bold">DISCOVER YOUR</text>
-  <text x="600" y="220" text-anchor="middle" fill="url(#textGradient)" font-family="serif" font-size="48" font-weight="bold">GOOD GIRL ARCHETYPE</text>
+  <!-- Main circle with quiz icon -->
+  <circle cx="300" cy="315" r="80" fill="url(#circleGradient)" opacity="0.9"/>
+  
+  <!-- Quiz/heart icon -->
+  <g transform="translate(260, 275)">
+    <path d="M40 16C34.4 4.4 18.4 4.4 12.8 16L40 44L67.2 16C61.6 4.4 45.6 4.4 40 16Z
+             M40 52L8 20C8 8.96 16.96 0 28 0C33.04 0 37.68 2.08 40.96 5.36
+             C44.24 2.08 48.88 0 53.92 0C64.96 0 72 8.96 72 20L40 52Z" 
+          fill="white"/>
+  </g>
+  
+  <!-- Title -->
+  <text x="450" y="230" font-family="serif" font-size="52" font-weight="bold" fill="white">
+    Discover Your
+  </text>
+  <text x="450" y="290" font-family="serif" font-size="52" font-weight="bold" fill="white">
+    Good Girl Archetype
+  </text>
   
   <!-- Subtitle -->
-  <text x="600" y="280" text-anchor="middle" fill="#E5E7EB" font-family="sans-serif" font-size="24">Are you a People-Pleaser, Perfectionist, or Awakened Rebel?</text>
-  <text x="600" y="320" text-anchor="middle" fill="#E5E7EB" font-family="sans-serif" font-size="24">Take this viral quiz to find out + get your personalized roadmap</text>
+  <text x="450" y="350" font-family="sans-serif" font-size="28" fill="#e2e8f0">
+    Take the viral quiz that's transforming women's relationship
+  </text>
+  <text x="450" y="385" font-family="sans-serif" font-size="28" fill="#e2e8f0">
+    with pleasure, power, and authenticity
+  </text>
   
-  <!-- Features -->
-  <text x="600" y="380" text-anchor="middle" fill="#FFFFFF" font-family="sans-serif" font-size="20">✨ Voice-narrated questions</text>
-  <text x="600" y="410" text-anchor="middle" fill="#FFFFFF" font-family="sans-serif" font-size="20">🎯 Personalized results</text>
-  <text x="600" y="440" text-anchor="middle" fill="#FFFFFF" font-family="sans-serif" font-size="20">📧 Custom email insights</text>
+  <!-- Call to Action -->
+  <rect x="450" y="430" width="280" height="60" rx="30" fill="url(#circleGradient)"/>
+  <text x="590" y="470" font-family="sans-serif" font-size="24" font-weight="bold" fill="white" text-anchor="middle">
+    Take Quiz Now
+  </text>
   
-  <!-- CTA -->
-  <rect x="450" y="480" width="300" height="60" rx="30" fill="url(#ctaGradient)"/>
-  <text x="600" y="520" text-anchor="middle" fill="#000000" font-family="sans-serif" font-size="20" font-weight="bold">TAKE THE QUIZ</text>
+  <!-- Brand -->
+  <text x="450" y="540" font-family="serif" font-size="24" font-weight="600" fill="#e2e8f0">
+    Fifth Element Somatics
+  </text>
   
-  <!-- Website -->
-  <text x="600" y="580" text-anchor="middle" fill="#10B981" font-family="sans-serif" font-size="18">fifthelementsomatics.com/quiz</text>
+  <!-- Decorative hearts -->
+  <g transform="translate(920, 160)">
+    <path d="M20 8C17.2 2.2 9.2 2.2 6.4 8L20 22L33.6 8C30.8 2.2 22.8 2.2 20 8Z" 
+          fill="#ec4899" opacity="0.6"/>
+  </g>
+  <g transform="translate(850, 420)">
+    <path d="M20 8C17.2 2.2 9.2 2.2 6.4 8L20 22L33.6 8C30.8 2.2 22.8 2.2 20 8Z" 
+          fill="#a855f7" opacity="0.7"/>
+  </g>
+  <g transform="translate(980, 440)">
+    <path d="M15 6C13.4 1.65 6.9 1.65 4.8 6L15 16.5L25.2 6C23.1 1.65 16.6 1.65 15 6Z" 
+          fill="#ec4899" opacity="0.5"/>
+  </g>
 </svg>

@@ -47,10 +47,12 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
       <SEOHead 
-        title="Fifth Element Somatics - Sensual. Sovereign. Sacred."
-        description="I help women reclaim their erotic truth & build unshakable intimacy with themselves, their bodies, and the people they love. Sacred embodiment and erotic reclamation for the modern woman."
-        image="/social-share.svg"
+        title="Fifth Element Somatics - Sacred Embodiment & Erotic Reclamation for Women"
+        description="Reclaim your erotic truth and build unshakable intimacy with yourself, your body, and the people you love. Take the viral Good Girl Quiz, download your free meditation, and discover transformational masterclass experiences. Sensual. Sovereign. Sacred."
+        image="/home-share.svg"
         url="https://fifthelementsomatics.com/"
+        type="website"
+        keywords="sacred embodiment, erotic reclamation, women's empowerment, somatic healing, nervous system regulation, good girl syndrome, embodiment coach, intimacy coaching, body wisdom, feminine power"
       />
       {/* Navigation */}
       <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">

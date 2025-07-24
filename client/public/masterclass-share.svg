@@ -1,43 +1,80 @@
 <svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
   <defs>
     <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#0a0a0a;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#1a0a1a;stop-opacity:1" />
+      <stop offset="0%" style="stop-color:#1a1a1a"/>
+      <stop offset="50%" style="stop-color:#7c3aed"/>
+      <stop offset="100%" style="stop-color:#000000"/>
     </linearGradient>
-    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#C77DFF;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#E879F9;stop-opacity:1" />
+    <linearGradient id="circleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#c77dff"/>
+      <stop offset="100%" style="stop-color:#e879f9"/>
     </linearGradient>
-    <linearGradient id="ctaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#C77DFF;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#E879F9;stop-opacity:1" />
-    </linearGradient>
+    <radialGradient id="glowGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#c77dff" stop-opacity="0.3"/>
+      <stop offset="100%" style="stop-color:#c77dff" stop-opacity="0"/>
+    </radialGradient>
   </defs>
   
   <!-- Background -->
   <rect width="1200" height="630" fill="url(#bgGradient)"/>
   
-  <!-- Brand Circle -->
-  <circle cx="100" cy="100" r="40" fill="url(#textGradient)"/>
-  <text x="100" y="110" text-anchor="middle" fill="#000000" font-family="serif" font-size="24" font-weight="bold">5E</text>
+  <!-- Subtle glow effects -->
+  <circle cx="200" cy="150" r="100" fill="url(#glowGradient)"/>
+  <circle cx="1000" cy="480" r="80" fill="url(#glowGradient)"/>
   
-  <!-- Main Content -->
-  <text x="600" y="180" text-anchor="middle" fill="url(#textGradient)" font-family="serif" font-size="56" font-weight="bold">THE GOOD GIRL</text>
-  <text x="600" y="240" text-anchor="middle" fill="url(#textGradient)" font-family="serif" font-size="56" font-weight="bold">PARADOX</text>
-  <text x="600" y="300" text-anchor="middle" fill="#FFFFFF" font-family="serif" font-size="32" font-weight="300">MASTERCLASS</text>
+  <!-- Main circle with crown icon -->
+  <circle cx="300" cy="315" r="80" fill="url(#circleGradient)" opacity="0.9"/>
+  
+  <!-- Crown icon -->
+  <g transform="translate(260, 275)">
+    <path d="M20 10L25 20L30 10L35 20L40 10L45 20L50 15L55 25L60 15L40 35L20 35L0 25L5 15L10 25L15 15L20 10Z
+             M10 40H70V50H10V40Z" 
+          fill="white"/>
+  </g>
+  
+  <!-- Title -->
+  <text x="450" y="220" font-family="serif" font-size="48" font-weight="bold" fill="white">
+    The Good Girl Paradox
+  </text>
+  <text x="450" y="280" font-family="serif" font-size="56" font-weight="bold" fill="white">
+    MASTERCLASS
+  </text>
   
   <!-- Subtitle -->
-  <text x="600" y="360" text-anchor="middle" fill="#E5E7EB" font-family="sans-serif" font-size="28">Break free from people-pleasing</text>
-  <text x="600" y="395" text-anchor="middle" fill="#E5E7EB" font-family="sans-serif" font-size="28">&amp; reclaim your authentic power</text>
+  <text x="450" y="340" font-family="sans-serif" font-size="26" fill="#e2e8f0">
+    Break free from people-pleasing patterns and
+  </text>
+  <text x="450" y="375" font-family="sans-serif" font-size="26" fill="#e2e8f0">
+    reclaim your authentic power &amp; pleasure
+  </text>
   
-  <!-- Price -->
-  <text x="600" y="450" text-anchor="middle" fill="#FFFFFF" font-family="sans-serif" font-size="32" font-weight="bold">$64</text>
-  <text x="670" y="450" text-anchor="start" fill="#E5E7EB" font-family="sans-serif" font-size="20">+ optional $25 Return to Body meditation</text>
+  <!-- Price and CTA -->
+  <text x="450" y="430" font-family="sans-serif" font-size="32" font-weight="bold" fill="#c77dff">
+    From $39 • 90 Minutes
+  </text>
   
-  <!-- CTA -->
-  <rect x="450" y="480" width="300" height="60" rx="30" fill="url(#ctaGradient)"/>
-  <text x="600" y="520" text-anchor="middle" fill="#000000" font-family="sans-serif" font-size="20" font-weight="bold">JOIN MASTERCLASS</text>
+  <rect x="450" y="460" width="320" height="60" rx="30" fill="url(#circleGradient)"/>
+  <text x="610" y="500" font-family="sans-serif" font-size="24" font-weight="bold" fill="white" text-anchor="middle">
+    Join the Masterclass
+  </text>
   
-  <!-- Website -->
-  <text x="600" y="580" text-anchor="middle" fill="#C77DFF" font-family="sans-serif" font-size="18">fifthelementsomatics.com</text>
+  <!-- Brand -->
+  <text x="450" y="570" font-family="serif" font-size="24" font-weight="600" fill="#e2e8f0">
+    Fifth Element Somatics
+  </text>
+  
+  <!-- Decorative stars -->
+  <g transform="translate(920, 180)">
+    <path d="M20 0L24 12L36 12L27 20L31 32L20 25L9 32L13 20L4 12L16 12L20 0Z" 
+          fill="#c77dff" opacity="0.6"/>
+  </g>
+  <g transform="translate(850, 450)">
+    <path d="M15 0L18 9L27 9L20.5 15L23.5 24L15 18.75L6.5 24L9.5 15L3 9L12 9L15 0Z" 
+          fill="#e879f9" opacity="0.7"/>
+  </g>
+  <g transform="translate(980, 420)">
+    <path d="M12 0L14.5 7L22 7L16.25 11.5L18.75 18.5L12 14.25L5.25 18.5L7.75 11.5L2 7L9.5 7L12 0Z" 
+          fill="#c77dff" opacity="0.8"/>
+  </g>
 </svg>

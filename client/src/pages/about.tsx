@@ -19,9 +19,11 @@ export default function About() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
       <SEOHead 
         title="About Saint - Somatic Sexologist & Reclamation Guide | Fifth Element Somatics"
-        description="Meet Saint, a somatic sexologist and body whisperer who helps women remember what their bodies already know. Learn about her journey and approach to sacred embodiment and erotic reclamation."
+        description="Meet Saint, a somatic sexologist and body whisperer who helps women remember what their bodies already know. Learn about her journey from corporate burnout to sacred embodiment and her trauma-informed approach to erotic reclamation and nervous system healing."
+        image="/home-share.svg"
         url="https://fifthelementsomatics.com/about"
-        keywords="Saint Fifth Element Somatics, somatic sexologist, body whisperer, reclamation guide, embodiment practitioner, trauma healing, sacred sexuality"
+        type="profile"
+        keywords="Saint Fifth Element Somatics, somatic sexologist, body whisperer, reclamation guide, embodiment practitioner, trauma healing, sacred sexuality, nervous system healing, somatic experiencing"
       />
       {/* Navigation */}
       <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">

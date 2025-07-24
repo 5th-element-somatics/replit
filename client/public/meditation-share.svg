@@ -1,42 +1,71 @@
 <svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
   <defs>
     <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#0a0a0a;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#1a0a1a;stop-opacity:1" />
+      <stop offset="0%" style="stop-color:#1a1a1a"/>
+      <stop offset="50%" style="stop-color:#2d3748"/>
+      <stop offset="100%" style="stop-color:#000000"/>
     </linearGradient>
-    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#C77DFF;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#E879F9;stop-opacity:1" />
+    <linearGradient id="circleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981"/>
+      <stop offset="100%" style="stop-color:#0891b2"/>
     </linearGradient>
-    <linearGradient id="ctaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#C77DFF;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#E879F9;stop-opacity:1" />
-    </linearGradient>
+    <radialGradient id="glowGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#10b981" stop-opacity="0.3"/>
+      <stop offset="100%" style="stop-color:#10b981" stop-opacity="0"/>
+    </radialGradient>
   </defs>
   
   <!-- Background -->
   <rect width="1200" height="630" fill="url(#bgGradient)"/>
   
-  <!-- Brand Circle -->
-  <circle cx="100" cy="100" r="40" fill="url(#textGradient)"/>
-  <text x="100" y="110" text-anchor="middle" fill="#000000" font-family="serif" font-size="24" font-weight="bold">5E</text>
+  <!-- Subtle glow effects -->
+  <circle cx="200" cy="150" r="100" fill="url(#glowGradient)"/>
+  <circle cx="1000" cy="480" r="80" fill="url(#glowGradient)"/>
   
-  <!-- Main Content -->
-  <text x="600" y="160" text-anchor="middle" fill="url(#textGradient)" font-family="serif" font-size="48" font-weight="bold">FREE GROUNDING</text>
-  <text x="600" y="220" text-anchor="middle" fill="url(#textGradient)" font-family="serif" font-size="48" font-weight="bold">MEDITATION</text>
+  <!-- Main circle with meditation icon -->
+  <circle cx="300" cy="315" r="80" fill="url(#circleGradient)" opacity="0.9"/>
+  
+  <!-- Meditation pose icon -->
+  <g transform="translate(260, 275)">
+    <path d="M40 20C44.4 20 48 16.4 48 12C48 7.6 44.4 4 40 4C35.6 4 32 7.6 32 12C32 16.4 35.6 20 40 20Z
+             M70 30V24L50 25V30
+             M50 38.5V31.5L70 30V36L50 38.5Z
+             M36 40H44V60H36
+             M30 60H50V66H30V60Z" 
+          fill="white"/>
+  </g>
+  
+  <!-- Title -->
+  <text x="450" y="250" font-family="serif" font-size="56" font-weight="bold" fill="white">
+    Free 10-Minute
+  </text>
+  <text x="450" y="320" font-family="serif" font-size="56" font-weight="bold" fill="white">
+    Grounding Meditation
+  </text>
   
   <!-- Subtitle -->
-  <text x="600" y="280" text-anchor="middle" fill="#FFFFFF" font-family="serif" font-size="32" font-weight="300">Feel Safe In Your Skin Again</text>
+  <text x="450" y="380" font-family="sans-serif" font-size="28" fill="#a0aec0">
+    Transform your nervous system with Saint's guided practice
+  </text>
   
-  <!-- Features -->
-  <text x="600" y="340" text-anchor="middle" fill="#E5E7EB" font-family="sans-serif" font-size="24">• 10-minute guided audio experience</text>
-  <text x="600" y="375" text-anchor="middle" fill="#E5E7EB" font-family="sans-serif" font-size="24">• Regulate your nervous system in real time</text>
-  <text x="600" y="410" text-anchor="middle" fill="#E5E7EB" font-family="sans-serif" font-size="24">• Stream instantly or download to your device</text>
+  <!-- Call to Action -->
+  <rect x="450" y="420" width="300" height="60" rx="30" fill="url(#circleGradient)"/>
+  <text x="600" y="460" font-family="sans-serif" font-size="24" font-weight="bold" fill="white" text-anchor="middle">
+    Download Free
+  </text>
   
-  <!-- CTA -->
-  <rect x="450" y="460" width="300" height="60" rx="30" fill="url(#ctaGradient)"/>
-  <text x="600" y="500" text-anchor="middle" fill="#000000" font-family="sans-serif" font-size="20" font-weight="bold">DOWNLOAD FOR FREE</text>
+  <!-- Brand -->
+  <text x="450" y="540" font-family="serif" font-size="24" font-weight="600" fill="#e2e8f0">
+    Fifth Element Somatics
+  </text>
   
-  <!-- Website -->
-  <text x="600" y="570" text-anchor="middle" fill="#C77DFF" font-family="sans-serif" font-size="18">fifthelementsomatics.com/free-meditation</text>
+  <!-- Decorative elements -->
+  <circle cx="950" cy="200" r="3" fill="#10b981" opacity="0.6"/>
+  <circle cx="980" cy="180" r="2" fill="#0891b2" opacity="0.8"/>
+  <circle cx="920" cy="160" r="2" fill="#10b981" opacity="0.7"/>
+  
+  <circle cx="850" cy="450" r="3" fill="#10b981" opacity="0.6"/>
+  <circle cx="880" cy="470" r="2" fill="#0891b2" opacity="0.8"/>
+  <circle cx="820" cy="490" r="2" fill="#10b981" opacity="0.7"/>
 </svg>

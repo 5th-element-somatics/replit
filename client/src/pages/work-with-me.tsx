@@ -18,9 +18,11 @@ export default function WorkWithMe() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
       <SEOHead 
         title="Work With Me - 1:1 Mentorship & Deep Body Work | Fifth Element Somatics"
-        description="Ready for deep somatic transformation? Apply for 1:1 mentorship with Saint. Sacred space, trauma-informed approach, and embodied reclamation work for women ready to trust their bodies again."
+        description="Ready for deep somatic transformation? Apply for 1:1 mentorship with Saint. Sacred space, trauma-informed approach, and embodied reclamation work for women ready to trust their bodies again. Personalized guidance for nervous system healing and authentic empowerment."
+        image="/home-share.svg"
         url="https://fifthelementsomatics.com/work-with-me"
-        keywords="1:1 mentorship, somatic practitioner, trauma-informed therapy, embodiment coach, body work, nervous system healing, women's empowerment"
+        type="service"
+        keywords="1:1 mentorship, somatic practitioner, trauma-informed therapy, embodiment coach, body work, nervous system healing, women's empowerment, personalized coaching, sacred embodiment"
       />
       {/* Navigation */}
       <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
