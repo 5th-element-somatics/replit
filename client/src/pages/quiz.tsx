@@ -814,11 +814,21 @@ export default function Quiz() {
             )}
           </nav>
 
+          {/* Quiz Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-4xl sm:text-5xl font-serif font-bold mb-6">
+              <span className="gradient-text">Good Girl Archetype Quiz</span>
+            </h1>
+            <p className="text-lg text-gray-300 mb-6">
+              Discover the pattern that's been running your life and the pathway to your liberation.
+            </p>
+          </div>
+
           {/* Voice Selection Header */}
           <div className="text-center mb-12">
-            <h1 className="text-4xl sm:text-5xl font-serif font-bold mb-6">
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-6">
               <span className="gradient-text">Choose Your Guide</span>
-            </h1>
+            </h2>
             <p className="text-xl text-gray-300 mb-6">
               Select the voice that will narrate your quiz journey and guide you to your archetype.
             </p>
