@@ -766,14 +766,19 @@ export default function Quiz() {
         />
         <div className="max-w-3xl mx-auto">
           {/* Navigation */}
-          <nav className="flex items-center justify-between mb-8">
-            <Link href="/" onClick={handleNavClick}>
-              <img 
-                src={tiger_no_bg} 
-                alt="Fifth Element Somatics" 
-                className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
-              />
-            </Link>
+          <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
+            <div className="flex items-center space-x-3">
+              <Link href="/" onClick={handleNavClick}>
+                <img 
+                  src={tiger_no_bg} 
+                  alt="Fifth Element Somatics" 
+                  className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
+                />
+              </Link>
+              <Link href="/" onClick={handleNavClick} className="md:hidden">
+                <span className="text-lg font-serif font-semibold text-white">FIFTH ELEMENT SOMATICS</span>
+              </Link>
+            </div>
             
             {/* Desktop Navigation */}
             <div className="hidden md:flex space-x-8">
@@ -921,7 +926,7 @@ export default function Quiz() {
       />
       <div className="max-w-3xl mx-auto">
         {/* Navigation */}
-        <nav className="flex items-center justify-between mb-8">
+        <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
           <div className="flex items-center space-x-3">
             <Link href="/" onClick={handleNavClick}>
               <img 
