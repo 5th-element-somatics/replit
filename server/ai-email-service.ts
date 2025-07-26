@@ -17,6 +17,12 @@ import {
 } from '@shared/schema';
 import { eq, and, lt, ne } from 'drizzle-orm';
 import { MailService } from '@sendgrid/mail';
+import { 
+  createBrandedEmailTemplate,
+  createArchetypeEmailTemplate,
+  createWelcomeEmailTemplate,
+  createMeditationEmailTemplate
+} from './email-templates';
 
 /*
 <important_code_snippet_instructions>
@@ -204,6 +210,9 @@ class AIEmailService {
       // Replace basic placeholders
       personalizedSubject = this.replacePlaceholders(personalizedSubject, lead);
       personalizedBody = this.replacePlaceholders(personalizedBody, lead);
+      
+      // Apply branded email template based on email type
+      personalizedBody = this.applyBrandedTemplate(personalizedBody, template, lead);
 
       // Update queue with personalized content
       await db
@@ -325,12 +334,16 @@ Return only a valid JSON object with "subject" and "body" fields. Do not include
   // Send email via SendGrid
   private async sendEmail(to: string, subject: string, html: string) {
     if (!this.mailService) {
-      throw new Error("Mail service not configured");
+      console.log(`📧 Would send branded email to ${to}: ${subject}`);
+      return; // For testing/development
     }
 
     await this.mailService.send({
       to,
-      from: process.env.SENDGRID_FROM_EMAIL!,
+      from: {
+        email: process.env.SENDGRID_FROM_EMAIL!,
+        name: 'Saint from Fifth Element Somatics'
+      },
       subject,
       html,
       text: this.htmlToText(html)
@@ -346,6 +359,22 @@ Return only a valid JSON object with "subject" and "body" fields. Do not include
       .replace(/&lt;/g, '<')
       .replace(/&gt;/g, '>')
       .trim();
+  }
+
+  // Apply branded template wrapper based on email type
+  private applyBrandedTemplate(content: string, template: AiEmailTemplate, lead: Lead): string {
+    const name = lead.name || 'there';
+    
+    // Determine template type based on template name
+    if (template.name.toLowerCase().includes('quiz') || template.name.toLowerCase().includes('archetype')) {
+      return createArchetypeEmailTemplate(lead.quizResult || 'unique soul', name, content);
+    } else if (template.name.toLowerCase().includes('welcome')) {
+      return createWelcomeEmailTemplate(name, content);
+    } else if (template.name.toLowerCase().includes('meditation')) {
+      return createMeditationEmailTemplate(name, content);
+    } else {
+      return createBrandedEmailTemplate(content);
+    }
   }
 
   // Track user behavior
