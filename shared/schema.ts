@@ -202,6 +202,80 @@ export const leadStatus = pgTable("lead_status", {
   changedAt: timestamp("changed_at").defaultNow().notNull(),
 });
 
+// AI Email Marketing Automation Tables
+export const aiEmailCampaigns = pgTable("ai_email_campaigns", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description"),
+  triggerType: text("trigger_type").notNull(), // quiz_completion, meditation_download, manual, time_delay
+  triggerData: jsonb("trigger_data"), // Additional trigger criteria
+  targetAudience: text("target_audience").notNull(), // all, quiz_takers, meditation_downloaders, specific_archetype
+  audienceFilters: jsonb("audience_filters"), // Additional filtering criteria
+  isActive: boolean("is_active").default(true),
+  aiPersonalization: boolean("ai_personalization").default(true),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const aiEmailTemplates = pgTable("ai_email_templates", {
+  id: serial("id").primaryKey(),
+  campaignId: integer("campaign_id").references(() => aiEmailCampaigns.id),
+  name: text("name").notNull(),
+  subjectTemplate: text("subject_template").notNull(), // Can include {{name}}, {{archetype}} placeholders
+  bodyTemplate: text("body_template").notNull(), // Rich text with AI placeholders
+  aiPromptInstructions: text("ai_prompt_instructions"), // Instructions for AI personalization
+  sendDelay: integer("send_delay").default(0), // Minutes after trigger
+  isActive: boolean("is_active").default(true),
+  order: integer("order").default(0), // Order in sequence
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const aiEmailQueue = pgTable("ai_email_queue", {
+  id: serial("id").primaryKey(),
+  leadId: integer("lead_id").references(() => leads.id),
+  templateId: integer("template_id").references(() => aiEmailTemplates.id),
+  scheduledFor: timestamp("scheduled_for").notNull(),
+  status: text("status").notNull().default("pending"), // pending, processing, sent, failed, cancelled
+  personalizedSubject: text("personalized_subject"),
+  personalizedBody: text("personalized_body"),
+  aiGenerationData: jsonb("ai_generation_data"), // Store AI context used
+  sentAt: timestamp("sent_at"),
+  error: text("error"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const aiEmailDeliveries = pgTable("ai_email_deliveries", {
+  id: serial("id").primaryKey(),
+  queueId: integer("queue_id").references(() => aiEmailQueue.id),
+  leadId: integer("lead_id").references(() => leads.id),
+  templateId: integer("template_id").references(() => aiEmailTemplates.id),
+  subject: text("subject").notNull(),
+  bodyHtml: text("body_html").notNull(),
+  bodyText: text("body_text"),
+  deliveryStatus: text("delivery_status").default("sent"), // sent, bounced, opened, clicked
+  openedAt: timestamp("opened_at"),
+  clickedAt: timestamp("clicked_at"),
+  linkClicked: text("link_clicked"),
+  sentAt: timestamp("sent_at").defaultNow().notNull(),
+});
+
+export const aiEmailSettings = pgTable("ai_email_settings", {
+  id: serial("id").primaryKey(),
+  settingKey: varchar("setting_key", { length: 100 }).notNull().unique(),
+  settingValue: text("setting_value").notNull(),
+  description: text("description"),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const leadBehaviorTracking = pgTable("lead_behavior_tracking", {
+  id: serial("id").primaryKey(),
+  leadId: integer("lead_id").references(() => leads.id),
+  eventType: text("event_type").notNull(), // page_view, email_open, email_click, quiz_retake, meditation_play
+  eventData: jsonb("event_data"), // Additional event context
+  eventTimestamp: timestamp("event_timestamp").defaultNow().notNull(),
+});
+
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
@@ -270,3 +344,17 @@ export type AffiliateCommission = typeof affiliateCommissions.$inferSelect;
 export type CustomerTag = typeof customerTags.$inferSelect;
 export type LeadNote = typeof leadNotes.$inferSelect;
 export type LeadStatusEntry = typeof leadStatus.$inferSelect;
+
+// AI Email Marketing Types
+export type AiEmailCampaign = typeof aiEmailCampaigns.$inferSelect;
+export type InsertAiEmailCampaign = typeof aiEmailCampaigns.$inferInsert;
+export type AiEmailTemplate = typeof aiEmailTemplates.$inferSelect;
+export type InsertAiEmailTemplate = typeof aiEmailTemplates.$inferInsert;
+export type AiEmailQueue = typeof aiEmailQueue.$inferSelect;
+export type InsertAiEmailQueue = typeof aiEmailQueue.$inferInsert;
+export type AiEmailDelivery = typeof aiEmailDeliveries.$inferSelect;
+export type InsertAiEmailDelivery = typeof aiEmailDeliveries.$inferInsert;
+export type AiEmailSetting = typeof aiEmailSettings.$inferSelect;
+export type InsertAiEmailSetting = typeof aiEmailSettings.$inferInsert;
+export type LeadBehaviorTracking = typeof leadBehaviorTracking.$inferSelect;
+export type InsertLeadBehaviorTracking = typeof leadBehaviorTracking.$inferInsert;
