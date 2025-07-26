@@ -31,11 +31,12 @@ export const createBrandedEmailTemplate = (content: string) => {
         }
         
         .header {
-            background: linear-gradient(135deg, #2a1a3d 0%, #1a1328 100%);
+            background: linear-gradient(135deg, #ffffff 0%, #f8f6ff 100%);
             padding: 40px 30px;
             text-align: center;
             position: relative;
             overflow: hidden;
+            border-bottom: 3px solid #C77DFF;
         }
         
         .header::before {
@@ -76,16 +77,16 @@ export const createBrandedEmailTemplate = (content: string) => {
             font-family: 'Crimson Text', serif;
             font-size: 24px;
             font-weight: 600;
-            color: #ffffff;
+            color: #2a1a3d;
             letter-spacing: 1px;
             margin: 0;
         }
         
         .tagline {
             font-size: 14px;
-            color: rgba(255, 255, 255, 0.8);
+            color: #6b4c7a;
             margin-top: 8px;
-            font-weight: 300;
+            font-weight: 400;
         }
         
         .content {
