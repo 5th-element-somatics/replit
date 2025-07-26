@@ -1,0 +1,145 @@
+# Fifth Element Somatics – QA Implementation Spec (Security + UX Fixes)
+
+This QA spec summarizes critical and high-priority feedback from the user experience testing document and outlines implementation tasks for Replit AI to fix.
+
+---
+
+## 🚨 CRITICAL: SECURITY FIXES
+
+### 🔐 1. Email Exposure in Developer Tools
+- Issue: Submitted form emails are visible in browser dev tools.
+- Pages affected:
+  - /apply
+  - /free-meditation
+- ✅ Fix:
+  - Remove direct email exposure from frontend form handlers.
+  - Send email data only through a secure backend API route (POST → server).
+  - Ensure responses from server do not echo user email in the response body.
+
+---
+
+### 🔒 2. Stripe Client Secret Exposure
+- Issue: Stripe secret key is visible in browser JS or response payload.
+- Location: /checkout
+- ✅ Fix:
+  - Remove all secret keys from frontend code.
+  - Use Stripe’s [Checkout Session API](https://stripe.com/docs/payments/checkout/one-time) on server.
+  - Pass `client_secret` securely via HTTPS API route using environment variables.
+  - Never expose or commit secrets in frontend.
+
+---
+
+### 💳 3. Card Details in Headers
+- Issue: Card data appears in browser network tab (headers/payload).
+- ✅ Fix:
+  - Use Stripe Elements or Checkout component.
+  - Ensure PCI-compliant behavior: card data handled by Stripe, not custom input fields.
+  - Never manually attach card numbers to requests.
+
+---
+
+## 🧠 FUNCTIONAL UX FIXES
+
+### 🧮 4. Form Validation (Quiz & Apply Pages)
+- Location: `/apply`, `/quiz`
+- Issues:
+  - Forms allow empty required fields.
+  - Email validation only checks for `@`, accepts invalid addresses.
+- ✅ Fix:
+  - Add HTML5 required fields or JS validation on blur/change.
+  - Use proper regex pattern for email:
+    ```regex
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    ```
+  - Disable submit until all validations pass.
+
+---
+
+### 🔁 5. Quiz Share Link is Broken
+- Issue: Clicking “Share My Result” does not share quiz result.
+- ✅ Fix:
+  - Append quiz result data to the shared link URL (e.g., `/quiz?result=warrior`)
+  - Update the quiz page to parse URL params and pre-fill or show correct result.
+  - Alternatively: generate dynamic short URL with embedded result.
+
+---
+
+### 🚫 6. “Join the Waitlist” Button Doesn’t Work
+- Location: `/about`
+- ✅ Fix:
+  - Check that the CTA is wired to correct form handler or modal.
+  - Ensure all buttons are enabled and clickable.
+
+---
+
+### 🔁 7. Duplicate CTAs (Apply for Mentorship)
+- Issue: “Apply” button appears multiple times on one page.
+- ✅ Fix:
+  - Consolidate into a single, high-impact CTA per page.
+
+---
+
+## 🔊 AUDIO CONTROL FIXES
+
+### 🎧 8. Meditation or Quiz Audio Autoplay Bug
+- Issue: Audio continues playing even when navigating between pages.
+- ✅ Fix:
+  - Tie audio to page/component lifecycle.
+  - Use `useEffect()` cleanup or `onUnmount` to stop playback.
+  - If using `<audio autoplay>`, replace with controlled JS player that stops on route change.
+
+---
+
+## 💰 CHECKOUT FLOW IMPROVEMENTS
+
+### ⛔ 9. Payment Redirects Too Early
+- Issue: Page redirects before email field is completed.
+- ✅ Fix:
+  - Ensure all required fields are filled before `Continue to Payment`.
+  - Use button disabling and frontend validation.
+
+---
+
+### 🧾 10. Improve Checkout UX
+- ✅ Fixes:
+  - Keep navigation header visible on checkout pages
+  - Check Apple Pay / Link Pay visibility
+  - If Stripe integration allows it, surface quick pay buttons clearly
+  - Confirm “Return to Body” bonus checkbox toggles correctly and updates pricing
+
+---
+
+## 🎨 UI POLISH TASKS
+
+### 🎭 11. Home Icon Consistency
+- Issue: Tiger logo blends well on dark pages but looks off on light pages.
+- ✅ Fix:
+  - Add alternate logo version for light backgrounds.
+  - Detect scroll or page context to toggle icon color dynamically.
+
+---
+
+## ✅ SUMMARY CHECKLIST
+
+| Task                                       | Priority  | Status |
+|--------------------------------------------|-----------|--------|
+| Remove exposed email in request headers     | High      | ⏳      |
+| Secure Stripe client secret implementation  | High      | ⏳      |
+| Replace raw card input with Stripe Elements | High      | ⏳      |
+| Add full email + field validation           | Medium    | ⏳      |
+| Enable “Join the Waitlist” button           | Medium    | ⏳      |
+| Fix quiz sharing result URLs                | Medium    | ⏳      |
+| Stop autoplay audio on navigation           | Medium    | ⏳      |
+| Consolidate duplicate CTAs                  | Low       | ⏳      |
+| Logo/icon visibility across themes          | Low       | ⏳      |
+
+---
+
+## 📘 Notes
+- All sensitive actions must follow Stripe security best practices: [https://stripe.com/docs/security](https://stripe.com/docs/security)
+- Dev team should confirm which pages include client-side email or card handling and refactor accordingly.
+- Replit AI can assist in validating forms, mounting audio, and conditional UI rendering with tailwind/react.
+
+---
+
+Let’s get this polished, secure, and ready for market 🌹
