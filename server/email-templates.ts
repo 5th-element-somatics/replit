@@ -31,12 +31,11 @@ export const createBrandedEmailTemplate = (content: string) => {
         }
         
         .header {
-            background: linear-gradient(135deg, #ffffff 0%, #f8f6ff 100%);
+            background: linear-gradient(135deg, #4a2c5a 0%, #2a1a3d 100%);
             padding: 40px 30px;
             text-align: center;
             position: relative;
             overflow: hidden;
-            border-bottom: 3px solid #C77DFF;
         }
         
         .header::before {
@@ -58,13 +57,12 @@ export const createBrandedEmailTemplate = (content: string) => {
         .tiger-icon {
             width: 60px;
             height: 60px;
-            background: linear-gradient(135deg, #C77DFF 0%, #9d4edd 100%);
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 50%;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 16px;
-            box-shadow: 0 8px 25px rgba(199, 125, 255, 0.3);
         }
         
         .tiger-icon svg {
@@ -77,16 +75,17 @@ export const createBrandedEmailTemplate = (content: string) => {
             font-family: 'Crimson Text', serif;
             font-size: 24px;
             font-weight: 600;
-            color: #2a1a3d;
+            color: #ffffff;
             letter-spacing: 1px;
             margin: 0;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
         
         .tagline {
             font-size: 14px;
-            color: #6b4c7a;
+            color: rgba(255, 255, 255, 0.9);
             margin-top: 8px;
-            font-weight: 400;
+            font-weight: 300;
         }
         
         .content {
@@ -287,9 +286,7 @@ export const createBrandedEmailTemplate = (content: string) => {
         <div class="header">
             <div class="logo">
                 <div class="tiger-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 2C8.13 2 5 5.13 5 9c0 1.74.64 3.34 1.69 4.56L12 20l5.31-6.44C18.36 12.34 19 10.74 19 9c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                    </svg>
+                    <span style="font-size: 24px; color: #4a2c5a;">🐅</span>
                 </div>
                 <h1 class="brand-name">FIFTH ELEMENT SOMATICS</h1>
                 <p class="tagline">Embodied Wisdom • Somatic Healing • Sacred Transformation</p>
