@@ -307,7 +307,7 @@ export const createBrandedEmailTemplate = (content: string) => {
         <div class="header">
             <div class="logo">
                 <div class="tiger-icon">
-                    <img src="https://2c923140-f93e-4994-9070-2da5e27e771c-00-3kz32guy7e7gh.janeway.replit.dev/@fs/home/runner/workspace/attached_assets/tiger_no_bg.png" alt="Fifth Element Somatics Tiger Logo" style="width: 60px; height: 60px; object-fit: contain;" />
+                    <img src="https://fifthelementsomatics.com/assets/tiger_no_bg-B2cxPpc4.png" alt="Fifth Element Somatics Tiger Logo" style="width: 60px; height: 60px; object-fit: contain;" />
                 </div>
                 <h1 class="brand-name" style="font-family: Arial, Helvetica, sans-serif; font-size: 32px; font-weight: 900; color: #1a0d1f !important; letter-spacing: 3px; margin: 0; text-transform: uppercase; background: #f5f1e8; padding: 12px 24px; border-radius: 8px; display: inline-block; border: 2px solid #C77DFF; box-shadow: 0 4px 12px rgba(199, 125, 255, 0.3);">FIFTH ELEMENT SOMATICS</h1>
                 <p class="tagline" style="font-family: Arial, Helvetica, sans-serif; font-size: 18px; color: #f5f1e8 !important; margin-top: 20px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; background: #C77DFF; padding: 8px 16px; border-radius: 20px; display: inline-block; border: 1px solid #f5f1e8;">Embodied Wisdom • Somatic Healing</p>
