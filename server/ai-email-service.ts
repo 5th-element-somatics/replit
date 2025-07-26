@@ -295,7 +295,7 @@ BRAND VOICE:
 
 Please provide a personalized version that feels authentic to this specific person's journey. Maintain the structure but make it feel personally crafted for them.
 
-Return only JSON with "subject" and "body" fields.`;
+Return only a valid JSON object with "subject" and "body" fields. Do not include markdown formatting or code blocks.`;
 
     const response = await this.anthropic.messages.create({
       model: DEFAULT_MODEL_STR, // "claude-sonnet-4-20250514"
@@ -305,7 +305,10 @@ Return only JSON with "subject" and "body" fields.`;
 
     const firstContent = response.content[0];
     if (firstContent.type === 'text') {
-      return JSON.parse(firstContent.text);
+      let content = firstContent.text.trim();
+      // Clean up any markdown formatting
+      content = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+      return JSON.parse(content);
     }
     throw new Error('Unexpected response type from Anthropic API');
   }
@@ -444,7 +447,7 @@ Return only JSON with "subject" and "body" fields.`;
           <p>In solidarity with your unbecoming,<br>Saint</p>
         `,
         aiPromptInstructions: `Create a deeper, more nuanced exploration of their archetype. Share an insight that feels personally revealing. Suggest a specific somatic practice (breathing, body awareness, movement) that addresses their archetype's core wound. Make it feel like a personal letter from Saint.`,
-        sendDelay: 1440 // 24 hours
+        sendDelay: 0 // For testing - normally 24 hours
       }
     ];
 
@@ -500,6 +503,95 @@ Return only JSON with "subject" and "body" fields.`;
         ...template,
         order: index
       });
+    }
+  }
+
+  // Extended nurture sequences for testing
+  async createExtendedNurtureSequences() {
+    try {
+      console.log("🔧 Creating extended nurture sequences for testing...");
+      
+      // Week 1 Follow-up Campaign
+      const [week1Campaign] = await db.insert(aiEmailCampaigns).values({
+        name: "Week 1 Nurture Follow-up",
+        description: "Deep dive nurture sequence for engaged leads",
+        triggerType: "manual",
+        targetAudience: "all",
+        isActive: true,
+        aiPersonalization: true
+      }).returning();
+
+      const week1Templates = [
+        {
+          name: "Your Body's Wisdom",
+          subjectTemplate: "{{name}}, what your body has been trying to tell you",
+          bodyTemplate: `
+            <h2>{{name}},</h2>
+            
+            <p>I've been thinking about you since you joined our community. There's something I want to share about the wisdom your body holds.</p>
+            
+            <p>For years, maybe decades, you've been receiving messages from your body. Tension in your shoulders when you say yes when you mean no. A knot in your stomach when you're not being authentic. A flutter in your chest when something truly excites you.</p>
+            
+            <p>Your {{archetype}} pattern has likely taught you to override these signals. But what if these sensations are not problems to fix, but intelligence to honor?</p>
+            
+            <h3>This week, try this:</h3>
+            <p>[AI will personalize a specific somatic practice]</p>
+            
+            <p>Your body is not your enemy. It's your oldest, wisest teacher.</p>
+            
+            <p><a href="https://fifthelementsomatics.com/masterclass">Ready to learn her language?</a></p>
+            
+            <p>In reverence for your body's wisdom,<br>Saint</p>
+          `,
+          aiPromptInstructions: `Write about how each archetype disconnects from body wisdom. Create a specific week-long somatic practice that helps them reconnect. Make it feel like Saint is speaking directly to their core wound around embodiment.`,
+          sendDelay: 0
+        },
+        {
+          name: "The Good Girl Contract",
+          subjectTemplate: "{{name}}, it's time to renegotiate your contract",
+          bodyTemplate: `
+            <h2>{{name}},</h2>
+            
+            <p>We need to talk about the contract you signed when you were little. The one that said:</p>
+            
+            <p><em>"If I am good enough, perfect enough, compliant enough... I will be loved, safe, worthy."</em></p>
+            
+            <p>Every {{archetype}} signed a version of this contract. And it worked... for a while.</p>
+            
+            <p>But contracts can be renegotiated. Terms can be updated. And some agreements, well, they need to be burned entirely.</p>
+            
+            <p>[AI personalizes the specific "contract" this archetype made]</p>
+            
+            <h3>The truth:</h3>
+            <p>You were worthy before you ever tried to earn it. Your worth isn't performance-based.</p>
+            
+            <p>Ready to tear up the old contract and write new terms? <a href="https://fifthelementsomatics.com/masterclass">Let's do this together.</a></p>
+            
+            <p>In solidarity with your becoming,<br>Saint</p>
+          `,
+          aiPromptInstructions: `Explore the specific "good girl contract" each archetype made in childhood. Be specific about their pattern. Then offer what renegotiation might look like for them specifically.`,
+          sendDelay: 0
+        }
+      ];
+
+      for (let index = 0; index < week1Templates.length; index++) {
+        const template = week1Templates[index];
+        await db.insert(aiEmailTemplates).values({
+          campaignId: week1Campaign.id,
+          ...template,
+          order: index
+        });
+      }
+
+      // Trigger this campaign for existing leads
+      const recentLeads = await db.select().from(leads).limit(10);
+      for (const lead of recentLeads) {
+        await this.scheduleCampaignEmails(week1Campaign, lead, { testSequence: true });
+      }
+
+      console.log("✅ Extended nurture sequences created and scheduled");
+    } catch (error) {
+      console.error("Error creating extended sequences:", error);
     }
   }
 
@@ -564,3 +656,12 @@ if (process.env.NODE_ENV === 'production' || process.env.ENABLE_EMAIL_QUEUE === 
     aiEmailService.processEmailQueue().catch(console.error);
   }, 5 * 60 * 1000); // 5 minutes
 }
+
+// For testing - process queue immediately and add more nurture sequences
+aiEmailService.processEmailQueue().catch(console.error);
+
+// Add extended nurture campaigns for testing
+setTimeout(async () => {
+  await aiEmailService.createExtendedNurtureSequences();
+  aiEmailService.processEmailQueue().catch(console.error);
+}, 2000);
