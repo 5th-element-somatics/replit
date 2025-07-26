@@ -31,11 +31,12 @@ export const createBrandedEmailTemplate = (content: string) => {
         }
         
         .header {
-            background: linear-gradient(135deg, #4a2c5a 0%, #2a1a3d 100%) !important;
+            background: #2a1a3d !important;
             padding: 40px 30px;
             text-align: center;
             position: relative;
             overflow: hidden;
+            border: 3px solid #C77DFF;
             /* Force light content in email clients */
             color-scheme: light;
             -webkit-color-scheme: light;
@@ -76,26 +77,34 @@ export const createBrandedEmailTemplate = (content: string) => {
         }
         
         .brand-name {
-            font-family: 'Crimson Text', Georgia, 'Times New Roman', serif;
-            font-size: 28px;
-            font-weight: 700;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 32px;
+            font-weight: 900;
             color: #ffffff !important;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             margin: 0;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.9), 0 0 12px rgba(0,0,0,0.7), 1px 1px 0px rgba(0,0,0,1);
-            -webkit-font-smoothing: antialiased;
-            text-rendering: optimizeLegibility;
+            text-transform: uppercase;
+            background: #ffffff;
+            color: #2a1a3d !important;
+            padding: 12px 24px;
+            border-radius: 8px;
+            display: inline-block;
+            border: 2px solid #C77DFF;
+            box-shadow: 0 4px 12px rgba(199, 125, 255, 0.3);
         }
         
         .tagline {
-            font-family: 'Inter', Arial, Helvetica, sans-serif;
-            font-size: 16px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 18px;
             color: #ffffff !important;
-            margin-top: 12px;
-            font-weight: 500;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 8px rgba(0,0,0,0.6);
-            letter-spacing: 0.5px;
-            -webkit-font-smoothing: antialiased;
+            margin-top: 20px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: rgba(199, 125, 255, 0.9);
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
         }
         
         .content {
@@ -298,8 +307,8 @@ export const createBrandedEmailTemplate = (content: string) => {
                 <div class="tiger-icon">
                     <span style="font-size: 24px; color: #4a2c5a;">🐅</span>
                 </div>
-                <h1 class="brand-name" style="color: #ffffff !important; text-shadow: 3px 3px 6px rgba(0,0,0,0.9), 0 0 12px rgba(0,0,0,0.7), 1px 1px 0px rgba(0,0,0,1); font-family: 'Crimson Text', Georgia, 'Times New Roman', serif; font-size: 28px; font-weight: 700; letter-spacing: 2px; margin: 0; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;">FIFTH ELEMENT SOMATICS</h1>
-                <p class="tagline" style="color: #ffffff !important; text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 8px rgba(0,0,0,0.6); font-family: 'Inter', Arial, Helvetica, sans-serif; font-size: 16px; margin-top: 12px; font-weight: 500; letter-spacing: 0.5px; -webkit-font-smoothing: antialiased;">Embodied Wisdom • Somatic Healing • Sacred Transformation</p>
+                <h1 class="brand-name" style="font-family: Arial, Helvetica, sans-serif; font-size: 32px; font-weight: 900; color: #2a1a3d !important; letter-spacing: 3px; margin: 0; text-transform: uppercase; background: #ffffff; padding: 12px 24px; border-radius: 8px; display: inline-block; border: 2px solid #C77DFF; box-shadow: 0 4px 12px rgba(199, 125, 255, 0.3);">FIFTH ELEMENT SOMATICS</h1>
+                <p class="tagline" style="font-family: Arial, Helvetica, sans-serif; font-size: 18px; color: #ffffff !important; margin-top: 20px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; background: rgba(199, 125, 255, 0.9); padding: 8px 16px; border-radius: 20px; display: inline-block;">Embodied Wisdom • Somatic Healing</p>
             </div>
         </div>
         
