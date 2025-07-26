@@ -93,7 +93,7 @@ export default function FreeMeditation() {
               className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
             />
           </Link>
-          <Link href="/" onClick={handleNavClick} className="md:hidden">
+          <Link href="/" onClick={handleNavClick} className="">
             <span className="text-lg font-serif font-semibold text-white">FIFTH ELEMENT SOMATICS</span>
           </Link>
         </div>
@@ -521,7 +521,7 @@ function MeditationAccess() {
               className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
             />
           </Link>
-          <Link href="/" onClick={handleNavClick} className="md:hidden">
+          <Link href="/" onClick={handleNavClick} className="">
             <span className="text-lg font-serif font-semibold text-white">FIFTH ELEMENT SOMATICS</span>
           </Link>
         </div>

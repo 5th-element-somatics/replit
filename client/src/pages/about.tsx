@@ -35,7 +35,7 @@ export default function About() {
               className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
             />
           </Link>
-          <Link href="/" onClick={handleNavClick} className="md:hidden">
+          <Link href="/" onClick={handleNavClick}>
             <span className="text-lg font-serif font-semibold text-white">FIFTH ELEMENT SOMATICS</span>
           </Link>
         </div>
