@@ -16,6 +16,7 @@ import AdminLogin from "@/pages/admin-login";
 import AdminVerify from "@/pages/admin-verify";
 import Quiz from "@/pages/quiz";
 import FreeMeditation from "@/pages/free-meditation";
+import AIEmailAdmin from "@/pages/ai-email-admin";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -32,6 +33,7 @@ function Router() {
       <Route path="/admin-advanced" component={AdminAdvanced} />
       <Route path="/admin-login" component={AdminLogin} />
       <Route path="/admin-verify" component={AdminVerify} />
+      <Route path="/admin/ai-email" component={AIEmailAdmin} />
       <Route path="/free-meditation" component={FreeMeditation} />
       <Route path="/quiz" component={Quiz} />
       <Route component={NotFound} />

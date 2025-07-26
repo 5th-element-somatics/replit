@@ -2,7 +2,17 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import Stripe from "stripe";
 import { storage } from "./storage";
-import { insertPurchaseSchema, insertApplicationSchema, insertLeadSchema } from "@shared/schema";
+import { aiEmailService } from "./ai-email-service";
+import { 
+  insertPurchaseSchema, 
+  insertApplicationSchema, 
+  insertLeadSchema,
+  aiEmailCampaigns,
+  aiEmailTemplates,
+  aiEmailQueue,
+  aiEmailDeliveries
+} from "@shared/schema";
+import { sql, count, sum } from 'drizzle-orm';
 import sgMail from '@sendgrid/mail';
 import crypto from 'crypto';
 
@@ -435,6 +445,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.log(`SendGrid API Key: ${process.env.SENDGRID_API_KEY ? 'EXISTS' : 'MISSING'}, From Email: ${process.env.SENDGRID_FROM_EMAIL ? 'EXISTS' : 'MISSING'}`);
       }
       
+      // Trigger AI email campaigns based on source
+      if (lead.source === 'meditation-download') {
+        await aiEmailService.triggerCampaign('meditation_download', lead.id, { downloadedAt: new Date() });
+      } else if (lead.quizResult) {
+        await aiEmailService.triggerCampaign('quiz_completion', lead.id, { 
+          archetype: lead.quizResult,
+          answers: lead.quizAnswers 
+        });
+      }
+      
+      // Always trigger general lead created campaign
+      await aiEmailService.triggerCampaign('lead_created', lead.id);
+
       res.json({ success: true, id: lead.id });
     } catch (error: any) {
       res.status(400).json({ message: "Error submitting lead: " + error.message });
@@ -928,6 +951,92 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Error assigning customer tag: " + error.message });
     }
   });
+
+  // AI Email Marketing Admin Routes
+  app.get("/api/admin/ai-email/campaigns", requireAdminAuth, async (req, res) => {
+    try {
+      const campaigns = await db
+        .select()
+        .from(aiEmailCampaigns)
+        .orderBy(aiEmailCampaigns.createdAt);
+      
+      res.json(campaigns);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching campaigns: " + error.message });
+    }
+  });
+
+  app.get("/api/admin/ai-email/templates/:campaignId", requireAdminAuth, async (req, res) => {
+    try {
+      const campaignId = parseInt(req.params.campaignId);
+      const templates = await db
+        .select()
+        .from(aiEmailTemplates)
+        .where(eq(aiEmailTemplates.campaignId, campaignId))
+        .orderBy(aiEmailTemplates.order);
+      
+      res.json(templates);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching templates: " + error.message });
+    }
+  });
+
+  app.get("/api/admin/ai-email/metrics", requireAdminAuth, async (req, res) => {
+    try {
+      const [campaigns, queue, deliveries] = await Promise.all([
+        db.select({ 
+          total: count(),
+          active: sum(sql`CASE WHEN ${aiEmailCampaigns.isActive} THEN 1 ELSE 0 END`)
+        }).from(aiEmailCampaigns),
+        db.select({ count: count() }).from(aiEmailQueue).where(eq(aiEmailQueue.status, 'pending')),
+        db.select({ count: count() }).from(aiEmailDeliveries)
+      ]);
+
+      const metrics = {
+        totalCampaigns: campaigns[0]?.total || 0,
+        activeCampaigns: campaigns[0]?.active || 0,
+        totalEmailsSent: deliveries[0]?.count || 0,
+        emailsInQueue: queue[0]?.count || 0,
+        openRate: 15.2, // TODO: Calculate from delivery data
+        clickRate: 3.8,  // TODO: Calculate from delivery data
+        conversionRate: 1.2, // TODO: Calculate from conversions
+        recentActivity: [] // TODO: Fetch recent activity
+      };
+
+      res.json(metrics);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching metrics: " + error.message });
+    }
+  });
+
+  app.patch("/api/admin/ai-email/campaigns/:id", requireAdminAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updates = req.body;
+      
+      await db
+        .update(aiEmailCampaigns)
+        .set({ ...updates, updatedAt: new Date() })
+        .where(eq(aiEmailCampaigns.id, id));
+      
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ message: "Error updating campaign: " + error.message });
+    }
+  });
+
+  app.post("/api/admin/ai-email/process-queue", requireAdminAuth, async (req, res) => {
+    try {
+      // Trigger queue processing
+      aiEmailService.processEmailQueue().catch(console.error);
+      res.json({ success: true, message: "Queue processing started" });
+    } catch (error: any) {
+      res.status(500).json({ message: "Error processing queue: " + error.message });
+    }
+  });
+
+  // Initialize AI email campaigns on server start
+  aiEmailService.initializeDefaultCampaigns().catch(console.error);
 
   const httpServer = createServer(app);
   return httpServer;

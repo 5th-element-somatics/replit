@@ -128,6 +128,11 @@ export default function Admin() {
               Advanced Dashboard
             </Button>
           </Link>
+          <Link href="/admin/ai-email" onClick={handleNavClick}>
+            <Button variant="outline" size="sm" className="text-purple-400 border-purple-400 hover:bg-purple-400 hover:text-white">
+              🤖 AI Email
+            </Button>
+          </Link>
           <span className="text-purple-400 font-semibold">Admin Dashboard</span>
           <Button 
             onClick={() => logoutMutation.mutate()}
