@@ -31,7 +31,7 @@ export const createBrandedEmailTemplate = (content: string) => {
         }
         
         .header {
-            background: #2a1a3d !important;
+            background: #1a0d1f !important;
             padding: 40px 30px;
             text-align: center;
             position: relative;
@@ -59,15 +59,16 @@ export const createBrandedEmailTemplate = (content: string) => {
         }
         
         .tiger-icon {
-            width: 60px;
-            height: 60px;
-            background: rgba(255, 255, 255, 0.95) !important;
+            width: 80px;
+            height: 80px;
+            background: #f5f1e8 !important;
             border-radius: 50%;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 16px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            margin-bottom: 20px;
+            border: 3px solid #C77DFF;
+            box-shadow: 0 4px 12px rgba(199, 125, 255, 0.4);
         }
         
         .tiger-icon svg {
@@ -80,12 +81,11 @@ export const createBrandedEmailTemplate = (content: string) => {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 32px;
             font-weight: 900;
-            color: #ffffff !important;
+            color: #1a0d1f !important;
             letter-spacing: 3px;
             margin: 0;
             text-transform: uppercase;
-            background: #ffffff;
-            color: #2a1a3d !important;
+            background: #f5f1e8;
             padding: 12px 24px;
             border-radius: 8px;
             display: inline-block;
@@ -96,15 +96,16 @@ export const createBrandedEmailTemplate = (content: string) => {
         .tagline {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 18px;
-            color: #ffffff !important;
+            color: #f5f1e8 !important;
             margin-top: 20px;
             font-weight: 600;
             letter-spacing: 1px;
             text-transform: uppercase;
-            background: rgba(199, 125, 255, 0.9);
+            background: #C77DFF;
             padding: 8px 16px;
             border-radius: 20px;
             display: inline-block;
+            border: 1px solid #f5f1e8;
         }
         
         .content {
@@ -305,10 +306,10 @@ export const createBrandedEmailTemplate = (content: string) => {
         <div class="header">
             <div class="logo">
                 <div class="tiger-icon">
-                    <span style="font-size: 24px; color: #4a2c5a;">🐅</span>
+                    <img src="https://res.cloudinary.com/replit/image/upload/v1753292965/tiger_1753292965014.png" alt="Fifth Element Somatics Tiger Logo" style="width: 50px; height: 50px; object-fit: contain;" />
                 </div>
-                <h1 class="brand-name" style="font-family: Arial, Helvetica, sans-serif; font-size: 32px; font-weight: 900; color: #2a1a3d !important; letter-spacing: 3px; margin: 0; text-transform: uppercase; background: #ffffff; padding: 12px 24px; border-radius: 8px; display: inline-block; border: 2px solid #C77DFF; box-shadow: 0 4px 12px rgba(199, 125, 255, 0.3);">FIFTH ELEMENT SOMATICS</h1>
-                <p class="tagline" style="font-family: Arial, Helvetica, sans-serif; font-size: 18px; color: #ffffff !important; margin-top: 20px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; background: rgba(199, 125, 255, 0.9); padding: 8px 16px; border-radius: 20px; display: inline-block;">Embodied Wisdom • Somatic Healing</p>
+                <h1 class="brand-name" style="font-family: Arial, Helvetica, sans-serif; font-size: 32px; font-weight: 900; color: #1a0d1f !important; letter-spacing: 3px; margin: 0; text-transform: uppercase; background: #f5f1e8; padding: 12px 24px; border-radius: 8px; display: inline-block; border: 2px solid #C77DFF; box-shadow: 0 4px 12px rgba(199, 125, 255, 0.3);">FIFTH ELEMENT SOMATICS</h1>
+                <p class="tagline" style="font-family: Arial, Helvetica, sans-serif; font-size: 18px; color: #f5f1e8 !important; margin-top: 20px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; background: #C77DFF; padding: 8px 16px; border-radius: 20px; display: inline-block; border: 1px solid #f5f1e8;">Embodied Wisdom • Somatic Healing</p>
             </div>
         </div>
         
