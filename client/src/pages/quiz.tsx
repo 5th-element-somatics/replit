@@ -148,6 +148,24 @@ export default function Quiz() {
   const [showVoiceSelection, setShowVoiceSelection] = useState(true);
   const [quizStarted, setQuizStarted] = useState(false);
 
+  // Check for shared result in URL parameters
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const sharedResult = urlParams.get('result');
+    
+    if (sharedResult && sharedResult in resultTypes) {
+      setResult(sharedResult as keyof typeof resultTypes);
+      setShowResult(true);
+      setShowVoiceSelection(false);
+      setQuizStarted(true);
+      
+      // Clean URL without reloading page
+      const url = new URL(window.location.href);
+      url.searchParams.delete('result');
+      window.history.replaceState({}, '', url.toString());
+    }
+  }, []);
+
   const handleVoiceChange = (voiceId: string) => {
     // Check if voice is disabled
     const selectedVoiceOption = voiceOptions.find(v => v.id === voiceId);
@@ -460,10 +478,49 @@ export default function Quiz() {
   };
 
   const submitLead = async () => {
-    if (!email || !name) {
+    // Enhanced validation
+    if (!name?.trim() || name.trim().length < 1) {
       toast({
-        title: "Please fill in your details",
-        description: "We need your name and email to send your personalized results.",
+        title: "Name Required",
+        description: "Please enter your name to see your results.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!email?.trim()) {
+      toast({
+        title: "Email Required",
+        description: "Please enter your email to see your results.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Enhanced email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (name.trim().length > 100) {
+      toast({
+        title: "Name Too Long",
+        description: "Please enter a shorter name (100 characters or less).",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (email.trim().length > 255) {
+      toast({
+        title: "Email Too Long",
+        description: "Please enter a shorter email address.",
         variant: "destructive"
       });
       return;
@@ -472,11 +529,11 @@ export default function Quiz() {
     setIsSubmitting(true);
     try {
       await apiRequest("POST", "/api/leads", {
-        email,
-        name,
+        email: email.trim(),
+        name: name.trim(),
         source: `quiz_${result}`,
         quizResult: result,
-        quizAnswers: answers
+        quizAnswers: JSON.stringify(answers)
       });
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -496,14 +553,15 @@ export default function Quiz() {
 
   const shareResult = async () => {
     const resultData = resultTypes[result!];
-    const shareText = `I just discovered I'm "${resultData.title}" in my reclamation journey! 💫 What's your Good Girl archetype? Take the quiz: ${window.location.origin}/quiz`;
+    const shareUrl = `${window.location.origin}/quiz?result=${result}`;
+    const shareText = `I just discovered I'm "${resultData.title}" in my reclamation journey! 💫 What's your Good Girl archetype? Take the quiz: ${shareUrl}`;
     
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "Good Girl Paradox Quiz",
+          title: "Good Girl Paradox Quiz Result",
           text: shareText,
-          url: `${window.location.origin}/quiz`
+          url: shareUrl
         });
       } catch (err) {
         copyToClipboard(shareText);

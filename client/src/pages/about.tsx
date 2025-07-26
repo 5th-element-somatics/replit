@@ -210,7 +210,15 @@ export default function About() {
                 </div>
                 <h3 className="text-lg font-semibold text-white mb-2">✧ Join Waitlist for Radiant Alchemy ✧</h3>
                 <p className="text-sm text-gray-400 mb-4">AN IMMERSIVE GROUP EXPERIENCE ROOTED IN SOMATICS, SENSUALITY AND SOUL-LED EMBODIMENT.</p>
-                <Button className="bg-gray-600 hover:bg-gray-700 text-white text-sm">
+                <Button 
+                  onClick={() => {
+                    // Open email client with prefilled subject and body
+                    const subject = encodeURIComponent("Radiant Alchemy Waitlist - Sign Me Up!");
+                    const body = encodeURIComponent("Hi Saint,\n\nI'm interested in joining the waitlist for Radiant Alchemy - the immersive group experience in somatics, sensuality and soul-led embodiment.\n\nPlease add me to the waitlist and keep me updated on launch details.\n\nThank you!");
+                    window.location.href = `mailto:hello@fifthelementsomatics.com?subject=${subject}&body=${body}`;
+                  }}
+                  className="bg-gray-600 hover:bg-gray-700 text-white text-sm"
+                >
                   Join The Waitlist
                 </Button>
               </CardContent>

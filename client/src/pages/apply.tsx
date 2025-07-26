@@ -14,6 +14,22 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Mic, MicOff, Play, Pause, Trash2 } from "lucide-react";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
+import { z } from "zod";
+
+// Enhanced application schema with better validation
+const enhancedApplicationSchema = insertApplicationSchema.extend({
+  name: z.string().min(1, "Name is required").max(100, "Name is too long"),
+  email: z.string()
+    .min(1, "Email is required")
+    .email("Please enter a valid email address")
+    .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Please enter a valid email address")
+    .max(255, "Email is too long"),
+  phone: z.string().optional(),
+  experience: z.string().min(10, "Please provide at least a brief description (10+ characters)"),
+  intentions: z.string().min(10, "Please share what you hope to achieve (10+ characters)"),
+  challenges: z.string().min(10, "Please describe your current challenges (10+ characters)"),
+  support: z.string().min(10, "Please explain what support means to you (10+ characters)"),
+});
 
 // Voice recording interface
 interface VoiceRecording {
@@ -55,7 +71,7 @@ export default function Apply() {
   };
 
   const form = useForm<InsertApplication>({
-    resolver: zodResolver(insertApplicationSchema),
+    resolver: zodResolver(enhancedApplicationSchema),
     defaultValues: {
       name: "",
       email: "",

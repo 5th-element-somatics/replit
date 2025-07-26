@@ -17,8 +17,12 @@ import tiger_no_bg from "@assets/tiger_no_bg.png";
 import MeditationVisuals from "@/components/MeditationVisuals";
 
 const leadFormSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email("Please enter a valid email address"),
+  name: z.string().min(1, "Name is required").max(100, "Name is too long"),
+  email: z.string()
+    .min(1, "Email is required")
+    .email("Please enter a valid email address")
+    .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Please enter a valid email address")
+    .max(255, "Email is too long"),
 });
 
 type LeadFormData = z.infer<typeof leadFormSchema>;
@@ -462,11 +466,46 @@ function MeditationAccess() {
 
   // Cleanup audio when component unmounts or user navigates away
   useEffect(() => {
-    return () => {
+    const handleBeforeUnload = () => {
       if (audioRef.current) {
         audioRef.current.pause();
+        audioRef.current.currentTime = 0;
       }
       setIsPlaying(false);
+    };
+
+    const handlePopState = () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+      setIsPlaying(false);
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden && audioRef.current) {
+        audioRef.current.pause(); 
+        setIsPlaying(false);
+      }
+    };
+
+    // Add event listeners for page navigation and visibility changes
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('popstate', handlePopState);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      // Cleanup on component unmount
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+      setIsPlaying(false);
+      
+      // Remove event listeners
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('popstate', handlePopState);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
 
