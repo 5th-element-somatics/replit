@@ -31,11 +31,14 @@ export const createBrandedEmailTemplate = (content: string) => {
         }
         
         .header {
-            background: linear-gradient(135deg, #4a2c5a 0%, #2a1a3d 100%);
+            background: linear-gradient(135deg, #4a2c5a 0%, #2a1a3d 100%) !important;
             padding: 40px 30px;
             text-align: center;
             position: relative;
             overflow: hidden;
+            /* Force light content in email clients */
+            color-scheme: light;
+            -webkit-color-scheme: light;
         }
         
         .header::before {
@@ -57,12 +60,13 @@ export const createBrandedEmailTemplate = (content: string) => {
         .tiger-icon {
             width: 60px;
             height: 60px;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95) !important;
             border-radius: 50%;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
         }
         
         .tiger-icon svg {
@@ -72,20 +76,26 @@ export const createBrandedEmailTemplate = (content: string) => {
         }
         
         .brand-name {
-            font-family: 'Crimson Text', serif;
-            font-size: 24px;
-            font-weight: 600;
-            color: #ffffff;
-            letter-spacing: 1px;
+            font-family: 'Crimson Text', Georgia, 'Times New Roman', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff !important;
+            letter-spacing: 2px;
             margin: 0;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.9), 0 0 12px rgba(0,0,0,0.7), 1px 1px 0px rgba(0,0,0,1);
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
         }
         
         .tagline {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.9);
-            margin-top: 8px;
-            font-weight: 300;
+            font-family: 'Inter', Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            color: #ffffff !important;
+            margin-top: 12px;
+            font-weight: 500;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 8px rgba(0,0,0,0.6);
+            letter-spacing: 0.5px;
+            -webkit-font-smoothing: antialiased;
         }
         
         .content {
@@ -288,8 +298,8 @@ export const createBrandedEmailTemplate = (content: string) => {
                 <div class="tiger-icon">
                     <span style="font-size: 24px; color: #4a2c5a;">🐅</span>
                 </div>
-                <h1 class="brand-name">FIFTH ELEMENT SOMATICS</h1>
-                <p class="tagline">Embodied Wisdom • Somatic Healing • Sacred Transformation</p>
+                <h1 class="brand-name" style="color: #ffffff !important; text-shadow: 3px 3px 6px rgba(0,0,0,0.9), 0 0 12px rgba(0,0,0,0.7), 1px 1px 0px rgba(0,0,0,1); font-family: 'Crimson Text', Georgia, 'Times New Roman', serif; font-size: 28px; font-weight: 700; letter-spacing: 2px; margin: 0; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;">FIFTH ELEMENT SOMATICS</h1>
+                <p class="tagline" style="color: #ffffff !important; text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 8px rgba(0,0,0,0.6); font-family: 'Inter', Arial, Helvetica, sans-serif; font-size: 16px; margin-top: 12px; font-weight: 500; letter-spacing: 0.5px; -webkit-font-smoothing: antialiased;">Embodied Wisdom • Somatic Healing • Sacred Transformation</p>
             </div>
         </div>
         

@@ -11,39 +11,48 @@
         .email-container { max-width: 600px; margin: 0 auto; background-color: #ffffff; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
         
         .header {
-            background: linear-gradient(135deg, #4a2c5a 0%, #2a1a3d 100%);
+            background: linear-gradient(135deg, #4a2c5a 0%, #2a1a3d 100%) !important;
             padding: 40px 30px;
             text-align: center;
             position: relative;
             overflow: hidden;
+            color-scheme: light;
+            -webkit-color-scheme: light;
         }
         
         .tiger-icon {
             width: 60px;
             height: 60px;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95) !important;
             border-radius: 50%;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
         }
         
         .brand-name {
-            font-family: 'Crimson Text', serif;
-            font-size: 24px;
-            font-weight: 600;
-            color: #ffffff;
-            letter-spacing: 1px;
+            font-family: 'Crimson Text', Georgia, 'Times New Roman', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff !important;
+            letter-spacing: 2px;
             margin: 0;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.9), 0 0 12px rgba(0,0,0,0.7), 1px 1px 0px rgba(0,0,0,1);
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
         }
         
         .tagline {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.9);
-            margin-top: 8px;
-            font-weight: 300;
+            font-family: 'Inter', Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            color: #ffffff !important;
+            margin-top: 12px;
+            font-weight: 500;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 8px rgba(0,0,0,0.6);
+            letter-spacing: 0.5px;
+            -webkit-font-smoothing: antialiased;
         }
         
         .content { padding: 40px 30px; }
@@ -64,7 +73,7 @@
 <body>
     <!-- Status Banner -->
     <div class="status-banner">
-        ✅ VERSION 4 ACTIVE: Bold & Dramatic with Tiger Logo
+        ✅ VERSION 4 ACTIVE: Bold & Dramatic with Tiger Logo - DARK THEME OPTIMIZED
     </div>
 
     <div class="email-container">
@@ -73,8 +82,8 @@
             <div class="tiger-icon">
                 <span style="font-size: 24px; color: #4a2c5a;">🐅</span>
             </div>
-            <h1 class="brand-name">FIFTH ELEMENT SOMATICS</h1>
-            <p class="tagline">Embodied Wisdom • Somatic Healing • Sacred Transformation</p>
+            <h1 class="brand-name" style="color: #ffffff !important; text-shadow: 3px 3px 6px rgba(0,0,0,0.9), 0 0 12px rgba(0,0,0,0.7), 1px 1px 0px rgba(0,0,0,1); font-size: 28px; font-weight: 700; letter-spacing: 2px;">FIFTH ELEMENT SOMATICS</h1>
+            <p class="tagline" style="color: #ffffff !important; text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 8px rgba(0,0,0,0.6); font-size: 16px; font-weight: 500; letter-spacing: 0.5px;">Embodied Wisdom • Somatic Healing • Sacred Transformation</p>
         </div>
         
         <!-- Sample Email Content -->
@@ -128,9 +137,9 @@
         <ul style="color: #0f172a; line-height: 1.8;">
             <li><strong>Bold Purple Gradient Header:</strong> Rich gradient from #4a2c5a to #2a1a3d</li>
             <li><strong>Tiger Logo in White Circle:</strong> Tiger emoji in semi-transparent white background</li>
-            <li><strong>High Contrast White Text:</strong> White brand name with text shadow for perfect readability</li>
-            <li><strong>Professional Typography:</strong> Crimson Text for headings, Inter for body text</li>
-            <li><strong>Mobile Responsive:</strong> Optimized for all devices and email clients</li>
+            <li><strong>Enhanced Typography:</strong> Larger 28px font, weight 700, with fallback fonts</li>
+            <li><strong>Triple Text Shadow:</strong> Multiple shadows + outline for maximum dark theme readability</li>
+            <li><strong>Anti-aliased Rendering:</strong> Smooth font rendering across all email clients</li>
         </ul>
         <p style="margin-top: 20px; color: #1e40af; font-weight: 600;">All AI-powered emails now use this dramatic, branded design!</p>
     </div>
