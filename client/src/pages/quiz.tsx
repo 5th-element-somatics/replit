@@ -756,7 +756,7 @@ export default function Quiz() {
   // Voice Selection Screen
   if (showVoiceSelection) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
         <SEOHead 
           title="Good Girl Archetype Quiz - Discover Your Type | Fifth Element Somatics"
           description="Are you a People-Pleaser, Perfectionist, or Awakened Rebel? Take this viral quiz with voice narration to discover your Good Girl archetype and get your personalized roadmap to authentic empowerment."
@@ -926,7 +926,7 @@ export default function Quiz() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
       <SEOHead 
         title="Good Girl Archetype Quiz - Discover Your Type | Fifth Element Somatics"
         description="Are you a People-Pleaser, Perfectionist, or Awakened Rebel? Take this viral quiz with voice narration to discover your Good Girl archetype and get your personalized roadmap to authentic empowerment."
