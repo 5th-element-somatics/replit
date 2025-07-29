@@ -18,6 +18,7 @@ import Quiz from "@/pages/quiz";
 import FreeMeditation from "@/pages/free-meditation";
 import Waitlist from "@/pages/waitlist";
 import AIEmailAdmin from "@/pages/ai-email-admin";
+import SmartAdmin from "@/pages/smart-admin";
 import EmailHeaderTest from "@/pages/email-header-test";
 import NotFound from "@/pages/not-found";
 
@@ -36,6 +37,7 @@ function Router() {
       <Route path="/admin-login" component={AdminLogin} />
       <Route path="/admin-verify" component={AdminVerify} />
       <Route path="/admin/ai-email" component={AIEmailAdmin} />
+      <Route path="/smart-admin" component={SmartAdmin} />
       <Route path="/free-meditation" component={FreeMeditation} />
       <Route path="/waitlist" component={Waitlist} />
       <Route path="/quiz" component={Quiz} />
