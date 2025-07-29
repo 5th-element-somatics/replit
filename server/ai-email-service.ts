@@ -149,6 +149,9 @@ class AIEmailService {
 
   // Process pending emails in the queue
   async processEmailQueue() {
+    console.log("📧 Email processing temporarily disabled to prevent spam");
+    return;
+    
     try {
       const now = new Date();
       const pendingEmails = await db
