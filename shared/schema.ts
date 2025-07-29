@@ -276,6 +276,31 @@ export const leadBehaviorTracking = pgTable("lead_behavior_tracking", {
   eventTimestamp: timestamp("event_timestamp").defaultNow().notNull(),
 });
 
+// Contact Messages
+export const contactMessages = pgTable("contact_messages", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  message: text("message").notNull(),
+  status: text("status").notNull().default("new"), // new, read, replied, archived
+  adminNotes: text("admin_notes"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Waitlist Management
+export const waitlistEntries = pgTable("waitlist_entries", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  program: text("program").notNull().default("radiant-alchemy"), // radiant-alchemy, masterclass, mentorship
+  source: text("source"), // how_found_us
+  status: text("status").notNull().default("active"), // active, contacted, converted, unsubscribed
+  adminNotes: text("admin_notes"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
@@ -318,6 +343,19 @@ export const insertAdminSessionSchema = createInsertSchema(adminSessions).pick({
   expiresAt: true,
 });
 
+export const insertContactMessageSchema = createInsertSchema(contactMessages).pick({
+  name: true,
+  email: true,
+  message: true,
+});
+
+export const insertWaitlistEntrySchema = createInsertSchema(waitlistEntries).pick({
+  name: true,
+  email: true,
+  program: true,
+  source: true,
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type InsertPurchase = z.infer<typeof insertPurchaseSchema>;
@@ -358,3 +396,9 @@ export type AiEmailSetting = typeof aiEmailSettings.$inferSelect;
 export type InsertAiEmailSetting = typeof aiEmailSettings.$inferInsert;
 export type LeadBehaviorTracking = typeof leadBehaviorTracking.$inferSelect;
 export type InsertLeadBehaviorTracking = typeof leadBehaviorTracking.$inferInsert;
+
+// Contact and Waitlist Types
+export type ContactMessage = typeof contactMessages.$inferSelect;
+export type InsertContactMessage = z.infer<typeof insertContactMessageSchema>;
+export type WaitlistEntry = typeof waitlistEntries.$inferSelect;
+export type InsertWaitlistEntry = z.infer<typeof insertWaitlistEntrySchema>;

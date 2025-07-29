@@ -221,7 +221,7 @@ export default function Home() {
           
           <div className="mt-12">
             <Link href="/masterclass" onClick={handleNavClick}>
-              <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 sm:px-12 py-4 sm:py-5 rounded-full text-lg sm:text-xl transition-all duration-300 mystique-glow max-w-xs sm:max-w-none mx-auto">
+              <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 sm:px-12 py-6 sm:py-8 rounded-full text-lg sm:text-xl transition-all duration-300 mystique-glow max-w-xs sm:max-w-none mx-auto">
                 <span className="text-center leading-tight">
                   JOIN MASTERCLASS<br className="hidden sm:block" />
                   <span className="sm:hidden"> </span>
@@ -304,7 +304,12 @@ export default function Home() {
             <p><strong className="text-white">Let this be the place where you finally exhale and remember who you are.</strong></p>
           </div>
           
-          <div className="mt-8">
+          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link href="/quiz" onClick={handleNavClick}>
+              <Button className="bg-gradient-to-r from-emerald-500 to-purple-600 hover:from-emerald-600 hover:to-purple-700 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 mystique-glow">
+                TAKE THE QUIZ
+              </Button>
+            </Link>
             <Link href="/work-with-me" onClick={handleNavClick}>
               <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 mystique-glow">
                 APPLY FOR MENTORSHIP
@@ -394,13 +399,13 @@ export default function Home() {
             </div>
             
             <div>
-              <h5 className="font-semibold text-white mb-4">Support</h5>
+              <h5 className="font-semibold text-white mb-4">Get in Touch</h5>
               <p className="text-gray-400 text-sm mb-2">
-                Questions about your purchase?
+                Have questions? Let's connect.
               </p>
-              <a href="mailto:hello@fifthelementsomatics.com" className="text-purple-400 hover:text-pink-600 transition-colors">
-                hello@fifthelementsomatics.com
-              </a>
+              <Link href="/about" onClick={handleNavClick} className="text-purple-400 hover:text-pink-600 transition-colors">
+                Contact Form
+              </Link>
             </div>
           </div>
           

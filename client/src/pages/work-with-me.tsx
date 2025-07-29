@@ -5,6 +5,7 @@ import { Link } from "wouter";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
+import { ContactForm } from "@/components/ContactForm";
 
 export default function WorkWithMe() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -42,8 +43,8 @@ export default function WorkWithMe() {
         {/* Desktop Navigation */}
         <div className="hidden md:flex space-x-8">
           <Link href="/" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">HOME</Link>
-          <Link href="/free-meditation" onClick={handleNavClick} className="text-emerald-400 hover:text-emerald-300 transition-colors font-semibold">FREE MEDITATION</Link>
-          <Link href="/quiz" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">TAKE THE QUIZ</Link>
+          <Link href="/quiz" onClick={handleNavClick} className="text-emerald-400 hover:text-emerald-300 transition-colors font-semibold">TAKE THE QUIZ</Link>
+          <Link href="/free-meditation" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">FREE MEDITATION</Link>
           <Link href="/work-with-me" onClick={handleNavClick} className="text-white font-semibold">WORK WITH ME</Link>
           <Link href="/masterclass" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">MASTERCLASS</Link>
           <Link href="/about" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">ABOUT</Link>
@@ -63,8 +64,8 @@ export default function WorkWithMe() {
           <div className="absolute top-20 left-0 right-0 bg-gray-900 bg-opacity-95 backdrop-blur-sm md:hidden z-50">
             <div className="flex flex-col p-4 space-y-4">
               <Link href="/" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">HOME</Link>
-              <Link href="/free-meditation" onClick={handleNavClick} className="text-emerald-400 hover:text-emerald-300 transition-colors font-semibold text-lg">FREE MEDITATION</Link>
-              <Link href="/quiz" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">TAKE THE QUIZ</Link>
+              <Link href="/quiz" onClick={handleNavClick} className="text-emerald-400 hover:text-emerald-300 transition-colors font-semibold text-lg">TAKE THE QUIZ</Link>
+              <Link href="/free-meditation" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">FREE MEDITATION</Link>
               <Link href="/work-with-me" onClick={handleNavClick} className="text-white font-semibold text-lg">WORK WITH ME</Link>
               <Link href="/masterclass" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">MASTERCLASS</Link>
               <Link href="/about" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">ABOUT</Link>
@@ -310,15 +311,7 @@ export default function WorkWithMe() {
               </div>
             </div>
             
-            <div>
-              <h5 className="font-semibold text-white mb-4">Support</h5>
-              <p className="text-gray-400 text-sm mb-2">
-                Questions about your purchase?
-              </p>
-              <a href="mailto:hello@fifthelementsomatics.com" className="text-purple-400 hover:text-pink-600 transition-colors">
-                hello@fifthelementsomatics.com
-              </a>
-            </div>
+            <ContactForm className="md:col-span-1" />
           </div>
           
           <div className="border-t border-gray-800 mt-8 pt-8 text-center">

@@ -7,12 +7,17 @@ import {
   insertPurchaseSchema, 
   insertApplicationSchema, 
   insertLeadSchema,
+  insertContactMessageSchema,
+  insertWaitlistEntrySchema,
   aiEmailCampaigns,
   aiEmailTemplates,
   aiEmailQueue,
-  aiEmailDeliveries
+  aiEmailDeliveries,
+  contactMessages,
+  waitlistEntries
 } from "@shared/schema";
-import { sql, count, sum } from 'drizzle-orm';
+import { sql, count, sum, eq } from 'drizzle-orm';
+import { db } from "./db";
 import sgMail from '@sendgrid/mail';
 import crypto from 'crypto';
 
@@ -1032,6 +1037,163 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true, message: "Queue processing started" });
     } catch (error: any) {
       res.status(500).json({ message: "Error processing queue: " + error.message });
+    }
+  });
+
+  // Contact Form API
+  app.post("/api/contact", async (req, res) => {
+    try {
+      const validatedData = insertContactMessageSchema.parse(req.body);
+      
+      // Insert contact message
+      const [message] = await db
+        .insert(contactMessages)
+        .values(validatedData)
+        .returning();
+
+      // Send notification email to admin
+      if (process.env.SENDGRID_API_KEY) {
+        try {
+          await sgMail.send({
+            to: 'hello@fifthelementsomatics.com',
+            from: process.env.SENDGRID_FROM_EMAIL!,
+            subject: `New Contact Message from ${validatedData.name}`,
+            html: `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                <h2 style="color: #C77DFF;">New Contact Message</h2>
+                <div style="background: #f5f1e8; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                  <p><strong>Name:</strong> ${validatedData.name}</p>
+                  <p><strong>Email:</strong> ${validatedData.email}</p>
+                  <p><strong>Message:</strong></p>
+                  <p style="white-space: pre-wrap;">${validatedData.message}</p>
+                </div>
+                <p style="color: #666; font-size: 14px;">
+                  Received: ${new Date().toLocaleString()}
+                </p>
+              </div>
+            `
+          });
+        } catch (emailError) {
+          console.error("Failed to send notification email:", emailError);
+        }
+      }
+
+      res.json({ success: true, id: message.id });
+    } catch (error: any) {
+      console.error("Contact form error:", error);
+      res.status(400).json({ message: "Error submitting contact form: " + error.message });
+    }
+  });
+
+  // Waitlist API
+  app.post("/api/waitlist", async (req, res) => {
+    try {
+      const validatedData = insertWaitlistEntrySchema.parse(req.body);
+      
+      // Insert waitlist entry
+      const [entry] = await db
+        .insert(waitlistEntries)
+        .values(validatedData)
+        .returning();
+
+      // Send notification email to admin
+      if (process.env.SENDGRID_API_KEY) {
+        try {
+          await sgMail.send({
+            to: 'hello@fifthelementsomatics.com',
+            from: process.env.SENDGRID_FROM_EMAIL!,
+            subject: `New Waitlist Entry: ${validatedData.program}`,
+            html: `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                <h2 style="color: #C77DFF;">New Waitlist Entry</h2>
+                <div style="background: #f5f1e8; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                  <p><strong>Name:</strong> ${validatedData.name}</p>
+                  <p><strong>Email:</strong> ${validatedData.email}</p>
+                  <p><strong>Program:</strong> ${validatedData.program}</p>
+                  ${validatedData.source ? `<p><strong>How they found us:</strong> ${validatedData.source}</p>` : ''}
+                </div>
+                <p style="color: #666; font-size: 14px;">
+                  Joined: ${new Date().toLocaleString()}
+                </p>
+              </div>
+            `
+          });
+        } catch (emailError) {
+          console.error("Failed to send waitlist notification email:", emailError);
+        }
+      }
+
+      res.json({ success: true, id: entry.id });
+    } catch (error: any) {
+      console.error("Waitlist form error:", error);
+      res.status(400).json({ message: "Error joining waitlist: " + error.message });
+    }
+  });
+
+  // Admin routes for contact messages and waitlist
+  app.get("/api/admin/contact-messages", requireAdminAuth, async (req, res) => {
+    try {
+      const messages = await db
+        .select()
+        .from(contactMessages)
+        .orderBy(sql`${contactMessages.createdAt} DESC`);
+      
+      res.json(messages);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching contact messages: " + error.message });
+    }
+  });
+
+  app.patch("/api/admin/contact-messages/:id", requireAdminAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { status, adminNotes } = req.body;
+      
+      await db
+        .update(contactMessages)
+        .set({ 
+          status, 
+          adminNotes,
+          updatedAt: new Date()
+        })
+        .where(eq(contactMessages.id, id));
+      
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ message: "Error updating contact message: " + error.message });
+    }
+  });
+
+  app.get("/api/admin/waitlist", requireAdminAuth, async (req, res) => {
+    try {
+      const entries = await db
+        .select()
+        .from(waitlistEntries)
+        .orderBy(sql`${waitlistEntries.createdAt} DESC`);
+      
+      res.json(entries);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching waitlist entries: " + error.message });
+    }
+  });
+
+  app.patch("/api/admin/waitlist/:id", requireAdminAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { status, adminNotes } = req.body;
+      
+      await db
+        .update(waitlistEntries)
+        .set({ 
+          status, 
+          adminNotes,
+          updatedAt: new Date()
+        })
+        .where(eq(waitlistEntries.id, id));
+      
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ message: "Error updating waitlist entry: " + error.message });
     }
   });
 

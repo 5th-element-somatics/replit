@@ -818,19 +818,22 @@ function MeditationAccess() {
               <p className="text-gray-300 mb-6">
                 If this meditation resonates with you, explore The Good Girl Paradox Masterclass for a complete transformation.
               </p>
-              <div className="space-y-3">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href="/quiz">
+                  <Button className="bg-gradient-to-r from-emerald-500 to-purple-600 hover:from-emerald-600 hover:to-purple-700 text-white font-bold px-8 py-3 rounded-full">
+                    Take the Quiz
+                  </Button>
+                </Link>
                 <Link href="/masterclass">
                   <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-3 rounded-full">
                     Explore the Masterclass
                   </Button>
                 </Link>
-                <div>
-                  <Link href="/work-with-me">
-                    <Button variant="outline" className="border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-white">
-                      Work With Me 1:1
-                    </Button>
-                  </Link>
-                </div>
+                <Link href="/work-with-me">
+                  <Button variant="outline" className="border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-white px-8 py-3 rounded-full">
+                    Work With Me 1:1
+                  </Button>
+                </Link>
               </div>
             </CardContent>
           </Card>
@@ -843,9 +846,11 @@ function MeditationAccess() {
           <div className="grid md:grid-cols-3 gap-8 text-center md:text-left">
             <div>
               <div className="flex items-center justify-center md:justify-start space-x-3 mb-4">
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
-                  <span className="text-white font-serif font-bold">5E</span>
-                </div>
+                <img 
+                  src={tiger_no_bg} 
+                  alt="Fifth Element Somatics" 
+                  className="h-10 w-auto"
+                />
                 <span className="text-lg font-serif font-semibold text-white">Fifth Element Somatics</span>
               </div>
               <p className="text-gray-400 text-sm">
@@ -862,15 +867,7 @@ function MeditationAccess() {
               </div>
             </div>
             
-            <div>
-              <h5 className="font-semibold text-white mb-4">Support</h5>
-              <p className="text-gray-400 text-sm mb-2">
-                Questions about your purchase?
-              </p>
-              <a href="mailto:hello@fifthelementsomatics.com" className="text-purple-400 hover:text-pink-600 transition-colors">
-                hello@fifthelementsomatics.com
-              </a>
-            </div>
+            <ContactForm className="md:col-span-1" />
           </div>
           
           <div className="border-t border-gray-800 mt-8 pt-8 text-center">

@@ -1,0 +1,142 @@
+Absolutely — here’s the full Replit AI markdown spec for the next round of revisions to fifthelementsomatics.com, organized into:
+	•	🔧 Admin Dashboard Functionality
+	•	🎨 UI/UX Updates (per-page tasks)
+	•	📬 Contact + Notification Routing
+	•	🧠 AI-First CMS Orientation
+
+This is clean and copy-paste ready for Replit AI.
+
+⸻
+
+
+# Replit AI Spec: Next Revisions for FifthElementSomatics.com 🌹
+
+This spec captures the next round of changes discussed live with Saint, focused on activating full admin functionality, updating UI/UX, enabling content creation via AI prompting, and improving system routing for user interaction.
+
+---
+
+## 🔧 ADMIN CENTER / DASHBOARD FUNCTIONALITY
+
+### ✅ Build & Enable Core Modules
+
+- [ ] Analytics Dashboard: traffic, sources, pageviews
+- [ ] Email Marketing: capture, tag, and send from Admin Panel
+- [ ] Affiliate Management: ability to track referrers + links
+- [ ] Lead Management: track quiz-takers, free downloaders, and checkout leads
+- [ ] Settings: update brand details, connect social, Stripe, email templates
+
+---
+
+### 🎯 Admin Panel Must Support:
+
+- [ ] **Page & Post creation via AI** (text + image suggestion)
+- [ ] **Voice-prompted commands** for page/post generation (integrate Whisper or equivalent)
+- [ ] Upload media and assign page placement
+- [ ] Access contact form submissions with notification
+
+---
+
+## 📬 CONTACT + EMAIL NOTIFICATION FLOW
+
+- [ ] Remove `hello@fifthelementsomatics.com` from visible footer
+- [ ] Replace with **contact form**
+  - Required fields: Name, Email, Message
+  - Submits to Admin Panel under “Messages”
+  - Sends auto-notification to hello@fifthelementsomatics.com
+
+---
+
+## 🎨 UI / LAYOUT UPDATES
+
+### 🔗 Global Fixes
+- [ ] All CTA pairs (e.g. **Take the Quiz** + **Explore Masterclass**) → reorder so that **Take the Quiz** comes first
+- [ ] Ensure proper spacing and margin between CTA buttons when side-by-side
+
+---
+
+### 🏠 Homepage
+- [ ] Fix **“Join Masterclass: Good Girl Paradox”** button:
+  - Add more **top/bottom padding** to improve tap target and visual spacing
+- [ ] Remove duplicate “Apply for Mentorship” buttons
+  - Replace with **one unified CTA** block that leads to /apply
+- [ ] Footer:
+  - Instagram should link to: [https://instagram.com/saintxsavant](https://instagram.com/saintxsavant)
+  - Email → replaced with contact form as noted above
+
+---
+
+### 📖 Masterclass Page
+- [ ] Above the **“Return to the Body”** bonus section:
+  - Add **short paragraph** describing the bonus before the checkbox
+  - Optional: Add “Learn More” button that opens modal with full bonus breakdown
+- [ ] Confirm bonus toggle dynamically updates checkout price
+
+---
+
+### 🧘 Free Grounding Meditation Page
+- [ ] **Take the Quiz** should appear *before* “Explore the Masterclass” wherever they appear side-by-side
+
+---
+
+### 🧘‍♀️ Mentorship Page (/apply or /work-with-me)
+- [ ] Add **more visual elements**:
+  - Icons for each step (e.g. 🌀 for soul match, 📞 for intake call, 🔥 for embodiment path)
+  - Multiple photos of Saint placed in-line or as section anchors
+- [ ] Replace 1-2-3 steps with **section blocks + imagery**
+- [ ] Confirm Apply for Mentorship form routes into Admin dashboard under “Leads”
+
+---
+
+### 🧬 About Page
+- [ ] Reformat long stacked title (currently 5 lines):
+  - Line 1: “Somatic Sexologist”
+  - Line 2: “Reclamation Guide”
+  - Line 3: “Body Whisperer”
+
+---
+
+### ✨ Radiant Alchemy Waitlist
+
+- [ ] Clicking “Join the Waitlist” should route to a **dedicated waitlist page** with:
+  - Name + Email fields
+  - Optional: How you found us (dropdown)
+- [ ] Submissions are stored in **Admin Center under Waitlists**
+- [ ] Copy of each submission is emailed to: `hello@fifthelementsomatics.com`
+
+---
+
+## 🧠 AI-CREATION FLOW (PREP FOR FUTURE BUILDOUT)
+
+- [ ] Enable prompt-based creation for:
+  - Pages
+  - Posts
+  - Email campaigns
+  - Meditation scripts
+- [ ] All content tools should support both **typed** and **spoken** prompts
+
+Example:
+```text
+“Create a new page called ‘Erotic Reclamation’ — include an intro paragraph, a masterclass CTA, and a footer with meditation link.”
+
+
+⸻
+
+✅ FINAL CHECKLIST SUMMARY
+
+Area	Task
+Admin Panel	Email marketing, affiliates, AI-based page/post generation
+CTA Fixes	Reorder, unify, and pad buttons
+Contact Form	Route to admin + notify via email
+Masterclass Bonus	Add intro paragraph + modal for Return to Body
+Mentorship Page	Add visuals, icons, more photos of Saint
+About Page Title	Collapse multi-line stack into 3-line poetic structure
+Radiant Alchemy Waitlist	Dedicated page + admin submission + email notification
+
+
+⸻
+
+Let me know when these are implemented and we can spec /watch, /quiz-results, and more AI tools next 🌙🔥
+
+---
+
+Would you like a follow-up spec for `/watch`, `/quiz-results`, or `/portal` once this round is complete? I can also create visuals to accompany Saint’s admin dashboard or content creation prompts.

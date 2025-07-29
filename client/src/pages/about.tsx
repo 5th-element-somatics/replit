@@ -6,6 +6,7 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import saintPhotoUrl from "@assets/saint_photo_1753245778552.png";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
+import { ContactForm } from "@/components/ContactForm";
 
 export default function About() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -77,7 +78,7 @@ export default function About() {
       {/* Hero Section */}
       <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 text-center">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-serif font-bold mb-6">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold mb-6 leading-tight">
             <span className="gradient-text">SOMATIC SEXOLOGIST.</span><br />
             <span className="gradient-text">RECLAMATION GUIDE.</span><br />
             <span className="gradient-text">BODY WHISPERER.</span>
@@ -290,15 +291,7 @@ export default function About() {
               </div>
             </div>
             
-            <div>
-              <h5 className="font-semibold text-white mb-4">Support</h5>
-              <p className="text-gray-400 text-sm mb-2">
-                Questions about your purchase?
-              </p>
-              <a href="mailto:hello@fifthelementsomatics.com" className="text-purple-400 hover:text-pink-600 transition-colors">
-                hello@fifthelementsomatics.com
-              </a>
-            </div>
+            <ContactForm className="md:col-span-1" />
           </div>
           
           <div className="border-t border-gray-800 mt-8 pt-8 text-center">
