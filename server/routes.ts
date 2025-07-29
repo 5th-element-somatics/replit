@@ -388,6 +388,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/applications", requireAdminAuth, async (req, res) => {
     try {
       const applications = await storage.getAllApplications();
+      console.log(`📋 Admin ${req.adminUser.email} requested applications. Returning ${applications.length} total applications`);
+      
+      // Add cache control headers to prevent caching issues
+      res.set({
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      });
+      
       res.json(applications);
     } catch (error: any) {
       res.status(500).json({ message: "Error fetching applications: " + error.message });
@@ -499,6 +508,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/leads", requireAdminAuth, async (req, res) => {
     try {
       const leads = await storage.getAllLeads();
+      console.log(`📊 Admin ${req.adminUser.email} requested leads. Returning ${leads.length} total leads`);
+      
+      // Add cache control headers to prevent caching issues
+      res.set({
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      });
+      
       res.json(leads);
     } catch (error: any) {
       res.status(500).json({ message: "Error fetching leads: " + error.message });
