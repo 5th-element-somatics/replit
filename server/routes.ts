@@ -280,6 +280,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log(`✅ Manual purchase created for ${email} - Full access granted`);
       console.log(`Purchase details:`, purchase);
 
+      // Send confirmation email (for testing)
+      console.log(`📧 Sending confirmation email to ${email}`);
+      console.log(`🎯 Course Access Link: /course?email=${encodeURIComponent(email)}`);
+      console.log(`📚 Content Access: Main masterclass + ${includeAddon ? 'Return to Body addon' : 'Main course only'}`);
+      
+      // In production, this would trigger actual email sending
+      console.log(`
+📧 EMAIL CONFIRMATION FOR: ${email}
+======================================
+Subject: Welcome to The Good Girl Paradox Masterclass!
+
+🎉 Your purchase is complete! 
+
+Access your course here:
+👉 ${req.protocol}://${req.get('host')}/course?email=${encodeURIComponent(email)}
+
+What you have access to:
+✅ The Good Girl Paradox - Full Masterclass (90 minutes)
+${includeAddon ? `✅ Boundary Tapping Ritual (15 minutes)
+✅ Eros Energy Activation (20 minutes) 
+✅ Sovereignty Ritual (18 minutes)` : ''}
+✅ Emotional Power Ebook (PDF download)
+
+Your transformational journey begins now!
+
+Questions? Reply to this email or contact hello@fifthelementsomatics.com
+======================================
+      `);
+
       res.json({ 
         success: true, 
         purchase,

@@ -31,6 +31,12 @@ export function VimeoPlayer({ videoId, title, onProgress, onComplete, autoplay =
 
     function initializePlayer() {
       if (playerRef.current && window.Vimeo) {
+        // Clear loading placeholder
+        const placeholder = playerRef.current.parentElement?.querySelector('.absolute');
+        if (placeholder) {
+          placeholder.remove();
+        }
+        
         vimeoPlayer.current = new window.Vimeo.Player(playerRef.current, {
           id: videoId,
           width: '100%',
@@ -43,6 +49,8 @@ export function VimeoPlayer({ videoId, title, onProgress, onComplete, autoplay =
           portrait: false,
           color: 'C77DFF'
         });
+
+        console.log(`🎬 Vimeo player initialized for video ID: ${videoId}`);
 
         // Track progress
         if (onProgress) {
@@ -69,8 +77,19 @@ export function VimeoPlayer({ videoId, title, onProgress, onComplete, autoplay =
   }, [videoId, onProgress, onComplete, autoplay]);
 
   return (
-    <div className="aspect-video bg-black rounded-lg overflow-hidden">
+    <div className="aspect-video bg-black rounded-lg overflow-hidden relative">
       <div ref={playerRef} className="w-full h-full" />
+      {/* Loading placeholder while Vimeo player initializes */}
+      <div className="absolute inset-0 flex items-center justify-center bg-black">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+            </svg>
+          </div>
+          <p className="text-white text-sm">Loading {title}...</p>
+        </div>
+      </div>
     </div>
   );
 }
