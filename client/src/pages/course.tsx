@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { SEOHead } from "@/components/SEOHead";
 import { VimeoPlayer } from "@/components/VimeoPlayer";
+import { DirectVimeoPlayer } from "@/components/DirectVimeoPlayer";
 import { CheckCircle, PlayCircle, Lock, Download, Book, Clock, Users } from 'lucide-react';
 import tiger_no_bg from "@assets/tiger_no_bg.png";
 
@@ -317,11 +318,9 @@ export default function Course() {
               <div className="space-y-6">
                 <Card className="bg-gray-900 border border-purple-400 border-opacity-30">
                   <CardContent className="p-0">
-                    <VimeoPlayer
+                    <DirectVimeoPlayer
                       videoId={currentModule.vimeoId}
                       title={currentModule.title}
-                      onProgress={(progress) => handleModuleProgress(currentModule.id, progress)}
-                      onComplete={() => handleModuleComplete(currentModule.id)}
                     />
                   </CardContent>
                 </Card>
