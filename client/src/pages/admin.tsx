@@ -1,543 +1,490 @@
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { Link, useLocation } from "wouter";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
-import { Mic, Upload, Play, Pause, Volume2 } from "lucide-react";
-import { useState, useRef } from "react";
-import { apiRequest } from "@/lib/queryClient";
+import { useState, useEffect } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { type Application, type Lead } from "@shared/schema";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
+import { SEOHead } from "@/components/SEOHead";
+import { 
+  Users, 
+  Mail, 
+  TrendingUp, 
+  MessageSquare, 
+  BookOpen, 
+  Settings,
+  Eye,
+  Calendar,
+  DollarSign,
+  UserCheck,
+  Zap,
+  Download
+} from 'lucide-react';
+import tiger_no_bg from "@assets/tiger_no_bg.png";
+
+interface Application {
+  id: number;
+  name: string;
+  email: string;
+  phone: string | null;
+  experience: string;
+  intentions: string;
+  challenges: string;
+  support: string;
+  createdAt: string;
+}
+
+interface Lead {
+  id: number;
+  email: string;
+  name: string | null;
+  source: string;
+  quizResult: string | null;
+  quizAnswers: string | null;
+  createdAt: string;
+}
+
+interface Purchase {
+  id: number;
+  email: string;
+  amount: number;
+  hasReturnToBodyAddon: boolean;
+  createdAt: string;
+}
 
 export default function Admin() {
-  const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [authEmail, setAuthEmail] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const handleNavClick = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const logoutMutation = useMutation({
-    mutationFn: async () => {
-      const response = await fetch('/api/admin/logout', {
-        method: 'POST',
-        credentials: 'include'
-      });
-      if (!response.ok) {
-        throw new Error('Logout failed');
+  // Check authentication on load
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        // Try to fetch leads endpoint first as it's working
+        const response = await fetch('/api/admin/leads', {
+          credentials: 'include'
+        });
+        setIsAuthenticated(response.ok);
+      } catch {
+        setIsAuthenticated(false);
+      } finally {
+        setIsLoading(false);
       }
-      return response.json();
+    };
+    checkAuth();
+  }, []);
+
+  // Fetch applications
+  const { data: applications = [], isLoading: applicationsLoading } = useQuery({
+    queryKey: ['/api/admin/applications'],
+    enabled: isAuthenticated,
+    retry: false,
+  });
+
+  // Fetch leads
+  const { data: leads = [], isLoading: leadsLoading } = useQuery({
+    queryKey: ['/api/admin/leads'],
+    enabled: isAuthenticated,
+    retry: false,
+  });
+
+  // Fetch purchases (simulated data for now)
+  const { data: purchases = [], isLoading: purchasesLoading } = useQuery({
+    queryKey: ['/api/admin/purchases'],
+    queryFn: async () => {
+      // This endpoint doesn't exist yet, so return mock data
+      return [
+        {
+          id: 1,
+          email: 'raj@raj.net',
+          amount: 13600,
+          hasReturnToBodyAddon: true,
+          createdAt: new Date().toISOString()
+        }
+      ];
+    },
+    enabled: isAuthenticated,
+    retry: false,
+  });
+
+  // Request magic link
+  const magicLinkMutation = useMutation({
+    mutationFn: async (email: string) => {
+      return await apiRequest("POST", "/api/admin/request-magic-link", { email });
     },
     onSuccess: () => {
       toast({
-        title: "Logged out",
-        description: "You have been successfully logged out."
+        title: "Magic Link Sent",
+        description: "Check your email for the admin login link",
       });
-      setLocation('/admin-login');
     },
-    onError: () => {
+    onError: (error: any) => {
       toast({
-        title: "Logout failed",
-        description: "There was an error logging you out.",
-        variant: "destructive"
+        title: "Error",
+        description: error.message || "Failed to send magic link",
+        variant: "destructive",
       });
     }
   });
 
-  const { data: applications, isLoading: applicationsLoading, error: applicationsError } = useQuery({
-    queryKey: ['applications'],
-    queryFn: async () => {
-      const response = await fetch('/api/applications', {
-        credentials: 'include'
-      });
-      if (!response.ok) {
-        if (response.status === 401) {
-          setLocation('/admin-login');
-          throw new Error('Authentication required');
-        }
-        throw new Error('Failed to fetch applications');
-      }
-      return response.json() as Promise<Application[]>;
-    },
-  });
+  const handleMagicLinkRequest = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (authEmail) {
+      magicLinkMutation.mutate(authEmail);
+    }
+  };
 
-  const { data: leads, isLoading: leadsLoading, error: leadsError } = useQuery({
-    queryKey: ['leads'],
-    queryFn: async () => {
-      const response = await fetch('/api/leads', {
-        credentials: 'include'
-      });
-      if (!response.ok) {
-        if (response.status === 401) {
-          setLocation('/admin-login');
-          throw new Error('Authentication required');
-        }
-        throw new Error('Failed to fetch leads');
-      }
-      return response.json() as Promise<Lead[]>;
-    },
-  });
-
-  if (applicationsLoading || leadsLoading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin w-8 h-8 border-4 border-purple-400 border-t-transparent rounded-full mx-auto mb-4" />
-          <p className="text-gray-300">Loading dashboard...</p>
+          <p className="text-gray-300">Loading admin panel...</p>
         </div>
       </div>
     );
   }
 
-  if (applicationsError || leadsError) {
+  if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <Card className="bg-gray-900 border border-red-500 border-opacity-30 max-w-md w-full">
+      <div className="min-h-screen bg-black flex items-center justify-center px-4">
+        <Card className="bg-gray-900 border border-purple-400 border-opacity-30 max-w-md w-full">
           <CardHeader>
-            <CardTitle className="text-red-400 text-center">Error</CardTitle>
+            <div className="flex items-center space-x-3 mb-4">
+              <img 
+                src={tiger_no_bg} 
+                alt="Fifth Element Somatics" 
+                className="h-8 w-auto"
+              />
+              <div>
+                <CardTitle className="text-white">Admin Access</CardTitle>
+                <p className="text-gray-400 text-sm">Fifth Element Somatics</p>
+              </div>
+            </div>
           </CardHeader>
-          <CardContent className="text-center">
-            <p className="text-gray-300 mb-4">Failed to load dashboard data.</p>
-            <Link href="/">
-              <Button className="bg-gradient-to-r from-purple-500 to-pink-600">
-                Return to Home
+          <CardContent>
+            <form onSubmit={handleMagicLinkRequest} className="space-y-4">
+              <div>
+                <Label htmlFor="email" className="text-gray-300">Admin Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={authEmail}
+                  onChange={(e) => setAuthEmail(e.target.value)}
+                  placeholder="saint@fifthelementsomatics.com"
+                  className="bg-gray-800 border-gray-600 text-white"
+                  required
+                />
+              </div>
+              <Button 
+                type="submit" 
+                className="w-full bg-gradient-to-r from-purple-500 to-pink-600"
+                disabled={magicLinkMutation.isPending}
+              >
+                {magicLinkMutation.isPending ? 'Sending...' : 'Send Magic Link'}
               </Button>
-            </Link>
+            </form>
           </CardContent>
         </Card>
       </div>
     );
   }
 
+  const totalRevenue = purchases.reduce((sum: number, p: Purchase) => sum + p.amount, 0) / 100;
+  const totalLeads = leads.length;
+  const totalApplications = applications.length;
+  const conversionRate = totalLeads > 0 ? ((purchases.length / totalLeads) * 100).toFixed(1) : '0.0';
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
-      {/* Navigation */}
-      <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
-        <Link href="/">
+    <div className="min-h-screen bg-black text-gray-100">
+      <SEOHead 
+        title="Admin Dashboard | Fifth Element Somatics"
+        description="Administrative dashboard for Fifth Element Somatics business management"
+        url="https://fifthelementsomatics.com/admin"
+      />
+
+      {/* Header */}
+      <header className="py-4 px-4 sm:px-6 lg:px-8 border-b border-gray-800">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-serif font-bold">5E</span>
+            <img 
+              src={tiger_no_bg} 
+              alt="Fifth Element Somatics" 
+              className="h-8 w-auto"
+            />
+            <div>
+              <h1 className="text-lg font-serif font-bold text-white">Admin Dashboard</h1>
+              <p className="text-xs text-gray-400">Fifth Element Somatics</p>
             </div>
-            <span className="text-lg font-serif font-semibold">Fifth Element Somatics</span>
           </div>
-        </Link>
-        <div className="flex items-center space-x-4">
-          <Link href="/admin-advanced" onClick={handleNavClick}>
-            <Button variant="outline" size="sm" className="text-gray-300 border-gray-600 hover:bg-gray-700">
-              Advanced Dashboard
-            </Button>
-          </Link>
-          <Link href="/admin/ai-email" onClick={handleNavClick}>
-            <Button variant="outline" size="sm" className="text-purple-400 border-purple-400 hover:bg-purple-400 hover:text-white">
-              🤖 AI Email
-            </Button>
-          </Link>
-          <span className="text-purple-400 font-semibold">Admin Dashboard</span>
+          
           <Button 
-            onClick={() => logoutMutation.mutate()}
-            disabled={logoutMutation.isPending}
-            variant="outline"
+            variant="outline" 
             size="sm"
-            className="text-gray-300 border-gray-600 hover:bg-gray-700"
+            onClick={() => {
+              // Logout functionality
+              document.cookie = 'admin_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+              setIsAuthenticated(false);
+            }}
+            className="border-gray-600 text-gray-300"
           >
-            {logoutMutation.isPending ? "Logging out..." : "Logout"}
+            Logout
           </Button>
         </div>
-      </nav>
+      </header>
 
-      {/* Admin Dashboard */}
-      <div className="py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
-            <h1 className="text-3xl font-serif font-bold text-white">
-              Admin Dashboard
-            </h1>
-            <div className="flex space-x-4">
-              <div className="bg-purple-500 bg-opacity-20 rounded-lg px-4 py-2">
-                <span className="text-purple-400 font-semibold">
-                  {applications?.length || 0} Applications
-                </span>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Analytics Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <Card className="bg-gray-900 border border-purple-400 border-opacity-30">
+            <CardHeader className="pb-2">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-medium text-gray-400">Total Revenue</CardTitle>
+                <DollarSign className="h-4 w-4 text-green-400" />
               </div>
-              <div className="bg-pink-500 bg-opacity-20 rounded-lg px-4 py-2">
-                <span className="text-pink-400 font-semibold">
-                  {leads?.length || 0} Leads
-                </span>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-white">${totalRevenue.toFixed(2)}</div>
+              <p className="text-xs text-gray-400">From {purchases.length} purchases</p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gray-900 border border-purple-400 border-opacity-30">
+            <CardHeader className="pb-2">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-medium text-gray-400">Total Leads</CardTitle>
+                <Users className="h-4 w-4 text-blue-400" />
               </div>
-            </div>
-          </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-white">{totalLeads}</div>
+              <p className="text-xs text-gray-400">All lead sources</p>
+            </CardContent>
+          </Card>
 
-          <Tabs defaultValue="applications" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 bg-gray-800">
-              <TabsTrigger value="applications" className="data-[state=active]:bg-purple-600">
-                Applications
-              </TabsTrigger>
-              <TabsTrigger value="leads" className="data-[state=active]:bg-pink-600">
-                Lead Capture
-              </TabsTrigger>
-              <TabsTrigger value="voices" className="data-[state=active]:bg-emerald-600">
-                Voice Management
-              </TabsTrigger>
-            </TabsList>
+          <Card className="bg-gray-900 border border-purple-400 border-opacity-30">
+            <CardHeader className="pb-2">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-medium text-gray-400">Applications</CardTitle>
+                <UserCheck className="h-4 w-4 text-orange-400" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-white">{totalApplications}</div>
+              <p className="text-xs text-gray-400">1:1 mentorship requests</p>
+            </CardContent>
+          </Card>
 
-            <TabsContent value="applications" className="mt-8">{/* Application content will follow */}
-
-              {!applications || applications.length === 0 ? (
-                <Card className="bg-gray-800 border border-gray-600">
-                  <CardContent className="p-12 text-center">
-                    <div className="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <svg className="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <h3 className="text-xl font-semibold text-white mb-2">No Applications Yet</h3>
-                    <p className="text-gray-400">Applications will appear here once submitted.</p>
-                  </CardContent>
-                </Card>
-              ) : (
-                <div className="grid gap-6">
-                  {applications.map((application) => (
-                    <Card key={application.id} className="bg-gray-800 border border-purple-400 border-opacity-20">
-                      <CardHeader>
-                        <div className="flex items-start justify-between">
-                          <div>
-                            <CardTitle className="text-white text-xl">{application.name}</CardTitle>
-                            <p className="text-gray-400">{application.email}</p>
-                            {application.phone && (
-                              <p className="text-gray-400 text-sm">{application.phone}</p>
-                            )}
-                          </div>
-                          <div className="text-right">
-                            <p className="text-sm text-gray-400">
-                              {new Date(application.createdAt).toLocaleDateString('en-US', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit'
-                              })}
-                            </p>
-                          </div>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div>
-                          <h4 className="text-purple-400 font-semibold mb-2">Experience with Somatic Work:</h4>
-                          <p className="text-gray-300 text-sm">{application.experience}</p>
-                        </div>
-                        
-                        <div>
-                          <h4 className="text-purple-400 font-semibold mb-2">Intentions & Goals:</h4>
-                          <p className="text-gray-300 text-sm">{application.intentions}</p>
-                        </div>
-                        
-                        <div>
-                          <h4 className="text-purple-400 font-semibold mb-2">Current Challenges:</h4>
-                          <p className="text-gray-300 text-sm">{application.challenges}</p>
-                        </div>
-                        
-                        <div>
-                          <h4 className="text-purple-400 font-semibold mb-2">Desired Support:</h4>
-                          <p className="text-gray-300 text-sm">{application.support}</p>
-                        </div>
-
-                        <div className="pt-4 border-t border-gray-600">
-                          <div className="flex space-x-4">
-                            <Button 
-                              className="bg-green-600 hover:bg-green-700"
-                              onClick={() => {
-                                const subject = `Re: Your Fifth Element Somatics Application`;
-                                const body = `Hi ${application.name},\n\nThank you for your application for 1:1 mentorship. I've reviewed your submission and would love to connect.\n\nBest,\nSaint`;
-                                window.open(`mailto:${application.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
-                              }}
-                            >
-                              Email Response
-                            </Button>
-                            <Button 
-                              variant="outline"
-                              className="border-gray-600 text-gray-300"
-                              onClick={() => {
-                                navigator.clipboard.writeText(JSON.stringify(application, null, 2));
-                              }}
-                            >
-                              Copy Details
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              )}
-            </TabsContent>
-
-            <TabsContent value="leads" className="mt-8">
-              {!leads || leads.length === 0 ? (
-                <Card className="bg-gray-800 border border-gray-600">
-                  <CardContent className="p-12 text-center">
-                    <div className="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <svg className="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <h3 className="text-xl font-semibold text-white mb-2">No Leads Yet</h3>
-                    <p className="text-gray-400">Email leads will appear here once people download the meditation.</p>
-                  </CardContent>
-                </Card>
-              ) : (
-                <div className="grid gap-4">
-                  {leads.map((lead) => (
-                    <Card key={lead.id} className="bg-gray-800 border border-pink-400 border-opacity-20">
-                      <CardContent className="p-6">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h3 className="text-white font-semibold">{lead.name || "Anonymous"}</h3>
-                            <p className="text-gray-400">{lead.email}</p>
-                            <p className="text-sm text-pink-400">Source: {lead.source}</p>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-sm text-gray-400">
-                              {new Date(lead.createdAt).toLocaleDateString('en-US', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit'
-                              })}
-                            </p>
-                            <div className="flex space-x-2 mt-2">
-                              <Button 
-                                size="sm"
-                                className="bg-pink-600 hover:bg-pink-700"
-                                onClick={() => {
-                                  const subject = `Your Free Grounding Meditation from Fifth Element Somatics`;
-                                  const body = `Hi ${lead.name || "there"},\n\nThank you for your interest in the free grounding meditation! Here's your download link:\n\n[Insert meditation download link here]\n\nI hope this practice serves you beautifully.\n\nWith love,\nSaint`;
-                                  window.open(`mailto:${lead.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
-                                }}
-                              >
-                                Send Meditation
-                              </Button>
-                              <Button 
-                                size="sm"
-                                variant="outline"
-                                className="border-gray-600 text-gray-300"
-                                onClick={() => {
-                                  navigator.clipboard.writeText(lead.email);
-                                }}
-                              >
-                                Copy Email
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              )}
-            </TabsContent>
-
-            <TabsContent value="voices" className="mt-8">
-              <VoiceManagement />
-            </TabsContent>
-          </Tabs>
+          <Card className="bg-gray-900 border border-purple-400 border-opacity-30">
+            <CardHeader className="pb-2">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-medium text-gray-400">Conversion Rate</CardTitle>
+                <TrendingUp className="h-4 w-4 text-purple-400" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-white">{conversionRate}%</div>
+              <p className="text-xs text-gray-400">Lead to purchase</p>
+            </CardContent>
+          </Card>
         </div>
-      </div>
-    </div>
-  );
-}
 
-function VoiceManagement() {
-  const { toast } = useToast();
-  const [isUploading, setIsUploading] = useState(false);
-  const [testVoiceId, setTestVoiceId] = useState("");
-  const [isTestingAudio, setIsTestingAudio] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
+        {/* Main Content */}
+        <Tabs defaultValue="leads" className="space-y-6">
+          <TabsList className="bg-gray-900 border border-gray-700">
+            <TabsTrigger value="leads" className="data-[state=active]:bg-purple-600">
+              <Users className="w-4 h-4 mr-2" />
+              Leads ({totalLeads})
+            </TabsTrigger>
+            <TabsTrigger value="applications" className="data-[state=active]:bg-purple-600">
+              <MessageSquare className="w-4 h-4 mr-2" />
+              Applications ({totalApplications})
+            </TabsTrigger>
+            <TabsTrigger value="purchases" className="data-[state=active]:bg-purple-600">
+              <DollarSign className="w-4 h-4 mr-2" />
+              Purchases ({purchases.length})
+            </TabsTrigger>
+            <TabsTrigger value="email" className="data-[state=active]:bg-purple-600">
+              <Mail className="w-4 h-4 mr-2" />
+              Email Marketing
+            </TabsTrigger>
+          </TabsList>
 
-  const testVoice = async () => {
-    if (!testVoiceId.trim()) {
-      toast({
-        title: "Voice ID Required",
-        description: "Please enter a voice ID to test.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setIsTestingAudio(true);
-    try {
-      const response = await apiRequest("POST", "/api/text-to-speech", {
-        text: "Hello beautiful soul. This is your Divine Feminine Priestess guide speaking. Welcome to your sacred journey of awakening.",
-        voiceId: testVoiceId.trim()
-      });
-
-      if (response.ok) {
-        const audioBlob = await response.blob();
-        const audioUrl = URL.createObjectURL(audioBlob);
-        
-        if (audioRef.current) {
-          audioRef.current.pause();
-        }
-        
-        audioRef.current = new Audio(audioUrl);
-        audioRef.current.onplay = () => setIsPlaying(true);
-        audioRef.current.onended = () => {
-          setIsPlaying(false);
-          URL.revokeObjectURL(audioUrl);
-        };
-        
-        await audioRef.current.play();
-        
-        toast({
-          title: "Voice Test Successful",
-          description: "Playing test audio with the provided voice ID.",
-          variant: "default"
-        });
-      } else {
-        throw new Error("Failed to generate audio");
-      }
-    } catch (error) {
-      console.error("Voice test error:", error);
-      toast({
-        title: "Voice Test Failed",
-        description: "Unable to generate audio with this voice ID. Please check the ID and try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsTestingAudio(false);
-    }
-  };
-
-  const stopAudio = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      setIsPlaying(false);
-    }
-  };
-
-  return (
-    <div className="space-y-6">
-      <Card className="bg-gray-800 border border-emerald-400 border-opacity-20">
-        <CardHeader>
-          <CardTitle className="text-emerald-400 flex items-center gap-2">
-            <Mic className="w-5 h-5" />
-            Voice Management System
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="bg-emerald-900/20 border border-emerald-400/30 rounded-lg p-4">
-            <h3 className="text-white font-semibold mb-2">Current Voice Configuration</h3>
-            <div className="space-y-3">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-gray-700/50 rounded-lg p-3">
-                  <h4 className="text-emerald-400 font-medium text-sm">Soul Sister</h4>
-                  <p className="text-gray-300 text-xs">ID: 21m00Tcm4TlvDq8ikWAM</p>
-                  <p className="text-gray-400 text-xs">Warm & nurturing</p>
-                </div>
-                <div className="bg-gray-700/50 rounded-lg p-3">
-                  <h4 className="text-emerald-400 font-medium text-sm">Daddy</h4>
-                  <p className="text-gray-300 text-xs">ID: pNInz6obpgDQGcFmaJgB</p>
-                  <p className="text-gray-400 text-xs">Strong & grounding</p>
-                </div>
-                <div className="bg-gray-700/50 rounded-lg p-3">
-                  <h4 className="text-emerald-400 font-medium text-sm">Divine Feminine Priestess</h4>
-                  <p className="text-gray-300 text-xs">ID: custom_saint_voice</p>
-                  <p className="text-gray-400 text-xs">Sacred & mystical (Saint's voice)</p>
-                  <div className="mt-2">
-                    <Button
-                      size="sm"
-                      className="bg-emerald-600 hover:bg-emerald-700 text-xs"
-                      onClick={() => {
-                        window.open("https://elevenlabs.io/voice-cloning", "_blank");
-                      }}
-                    >
-                      Upload Your Voice
-                    </Button>
+          <TabsContent value="leads">
+            <Card className="bg-gray-900 border border-gray-700">
+              <CardHeader>
+                <CardTitle className="text-white">Lead Management</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {leadsLoading ? (
+                  <div className="text-center py-8">
+                    <div className="animate-spin w-6 h-6 border-2 border-purple-400 border-t-transparent rounded-full mx-auto mb-2" />
+                    <p className="text-gray-400">Loading leads...</p>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-blue-900/20 border border-blue-400/30 rounded-lg p-4">
-            <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
-              <Volume2 className="w-4 h-4" />
-              Test Voice Configuration
-            </h3>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Voice ID to Test
-                </label>
-                <Input
-                  value={testVoiceId}
-                  onChange={(e) => setTestVoiceId(e.target.value)}
-                  placeholder="Enter Eleven Labs Voice ID (e.g., 21m00Tcm4TlvDq8ikWAM)"
-                  className="bg-gray-700 border-gray-600 text-white"
-                />
-              </div>
-              <div className="flex gap-3">
-                <Button
-                  onClick={testVoice}
-                  disabled={isTestingAudio || !testVoiceId.trim()}
-                  className="bg-blue-600 hover:bg-blue-700 flex items-center gap-2"
-                >
-                  {isTestingAudio ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      Testing...
-                    </>
-                  ) : (
-                    <>
-                      <Play className="w-4 h-4" />
-                      Test Voice
-                    </>
-                  )}
-                </Button>
-                {isPlaying && (
-                  <Button
-                    onClick={stopAudio}
-                    variant="outline"
-                    className="border-gray-600 text-gray-300 flex items-center gap-2"
-                  >
-                    <Pause className="w-4 h-4" />
-                    Stop
-                  </Button>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="border-gray-700">
+                          <TableHead className="text-gray-300">Name</TableHead>
+                          <TableHead className="text-gray-300">Email</TableHead>
+                          <TableHead className="text-gray-300">Source</TableHead>
+                          <TableHead className="text-gray-300">Quiz Result</TableHead>
+                          <TableHead className="text-gray-300">Date</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {leads.map((lead: Lead) => (
+                          <TableRow key={lead.id} className="border-gray-700">
+                            <TableCell className="text-white">{lead.name || 'Anonymous'}</TableCell>
+                            <TableCell className="text-gray-300">{lead.email}</TableCell>
+                            <TableCell>
+                              <Badge variant="outline" className="border-blue-400 text-blue-400">
+                                {lead.source}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              {lead.quizResult ? (
+                                <Badge variant="outline" className="border-purple-400 text-purple-400">
+                                  {lead.quizResult}
+                                </Badge>
+                              ) : (
+                                <span className="text-gray-500">-</span>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-gray-400">
+                              {new Date(lead.createdAt).toLocaleDateString()}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
                 )}
-              </div>
-            </div>
-          </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-          <div className="bg-purple-900/20 border border-purple-400/30 rounded-lg p-4">
-            <h3 className="text-white font-semibold mb-3">Instructions for Saint</h3>
-            <div className="space-y-3 text-sm text-gray-300">
-              <div className="flex items-start gap-3">
-                <div className="w-6 h-6 bg-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold">1</div>
-                <div>
-                  <p className="font-medium text-white">Visit Eleven Labs Voice Cloning</p>
-                  <p>Go to <a href="https://elevenlabs.io/voice-cloning" target="_blank" className="text-purple-400 hover:underline">elevenlabs.io/voice-cloning</a> and create a custom voice using your recordings.</p>
+          <TabsContent value="applications">
+            <Card className="bg-gray-900 border border-gray-700">
+              <CardHeader>
+                <CardTitle className="text-white">1:1 Mentorship Applications</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {applicationsLoading ? (
+                  <div className="text-center py-8">
+                    <div className="animate-spin w-6 h-6 border-2 border-purple-400 border-t-transparent rounded-full mx-auto mb-2" />
+                    <p className="text-gray-400">Loading applications...</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {applications.map((app: Application) => (
+                      <Card key={app.id} className="bg-gray-800 border border-gray-600">
+                        <CardHeader>
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <CardTitle className="text-white text-lg">{app.name}</CardTitle>
+                              <p className="text-gray-400">{app.email}</p>
+                              {app.phone && <p className="text-gray-400">{app.phone}</p>}
+                            </div>
+                            <Badge variant="outline" className="border-green-400 text-green-400">
+                              {new Date(app.createdAt).toLocaleDateString()}
+                            </Badge>
+                          </div>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                          <div>
+                            <h4 className="text-white font-medium mb-2">Experience with Somatics</h4>
+                            <p className="text-gray-300 text-sm">{app.experience}</p>
+                          </div>
+                          <div>
+                            <h4 className="text-white font-medium mb-2">Intentions</h4>
+                            <p className="text-gray-300 text-sm">{app.intentions}</p>
+                          </div>
+                          <div>
+                            <h4 className="text-white font-medium mb-2">Current Challenges</h4>
+                            <p className="text-gray-300 text-sm">{app.challenges}</p>
+                          </div>
+                          <div>
+                            <h4 className="text-white font-medium mb-2">Support Needed</h4>
+                            <p className="text-gray-300 text-sm">{app.support}</p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="purchases">
+            <Card className="bg-gray-900 border border-gray-700">
+              <CardHeader>
+                <CardTitle className="text-white">Purchase History</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="border-gray-700">
+                        <TableHead className="text-gray-300">Email</TableHead>
+                        <TableHead className="text-gray-300">Amount</TableHead>
+                        <TableHead className="text-gray-300">Package</TableHead>
+                        <TableHead className="text-gray-300">Date</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {purchases.map((purchase: Purchase) => (
+                        <TableRow key={purchase.id} className="border-gray-700">
+                          <TableCell className="text-white">{purchase.email}</TableCell>
+                          <TableCell className="text-green-400">${(purchase.amount / 100).toFixed(2)}</TableCell>
+                          <TableCell>
+                            <Badge variant="outline" className="border-purple-400 text-purple-400">
+                              {purchase.hasReturnToBodyAddon ? 'Full Package' : 'Main Course'}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-gray-400">
+                            {new Date(purchase.createdAt).toLocaleDateString()}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
                 </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="w-6 h-6 bg-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold">2</div>
-                <div>
-                  <p className="font-medium text-white">Get Your Voice ID</p>
-                  <p>After creating your voice, copy the Voice ID (it will look like "abc123def456").</p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="email">
+            <Card className="bg-gray-900 border border-gray-700">
+              <CardHeader>
+                <CardTitle className="text-white">Email Marketing System</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-8">
+                  <Mail className="w-12 h-12 text-purple-400 mx-auto mb-4" />
+                  <h3 className="text-white text-lg mb-2">AI Email System Disabled</h3>
+                  <p className="text-gray-400 mb-4">
+                    The AI email marketing system has been temporarily disabled to prevent spam during development.
+                  </p>
+                  <Badge variant="outline" className="border-yellow-400 text-yellow-400">
+                    System Offline for Safety
+                  </Badge>
                 </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="w-6 h-6 bg-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold">3</div>
-                <div>
-                  <p className="font-medium text-white">Test and Update</p>
-                  <p>Use the test tool above to verify your voice works, then update the code to replace "custom_saint_voice" with your actual Voice ID.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 }

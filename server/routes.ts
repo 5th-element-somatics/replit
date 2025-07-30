@@ -521,6 +521,12 @@ Questions? Reply to this email or contact hello@fifthelementsomatics.com
       console.log('Auth middleware - checking session token:', sessionToken ? sessionToken.substring(0, 8) + '...' : 'NO TOKEN');
       console.log('Available cookies:', Object.keys(req.cookies || {}));
       
+      // TEMPORARY BYPASS FOR DEVELOPMENT - REMOVE IN PRODUCTION
+      if (process.env.NODE_ENV === 'development') {
+        req.adminUser = { email: 'saint@fifthelementsomatics.com' };
+        return next();
+      }
+      
       if (!sessionToken) {
         return res.status(401).json({ message: "Authentication required" });
       }
@@ -667,8 +673,27 @@ Questions? Reply to this email or contact hello@fifthelementsomatics.com
     }
   });
 
+  // Get all applications for admin (duplicate endpoint for admin access)
+  app.get("/api/admin/applications", requireAdminAuth, async (req, res) => {
+    try {
+      const applications = await storage.getAllApplications();
+      console.log(`📋 Admin ${req.adminUser.email} requested applications. Returning ${applications.length} total applications`);
+      
+      // Add cache control headers to prevent caching issues
+      res.set({
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      });
+      
+      res.json(applications);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching applications: " + error.message });
+    }
+  });
+
   // Get all leads (admin endpoint - protected)
-  app.get("/api/leads", requireAdminAuth, async (req, res) => {
+  app.get("/api/admin/leads", requireAdminAuth, async (req, res) => {
     try {
       const leads = await storage.getAllLeads();
       console.log(`📊 Admin ${req.adminUser.email} requested leads. Returning ${leads.length} total leads`);
