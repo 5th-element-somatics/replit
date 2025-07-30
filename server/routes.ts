@@ -339,6 +339,109 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Serve masterclass video files (protected)
+  app.get("/api/video/:filename", async (req, res) => {
+    try {
+      const { filename } = req.params;
+      const email = req.query.email as string;
+      
+      if (!email) {
+        return res.status(401).json({ message: "Email required for video access" });
+      }
+
+      // Verify purchase
+      const purchase = await storage.getPurchaseByEmail(email);
+      if (!purchase) {
+        return res.status(403).json({ message: "Purchase verification failed" });
+      }
+
+      // Serve video file
+      const path = require('path');
+      const fs = require('fs');
+      const videoPath = path.join(process.cwd(), 'video-content', filename);
+      
+      if (!fs.existsSync(videoPath)) {
+        return res.status(404).json({ message: "Video not found" });
+      }
+
+      const stat = fs.statSync(videoPath);
+      const fileSize = stat.size;
+      const range = req.headers.range;
+
+      if (range) {
+        // Support video streaming with range requests
+        const parts = range.replace(/bytes=/, "").split("-");
+        const start = parseInt(parts[0], 10);
+        const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+        const chunksize = (end - start) + 1;
+        const file = fs.createReadStream(videoPath, { start, end });
+        const head = {
+          'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+          'Accept-Ranges': 'bytes',
+          'Content-Length': chunksize,
+          'Content-Type': 'video/mp4',
+        };
+        res.writeHead(206, head);
+        file.pipe(res);
+      } else {
+        const head = {
+          'Content-Length': fileSize,
+          'Content-Type': 'video/mp4',
+        };
+        res.writeHead(200, head);
+        fs.createReadStream(videoPath).pipe(res);
+      }
+    } catch (error: any) {
+      res.status(500).json({ message: "Error serving video: " + error.message });
+    }
+  });
+
+  // Serve downloadable resources (PDFs, audio files)
+  app.get("/api/download/:filename", async (req, res) => {
+    try {
+      const { filename } = req.params;
+      const email = req.query.email as string;
+      
+      if (!email) {
+        return res.status(401).json({ message: "Email required for download access" });
+      }
+
+      // Verify purchase
+      const purchase = await storage.getPurchaseByEmail(email);
+      if (!purchase) {
+        return res.status(403).json({ message: "Purchase verification failed" });
+      }
+
+      // Check if requesting Return to Body content
+      const isReturnToBodyContent = filename.includes('return-to-body') || filename.includes('boundary-tapping') || filename.includes('eros-activation') || filename.includes('sovereignty-ritual');
+      if (isReturnToBodyContent && !purchase.hasReturnToBodyAddon) {
+        return res.status(403).json({ message: "Return to Body addon required" });
+      }
+
+      const path = require('path');
+      const fs = require('fs');
+      const filePath = path.join(process.cwd(), 'downloadable-content', filename);
+      
+      if (!fs.existsSync(filePath)) {
+        return res.status(404).json({ message: "File not found" });
+      }
+
+      // Determine content type
+      let contentType = 'application/octet-stream';
+      if (filename.endsWith('.pdf')) contentType = 'application/pdf';
+      if (filename.endsWith('.mp3')) contentType = 'audio/mpeg';
+      if (filename.endsWith('.wav')) contentType = 'audio/wav';
+
+      res.setHeader('Content-Type', contentType);
+      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+      
+      const fileStream = fs.createReadStream(filePath);
+      fileStream.pipe(res);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error serving download: " + error.message });
+    }
+  });
+
   // Submit application for mentorship
   app.post("/api/applications", async (req, res) => {
     try {
