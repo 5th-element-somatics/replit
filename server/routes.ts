@@ -264,6 +264,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Manual test purchase endpoint
+  app.post("/api/manual-purchase", async (req, res) => {
+    try {
+      const { email, includeAddon } = req.body;
+      
+      // Create a test purchase record
+      const purchase = await storage.createPurchase({
+        email,
+        stripePaymentIntentId: `manual_test_${Date.now()}`,
+        amount: includeAddon ? 13600 : 8900, // $136 or $89 in cents
+        hasReturnToBodyAddon: includeAddon || false
+      });
+
+      console.log(`✅ Manual purchase created for ${email} - Full access granted`);
+      console.log(`Purchase details:`, purchase);
+
+      res.json({ 
+        success: true, 
+        purchase,
+        accessUrl: `/course?email=${encodeURIComponent(email)}`
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: "Error creating manual purchase: " + error.message });
+    }
+  });
+
   // Stripe payment route for one-time payments
   app.post("/api/create-payment-intent", async (req, res) => {
     try {
