@@ -31,40 +31,58 @@ export function VimeoPlayer({ videoId, title, onProgress, onComplete, autoplay =
 
     function initializePlayer() {
       if (playerRef.current && window.Vimeo) {
-        // Clear loading placeholder
-        const placeholder = playerRef.current.parentElement?.querySelector('.absolute');
-        if (placeholder) {
-          placeholder.remove();
-        }
-        
-        vimeoPlayer.current = new window.Vimeo.Player(playerRef.current, {
-          id: videoId,
-          width: '100%',
-          height: '100%',
-          controls: true,
-          autoplay: autoplay,
-          responsive: true,
-          title: false,
-          byline: false,
-          portrait: false,
-          color: 'C77DFF'
-        });
-
-        console.log(`🎬 Vimeo player initialized for video ID: ${videoId}`);
-
-        // Track progress
-        if (onProgress) {
-          vimeoPlayer.current.on('timeupdate', (data: any) => {
-            const progress = (data.seconds / data.duration) * 100;
-            onProgress(progress);
+        try {
+          // Destroy any existing player first
+          if (vimeoPlayer.current) {
+            vimeoPlayer.current.destroy();
+          }
+          
+          // Clear loading placeholder
+          const placeholder = playerRef.current.parentElement?.querySelector('.absolute');
+          if (placeholder) {
+            placeholder.remove();
+          }
+          
+          vimeoPlayer.current = new window.Vimeo.Player(playerRef.current, {
+            id: videoId,
+            width: '100%',
+            height: '100%',
+            controls: true,
+            autoplay: autoplay,
+            responsive: true,
+            title: false,
+            byline: false,
+            portrait: false,
+            color: 'C77DFF',
+            dnt: false,
+            transparent: false
           });
-        }
 
-        // Track completion
-        if (onComplete) {
-          vimeoPlayer.current.on('ended', () => {
-            onComplete();
+          console.log(`🎬 Vimeo player initialized for video ID: ${videoId}`);
+          
+          // Ensure player is ready
+          vimeoPlayer.current.ready().then(() => {
+            console.log(`✅ Vimeo player ready for: ${title}`);
+          }).catch((error: any) => {
+            console.error(`❌ Vimeo player error for ${videoId}:`, error);
           });
+
+          // Track progress
+          if (onProgress) {
+            vimeoPlayer.current.on('timeupdate', (data: any) => {
+              const progress = (data.seconds / data.duration) * 100;
+              onProgress(progress);
+            });
+          }
+
+          // Track completion
+          if (onComplete) {
+            vimeoPlayer.current.on('ended', () => {
+              onComplete();
+            });
+          }
+        } catch (error) {
+          console.error(`❌ Failed to initialize Vimeo player for ${videoId}:`, error);
         }
       }
     }
@@ -80,7 +98,7 @@ export function VimeoPlayer({ videoId, title, onProgress, onComplete, autoplay =
     <div className="aspect-video bg-black rounded-lg overflow-hidden relative">
       <div ref={playerRef} className="w-full h-full" />
       {/* Loading placeholder while Vimeo player initializes */}
-      <div className="absolute inset-0 flex items-center justify-center bg-black">
+      <div className="absolute inset-0 flex items-center justify-center bg-gray-900 z-10">
         <div className="text-center">
           <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -88,6 +106,7 @@ export function VimeoPlayer({ videoId, title, onProgress, onComplete, autoplay =
             </svg>
           </div>
           <p className="text-white text-sm">Loading {title}...</p>
+          <p className="text-gray-400 text-xs mt-2">Video ID: {videoId}</p>
         </div>
       </div>
     </div>

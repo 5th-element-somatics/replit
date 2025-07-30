@@ -35,10 +35,19 @@ const COURSE_MODULES: CourseModule[] = [
     id: 'boundary-tapping',
     title: 'Boundary Tapping Ritual',
     description: 'Learn powerful somatic techniques to establish and maintain healthy boundaries in all areas of your life.',
-    vimeoId: '1105916799',
+    vimeoId: '1105916647',
     duration: '15 minutes',
     type: 'addon',
     order: 2
+  },
+  {
+    id: 'sovereignty-ritual',
+    title: 'Sovereignty Ritual',
+    description: 'Reclaim your personal power and step into full ownership of your authentic self.',
+    vimeoId: '1105916799',
+    duration: '18 minutes',
+    type: 'addon',
+    order: 3
   },
   {
     id: 'eros-activation',
@@ -46,15 +55,6 @@ const COURSE_MODULES: CourseModule[] = [
     description: 'Awaken and harness your creative and sensual life force energy through guided practices.',
     vimeoId: '1105916354',
     duration: '20 minutes',
-    type: 'addon',
-    order: 3
-  },
-  {
-    id: 'sovereignty-ritual',
-    title: 'Sovereignty Ritual',
-    description: 'Reclaim your personal power and step into full ownership of your authentic self.',
-    vimeoId: '1105916647',
-    duration: '18 minutes',
     type: 'addon',
     order: 4
   }
