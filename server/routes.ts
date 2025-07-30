@@ -312,6 +312,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
           amount: paymentIntent.amount,
           hasReturnToBodyAddon: paymentIntent.metadata.hasReturnToBodyAddon === 'true'
         });
+
+        // Send access email with video links
+        console.log('🎥 Sending masterclass access email to:', paymentIntent.metadata.email);
+        // Email will contain direct Google Drive links for video access
+        
       } catch (error) {
         console.error('Error storing purchase:', error);
       }

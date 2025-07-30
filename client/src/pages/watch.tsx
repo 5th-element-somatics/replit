@@ -100,33 +100,51 @@ export default function Watch() {
           {/* Video Player */}
           <Card className="bg-gray-900 border border-purple-400 border-opacity-30 mystique-glow mb-8">
             <CardContent className="p-0">
-              <div className="aspect-video bg-black rounded-t-lg relative">
-                {/* Placeholder for video player */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="w-24 h-24 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <h3 className="text-xl font-semibold text-white mb-2">The Good Girl Paradox</h3>
-                    <p className="text-gray-400">90-minute transformational masterclass</p>
-                  </div>
-                </div>
-              </div>
-              <div className="p-6">
+              <div className="space-y-4 p-6">
                 <h2 className="text-2xl font-serif font-bold text-white mb-2">
-                  A Masterclass in Erotic Liberation
+                  The Good Girl Paradox Masterclass
                 </h2>
                 <p className="text-gray-300 mb-4">
-                  Welcome to your journey of reclamation. This 90-minute masterclass will guide you 
-                  through somatic tools, breathwork, and embodiment practices to help you reconnect 
-                  with your authentic self.
+                  Your transformational journey begins here. Please use the direct video links provided 
+                  in your purchase confirmation email to access the masterclass content.
                 </p>
-                <div className="flex items-center space-x-4 text-sm text-gray-400">
-                  <span>• 90 minutes</span>
-                  <span>• HD Quality</span>
-                  <span>• Lifetime Access</span>
+                
+                {/* Video Access Instructions */}
+                <div className="bg-gray-800 rounded-lg p-4 border border-purple-400 border-opacity-20">
+                  <h3 className="text-white font-semibold mb-3 flex items-center">
+                    <svg className="w-5 h-5 mr-2 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                    </svg>
+                    How to Access Your Masterclass
+                  </h3>
+                  <div className="space-y-2 text-gray-300 text-sm">
+                    <p>• Check your email for the purchase confirmation with video access links</p>
+                    <p>• Each video session is hosted securely and accessible with your purchase verification</p>
+                    <p>• Stream directly or download for offline viewing</p>
+                    <p>• Lifetime access - watch as many times as you need</p>
+                  </div>
+                </div>
+
+                {/* Contact Support */}
+                <div className="bg-gray-800 rounded-lg p-4 border border-pink-400 border-opacity-20">
+                  <h3 className="text-white font-semibold mb-2">Need Help?</h3>
+                  <p className="text-gray-300 text-sm mb-3">
+                    If you haven't received your access email or are having trouble viewing the content, 
+                    we're here to help.
+                  </p>
+                  <Button 
+                    onClick={() => window.location.href = 'mailto:hello@fifthelementsomatics.com?subject=Masterclass Access Help'}
+                    className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
+                  >
+                    Contact Support
+                  </Button>
+                </div>
+
+                <div className="flex items-center space-x-4 text-sm text-gray-400 pt-4">
+                  <span>• 90+ minutes of content</span>
+                  <span>• HD Quality streaming</span>
+                  <span>• Lifetime access</span>
+                  <span>• Download available</span>
                 </div>
               </div>
             </CardContent>
