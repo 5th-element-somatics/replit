@@ -11,9 +11,7 @@ import Checkout from "@/pages/checkout";
 import Watch from "@/pages/watch";
 import Course from "@/pages/course";
 import Apply from "@/pages/apply";
-import Admin from "@/pages/admin";
-import AdminTest from "@/pages/admin-test";
-import AdminAdvanced from "@/pages/admin-advanced";
+import AdminUnified from "@/pages/admin-unified";
 import AdminLogin from "@/pages/admin-login";
 import AdminVerify from "@/pages/admin-verify";
 import Quiz from "@/pages/quiz";
@@ -35,9 +33,7 @@ function Router() {
       <Route path="/watch" component={Watch} />
       <Route path="/course/:moduleId?" component={Course} />
       <Route path="/apply" component={Apply} />
-      <Route path="/admin" component={Admin} />
-      <Route path="/admin-test" component={AdminTest} />
-      <Route path="/admin-advanced" component={AdminAdvanced} />
+      <Route path="/admin" component={AdminUnified} />
       <Route path="/admin-login" component={AdminLogin} />
       <Route path="/admin-verify" component={AdminVerify} />
       <Route path="/admin/ai-email" component={AIEmailAdmin} />
