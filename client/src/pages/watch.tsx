@@ -132,12 +132,24 @@ export default function Watch() {
                     If you haven't received your access email or are having trouble viewing the content, 
                     we're here to help.
                   </p>
-                  <Button 
-                    onClick={() => window.location.href = 'mailto:hello@fifthelementsomatics.com?subject=Masterclass Access Help'}
-                    className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
-                  >
-                    Contact Support
-                  </Button>
+                  <div className="flex space-x-3">
+                    <Button 
+                      onClick={() => {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        window.location.href = `/course?email=${encodeURIComponent(email)}`;
+                      }}
+                      className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700"
+                    >
+                      Access Course Portal
+                    </Button>
+                    <Button 
+                      variant="outline"
+                      onClick={() => window.location.href = 'mailto:hello@fifthelementsomatics.com?subject=Masterclass Access Help'}
+                      className="border-gray-600 text-gray-300"
+                    >
+                      Contact Support
+                    </Button>
+                  </div>
                 </div>
 
                 <div className="flex items-center space-x-4 text-sm text-gray-400 pt-4">

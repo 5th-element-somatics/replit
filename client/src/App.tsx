@@ -9,6 +9,7 @@ import WorkWithMe from "@/pages/work-with-me";
 import Masterclass from "@/pages/masterclass";
 import Checkout from "@/pages/checkout";
 import Watch from "@/pages/watch";
+import Course from "@/pages/course";
 import Apply from "@/pages/apply";
 import Admin from "@/pages/admin";
 import AdminAdvanced from "@/pages/admin-advanced";
@@ -31,6 +32,7 @@ function Router() {
       <Route path="/masterclass" component={Masterclass} />
       <Route path="/checkout" component={Checkout} />
       <Route path="/watch" component={Watch} />
+      <Route path="/course/:moduleId?" component={Course} />
       <Route path="/apply" component={Apply} />
       <Route path="/admin" component={Admin} />
       <Route path="/admin-advanced" component={AdminAdvanced} />
