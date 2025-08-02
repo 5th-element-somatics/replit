@@ -667,6 +667,14 @@ Questions? Reply to this email or contact hello@fifthelementsomatics.com
         to: email,
         from: process.env.SENDGRID_FROM_EMAIL!,
         subject: `🎉 Welcome to The Good Girl Paradox Masterclass!`,
+        trackingSettings: {
+          clickTracking: {
+            enable: false
+          },
+          openTracking: {
+            enable: false
+          }
+        },
         html: `
           <div style="font-family: Georgia, serif; background: linear-gradient(135deg, #1a0d1f 0%, #2d1b33 100%); margin: 0; padding: 20px; color: #f5f1e8;">
             <div style="max-width: 600px; margin: 0 auto; background: rgba(26, 13, 31, 0.95); border: 1px solid rgba(199, 125, 255, 0.3); border-radius: 12px; overflow: hidden;">
