@@ -660,6 +660,9 @@ Questions? Reply to this email or contact hello@fifthelementsomatics.com
         return res.status(500).json({ message: "Email service not configured" });
       }
       
+      const encodedEmail = encodeURIComponent(email);
+      const accessUrl = `https://fifthelementsomatics.com/watch?email=${encodedEmail}`;
+      
       const msg = {
         to: email,
         from: process.env.SENDGRID_FROM_EMAIL!,
@@ -687,7 +690,7 @@ Questions? Reply to this email or contact hello@fifthelementsomatics.com
                   <p><strong>Access Level:</strong> Complete Masterclass${hasReturnToBodyAddon ? ' + Return to Body Practices' : ''}</p>
                   
                   <div style="text-align: center; margin: 20px 0;">
-                    <a href="https://fifthelementsomatics.com/watch?email=${encodeURIComponent(email)}" style="display: inline-block; background: linear-gradient(135deg, #C77DFF 0%, #e879f9 100%); color: white; text-decoration: none; padding: 15px 30px; border-radius: 25px; font-weight: bold; font-size: 16px;">
+                    <a href="${accessUrl}" style="display: inline-block; background: linear-gradient(135deg, #C77DFF 0%, #e879f9 100%); color: white; text-decoration: none; padding: 15px 30px; border-radius: 25px; font-weight: bold; font-size: 16px;">
                       Access Your Masterclass Now →
                     </a>
                   </div>
