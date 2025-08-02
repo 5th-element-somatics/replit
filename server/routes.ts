@@ -683,7 +683,7 @@ Questions? Reply to this email or contact hello@fifthelementsomatics.com
                 <div style="background: rgba(199, 125, 255, 0.1); border: 1px solid rgba(199, 125, 255, 0.3); border-radius: 8px; padding: 20px; margin: 25px 0;">
                   <h3 style="color: #C77DFF; margin-top: 0; font-size: 20px;">🔑 Your Masterclass Access</h3>
                   <p><strong>Email:</strong> ${email}</p>
-                  <p><strong>Investment:</strong> $${amount.toFixed(2)}</p>
+                  <p><strong>Investment:</strong> ${amount === 0 ? 'Complimentary Access' : `$${Number(amount).toFixed(2)}`}</p>
                   <p><strong>Access Level:</strong> Complete Masterclass${hasReturnToBodyAddon ? ' + Return to Body Addon' : ''}</p>
                   
                   <div style="text-align: center; margin: 20px 0;">

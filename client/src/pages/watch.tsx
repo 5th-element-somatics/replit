@@ -8,12 +8,15 @@ import { Button } from "@/components/ui/button";
 export default function Watch() {
   const [location] = useLocation();
   const [email, setEmail] = useState("");
+  const [manualEmail, setManualEmail] = useState("");
+  const [showEmailInput, setShowEmailInput] = useState(true);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const emailParam = urlParams.get('email');
     if (emailParam) {
       setEmail(emailParam);
+      setShowEmailInput(false);
     }
   }, [location]);
 
@@ -41,26 +44,57 @@ export default function Watch() {
     );
   }
 
-  if (error || !purchaseData?.hasAccess) {
+  // Show email input form if no email provided or access denied
+  if (!email || (error || !purchaseData?.hasAccess)) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center px-4">
-        <Card className="bg-gray-900 border border-red-500 border-opacity-30 max-w-md w-full">
+        <Card className="bg-gray-900 border border-purple-400 border-opacity-30 max-w-md w-full">
           <CardHeader>
-            <CardTitle className="text-red-400 text-center">Access Denied</CardTitle>
+            <CardTitle className="text-purple-400 text-center">Access Your Masterclass</CardTitle>
           </CardHeader>
-          <CardContent className="text-center">
-            <p className="text-gray-300 mb-4">
-              We couldn't verify your purchase. Please check your email or contact support.
-            </p>
+          <CardContent className="space-y-4">
+            {error && (
+              <div className="bg-red-900/30 border border-red-500/50 rounded-lg p-3 mb-4">
+                <p className="text-red-300 text-sm text-center">
+                  Unable to verify access. Please try again.
+                </p>
+              </div>
+            )}
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Enter your email to access the masterclass:
+              </label>
+              <input
+                type="email"
+                value={manualEmail}
+                onChange={(e) => setManualEmail(e.target.value)}
+                placeholder="hello@fifthelementsomatics.com"
+                className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
             <Button 
               onClick={() => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                window.location.href = '/';
+                if (manualEmail) {
+                  setEmail(manualEmail);
+                  setShowEmailInput(false);
+                }
               }}
-              className="bg-gradient-to-r from-purple-500 to-pink-600"
+              className="w-full bg-gradient-to-r from-purple-500 to-pink-600"
+              disabled={!manualEmail}
             >
-              Return to Home
+              Verify Purchase & Access Videos
             </Button>
+            <div className="pt-4 border-t border-gray-700">
+              <Button 
+                variant="outline"
+                onClick={() => {
+                  window.location.href = '/';
+                }}
+                className="w-full border-gray-600 text-gray-300"
+              >
+                Return to Home
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
