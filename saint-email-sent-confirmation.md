@@ -4,7 +4,7 @@
 - **Recipient**: hello@fifthelementsomatics.com
 - **Subject**: Welcome to The Good Girl Paradox Masterclass!
 - **Status**: Successfully processed (Email system shows 200 OK)
-- **Purchase Verified**: ✅ $197.00 with Return to Body addon
+- **Purchase Verified**: ✅ $197.00 with Return to Body Practices
 
 ## What Saint Received:
 🎉 **Beautiful welcome email** with:

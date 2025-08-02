@@ -285,7 +285,7 @@ export default function Course() {
 
                       {!hasAccess && (
                         <p className="text-xs text-gray-500 mt-1">
-                          Requires Return to Body addon
+                          Requires Return to Body Practices
                         </p>
                       )}
                     </div>
@@ -411,7 +411,7 @@ export default function Course() {
                   <Lock className="w-12 h-12 text-gray-500 mx-auto mb-4" />
                   <h3 className="text-xl font-semibold text-white mb-2">Module Locked</h3>
                   <p className="text-gray-400 mb-4">
-                    This content requires the Return to Body addon package.
+                    This content requires the Return to Body Practices package.
                   </p>
                   <Button 
                     onClick={() => setLocation('/masterclass')}

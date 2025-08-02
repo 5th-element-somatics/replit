@@ -20,7 +20,7 @@ export const MASTERCLASS_CONTENT = {
     description: "Reflection questions and practices to deepen your masterclass experience."
   },
 
-  // Return to Body addon content (only for users who purchased the addon)
+  // Return to Body Practices content (only for users who purchased the practices)
   returnToBodyAddon: {
     boundaryTapping: {
       title: "Boundary Tapping Ritual",

@@ -283,7 +283,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Send confirmation email (for testing)
       console.log(`📧 Sending confirmation email to ${email}`);
       console.log(`🎯 Course Access Link: /course?email=${encodeURIComponent(email)}`);
-      console.log(`📚 Content Access: Main masterclass + ${includeAddon ? 'Return to Body addon' : 'Main course only'}`);
+      console.log(`📚 Content Access: Main masterclass + ${includeAddon ? 'Return to Body Practices' : 'Main course only'}`);
       
       // In production, this would trigger actual email sending
       console.log(`
@@ -475,7 +475,7 @@ Questions? Reply to this email or contact hello@fifthelementsomatics.com
       // Check if requesting Return to Body content
       const isReturnToBodyContent = filename.includes('return-to-body') || filename.includes('boundary-tapping') || filename.includes('eros-activation') || filename.includes('sovereignty-ritual');
       if (isReturnToBodyContent && !purchase.hasReturnToBodyAddon) {
-        return res.status(403).json({ message: "Return to Body addon required" });
+        return res.status(403).json({ message: "Return to Body Practices required" });
       }
 
       const path = require('path');
@@ -684,7 +684,7 @@ Questions? Reply to this email or contact hello@fifthelementsomatics.com
                   <h3 style="color: #C77DFF; margin-top: 0; font-size: 20px;">🔑 Your Masterclass Access</h3>
                   <p><strong>Email:</strong> ${email}</p>
                   <p><strong>Investment:</strong> ${amount === 0 ? 'Complimentary Access' : `$${Number(amount).toFixed(2)}`}</p>
-                  <p><strong>Access Level:</strong> Complete Masterclass${hasReturnToBodyAddon ? ' + Return to Body Addon' : ''}</p>
+                  <p><strong>Access Level:</strong> Complete Masterclass${hasReturnToBodyAddon ? ' + Return to Body Practices' : ''}</p>
                   
                   <div style="text-align: center; margin: 20px 0;">
                     <a href="https://fifthelementsomatics.com/watch" style="display: inline-block; background: linear-gradient(135deg, #C77DFF 0%, #e879f9 100%); color: white; text-decoration: none; padding: 15px 30px; border-radius: 25px; font-weight: bold; font-size: 16px;">
@@ -707,8 +707,8 @@ Questions? Reply to this email or contact hello@fifthelementsomatics.com
 
                 ${hasReturnToBodyAddon ? `
                 <div style="background: linear-gradient(135deg, rgba(231, 121, 249, 0.1) 0%, rgba(199, 125, 255, 0.1) 100%); border: 1px solid rgba(231, 121, 249, 0.3); border-radius: 8px; padding: 20px; margin: 25px 0;">
-                  <h4 style="color: #e879f9; margin-top: 0;">🎁 Return to Body Addon (Included)</h4>
-                  <p>You also have access to our exclusive Return to Body bonus content - additional practices and insights to deepen your embodiment journey.</p>
+                  <h4 style="color: #e879f9; margin-top: 0;">🎁 Return to Body Practices (Included)</h4>
+                  <p>You also have access to our exclusive Return to Body practices - additional embodiment techniques and insights to deepen your somatic journey.</p>
                 </div>
                 ` : ''}
 

@@ -15,13 +15,13 @@
 
 ### Purchase Record Created:
 - **Email**: hello@fifthelementsomatics.com
-- **Amount**: $197.00 (full price with Return to Body addon)
+- **Amount**: $197.00 (full price with Return to Body Practices)
 - **Access Type**: Complete masterclass + bonus content
 - **Status**: Active and verified ✅
 
 ### What's Included:
 - ✅ Complete "Good Girl Paradox" Masterclass (4 modules)
-- ✅ Return to Body Addon (bonus content)
+- ✅ Return to Body Practices (bonus content)
 - ✅ Full video access with working controls
 - ✅ Lifetime access to all content
 
@@ -37,4 +37,4 @@
 - Use authorized email for magic link authentication
 
 ---
-*Purchase record created with full addon access - ready for immediate use*
+*Purchase record created with full practices access - ready for immediate use*
