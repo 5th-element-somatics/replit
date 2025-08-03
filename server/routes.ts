@@ -14,9 +14,14 @@ import {
   aiEmailQueue,
   aiEmailDeliveries,
   contactMessages,
-  waitlistEntries
+  waitlistEntries,
+  leads,
+  applications,
+  purchases,
+  adminSessions,
+  magicLinks
 } from "@shared/schema";
-import { sql, count, sum, eq } from 'drizzle-orm';
+import { sql, count, sum, eq, desc, and, gte, lt } from 'drizzle-orm';
 import { db } from "./db";
 import sgMail from '@sendgrid/mail';
 import crypto from 'crypto';
@@ -1382,9 +1387,9 @@ Questions? Reply to this email - I read every single one.`,
     try {
       // Get comprehensive analytics
       const [leadsData, applicationsData, purchasesData] = await Promise.all([
-        db.select().from(leads).orderBy(leads.createdAt),
-        db.select().from(applications).orderBy(applications.createdAt),
-        db.select().from(purchases).orderBy(purchases.createdAt)
+        db.select().from(leads).orderBy(desc(leads.createdAt)),
+        db.select().from(applications).orderBy(desc(applications.createdAt)),
+        db.select().from(purchases).orderBy(desc(purchases.createdAt))
       ]);
 
       // Calculate insights

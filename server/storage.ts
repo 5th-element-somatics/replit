@@ -189,7 +189,7 @@ export class DatabaseStorage implements IStorage {
   async updateApplication(id: number, updates: Partial<Application>): Promise<Application> {
     const [updated] = await db
       .update(applications)
-      .set({ ...updates, updatedAt: new Date() })
+      .set(updates)
       .where(eq(applications.id, id))
       .returning();
     return updated;
@@ -203,7 +203,7 @@ export class DatabaseStorage implements IStorage {
   async updateLead(id: number, updates: Partial<Lead>): Promise<Lead> {
     const [updated] = await db
       .update(leads)
-      .set({ ...updates, updatedAt: new Date() })
+      .set(updates)
       .where(eq(leads.id, id))
       .returning();
     return updated;
