@@ -601,11 +601,7 @@ Questions? Reply to this email or contact hello@fifthelementsomatics.com
       console.log('Auth middleware - checking session token:', sessionToken ? sessionToken.substring(0, 8) + '...' : 'NO TOKEN');
       console.log('Available cookies:', Object.keys(req.cookies || {}));
       
-      // TEMPORARY BYPASS FOR DEVELOPMENT - REMOVE IN PRODUCTION
-      if (process.env.NODE_ENV === 'development') {
-        req.adminUser = { email: 'saint@fifthelementsomatics.com' };
-        return next();
-      }
+      // Development bypass removed - admin authentication now works properly in all environments
       
       if (!sessionToken) {
         return res.status(401).json({ message: "Authentication required" });
