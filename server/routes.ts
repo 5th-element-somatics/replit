@@ -744,7 +744,12 @@ Questions? Reply to this email or contact hello@fifthelementsomatics.com
         `
       };
       
-      await sgMail.send(msg);
+      console.log(`🔄 Attempting to send email to ${email} via SendGrid...`);
+      console.log(`📧 From: ${process.env.SENDGRID_FROM_EMAIL}`);
+      console.log(`📧 Subject: ${msg.subject}`);
+      
+      const result = await sgMail.send(msg);
+      console.log(`✅ SendGrid response:`, result[0].statusCode, result[0].headers);
       console.log(`✅ Purchase confirmation email sent to ${email}`);
       res.json({ success: true, message: "Confirmation email sent successfully" });
     } catch (error: any) {

@@ -149,7 +149,7 @@ class AIEmailService {
 
   // Process pending emails in the queue
   async processEmailQueue() {
-    console.log("📧 Email processing temporarily disabled to prevent spam");
+    console.log("📧 Email processing temporarily disabled to prevent spam - but allowing manual confirmations");
     return;
     
     try {
