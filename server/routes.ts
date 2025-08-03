@@ -399,6 +399,44 @@ Questions? Reply to this email or contact hello@fifthelementsomatics.com
     }
   });
 
+  // Emergency GET endpoint to create Saint's purchase in production (temporary)
+  app.get("/api/emergency-create-saint-purchase", async (req, res) => {
+    try {
+      const saintEmail = "hello@fifthelementsomatics.com";
+      
+      // Check if purchase already exists
+      const existingPurchase = await storage.getPurchaseByEmail(saintEmail);
+      if (existingPurchase) {
+        return res.json({ 
+          success: true, 
+          message: "Purchase already exists", 
+          purchase: existingPurchase 
+        });
+      }
+
+      // Create the purchase record
+      const purchaseData = {
+        email: saintEmail,
+        stripePaymentIntentId: "manual_production_emergency_" + Date.now(),
+        amount: 89,
+        hasReturnToBodyAddon: true
+      };
+
+      const purchase = await storage.createPurchase(purchaseData);
+      
+      res.json({ 
+        success: true, 
+        message: "Emergency purchase created for production", 
+        purchase 
+      });
+    } catch (error: any) {
+      res.status(500).json({ 
+        success: false, 
+        message: "Error creating emergency purchase: " + error.message 
+      });
+    }
+  });
+
   // Serve masterclass video files (protected)
   app.get("/api/video/:filename", async (req, res) => {
     try {
