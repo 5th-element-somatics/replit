@@ -665,14 +665,7 @@ Questions? Reply to this email or contact hello@fifthelementsomatics.com
       
       const msg = {
         to: email,
-        from: {
-          email: process.env.SENDGRID_FROM_EMAIL!,
-          name: "Saint - Fifth Element Somatics"
-        },
-        replyTo: {
-          email: process.env.SENDGRID_FROM_EMAIL!,
-          name: "Saint - Fifth Element Somatics"
-        },
+        from: process.env.SENDGRID_FROM_EMAIL!,
         subject: `Welcome to The Good Girl Paradox Masterclass!`,
         trackingSettings: {
           clickTracking: {
@@ -680,12 +673,6 @@ Questions? Reply to this email or contact hello@fifthelementsomatics.com
           },
           openTracking: {
             enable: false
-          }
-        },
-        mailSettings: {
-          spamCheck: {
-            enable: true,
-            threshold: 1
           }
         },
         text: `Dear ${name},
