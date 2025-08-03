@@ -305,7 +305,7 @@ export default function AdminUnified() {
                   variant="outline" 
                   size="sm" 
                   className="border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white"
-                  onClick={() => window.location.href = '/ai-email-admin'}
+                  onClick={() => window.location.href = '/admin/ai-email'}
                 >
                   <Mail className="w-4 h-4 mr-2" />
                   Email Marketing
