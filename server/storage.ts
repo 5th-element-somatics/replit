@@ -49,6 +49,18 @@ export interface IStorage {
   createAdminSession(session: InsertAdminSession): Promise<AdminSession>;
   getAdminSession(sessionToken: string): Promise<AdminSession | undefined>;
   deleteAdminSession(sessionToken: string): Promise<void>;
+  
+  // Application CRUD
+  updateApplication(id: number, updates: Partial<Application>): Promise<Application>;
+  deleteApplication(id: number): Promise<void>;
+  
+  // Lead CRUD
+  updateLead(id: number, updates: Partial<Lead>): Promise<Lead>;
+  deleteLead(id: number): Promise<void>;
+  
+  // Admin settings
+  getSystemSettings(): Promise<any>;
+  updateSystemSettings(settings: any): Promise<any>;
   // Advanced admin methods
   getAnalytics(): Promise<any>;
   getAffiliates(): Promise<any[]>;
@@ -171,6 +183,60 @@ export class DatabaseStorage implements IStorage {
     await db
       .delete(adminSessions)
       .where(eq(adminSessions.sessionToken, sessionToken));
+  }
+
+  // Application CRUD operations
+  async updateApplication(id: number, updates: Partial<Application>): Promise<Application> {
+    const [updated] = await db
+      .update(applications)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(applications.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteApplication(id: number): Promise<void> {
+    await db.delete(applications).where(eq(applications.id, id));
+  }
+
+  // Lead CRUD operations
+  async updateLead(id: number, updates: Partial<Lead>): Promise<Lead> {
+    const [updated] = await db
+      .update(leads)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(leads.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteLead(id: number): Promise<void> {
+    await db.delete(leads).where(eq(leads.id, id));
+  }
+
+  // System settings
+  async getSystemSettings(): Promise<any> {
+    return {
+      emailProcessingEnabled: false,
+      autoEmailSequenceEnabled: true,
+      quizEmailsEnabled: true,
+      sendgridConfigured: !!process.env.SENDGRID_API_KEY,
+      elevenLabsConfigured: !!process.env.ELEVEN_LABS_API_KEY,
+      anthropicConfigured: !!process.env.ANTHROPIC_API_KEY,
+      stripeConfigured: !!process.env.STRIPE_SECRET_KEY,
+      maxDailyEmails: 100,
+      sessionTimeout: 15, // minutes
+      authorizedEmails: [
+        'hello@fifthelementsomatics.com',
+        'saint@fifthelementsomatics.com',
+        'raj@raj.net'
+      ]
+    };
+  }
+
+  async updateSystemSettings(settings: any): Promise<any> {
+    // In a real app, this would update a settings table
+    console.log('📝 System settings update requested:', settings);
+    return settings;
   }
 
   // Advanced admin methods

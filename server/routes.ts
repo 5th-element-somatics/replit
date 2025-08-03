@@ -1596,6 +1596,109 @@ Questions? Reply to this email - I read every single one.`,
     }
   });
 
+  // Enhanced CRUD Operations
+  
+  // Application management
+  app.patch("/api/admin/applications/:id", requireAdminAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updates = req.body;
+      const application = await storage.updateApplication(id, updates);
+      console.log(`📝 Admin ${req.adminUser.email} updated application ${id}`);
+      res.json(application);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error updating application: " + error.message });
+    }
+  });
+
+  app.delete("/api/admin/applications/:id", requireAdminAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteApplication(id);
+      console.log(`🗑️ Admin ${req.adminUser.email} deleted application ${id}`);
+      res.json({ success: true, message: "Application deleted successfully" });
+    } catch (error: any) {
+      res.status(500).json({ message: "Error deleting application: " + error.message });
+    }
+  });
+
+  // Lead management
+  app.patch("/api/admin/leads/:id", requireAdminAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updates = req.body;
+      const lead = await storage.updateLead(id, updates);
+      console.log(`📝 Admin ${req.adminUser.email} updated lead ${id}`);
+      res.json(lead);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error updating lead: " + error.message });
+    }
+  });
+
+  app.delete("/api/admin/leads/:id", requireAdminAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteLead(id);
+      console.log(`🗑️ Admin ${req.adminUser.email} deleted lead ${id}`);
+      res.json({ success: true, message: "Lead deleted successfully" });
+    } catch (error: any) {
+      res.status(500).json({ message: "Error deleting lead: " + error.message });
+    }
+  });
+
+  // System settings
+  app.get("/api/admin/settings", requireAdminAuth, async (req, res) => {
+    try {
+      const settings = await storage.getSystemSettings();
+      res.json(settings);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching settings: " + error.message });
+    }
+  });
+
+  app.patch("/api/admin/settings", requireAdminAuth, async (req, res) => {
+    try {
+      const updates = req.body;
+      const settings = await storage.updateSystemSettings(updates);
+      console.log(`⚙️ Admin ${req.adminUser.email} updated system settings`);
+      res.json(settings);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error updating settings: " + error.message });
+    }
+  });
+
+  // Data export
+  app.get("/api/admin/export/:type", requireAdminAuth, async (req, res) => {
+    try {
+      const type = req.params.type;
+      let data = [];
+      let filename = '';
+      
+      switch (type) {
+        case 'leads':
+          data = await storage.getAllLeads();
+          filename = `leads_export_${new Date().toISOString().split('T')[0]}.json`;
+          break;
+        case 'applications':
+          data = await storage.getAllApplications();
+          filename = `applications_export_${new Date().toISOString().split('T')[0]}.json`;
+          break;
+        default:
+          return res.status(400).json({ message: "Invalid export type" });
+      }
+      
+      res.set({
+        'Content-Type': 'application/json',
+        'Content-Disposition': `attachment; filename="${filename}"`
+      });
+      
+      console.log(`📊 Admin ${req.adminUser.email} exported ${type} data (${data.length} records)`);
+      res.json(data);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error exporting data: " + error.message });
+    }
+  });
+
   // Contact Form API
   app.post("/api/contact", async (req, res) => {
     try {

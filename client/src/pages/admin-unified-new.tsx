@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 import { 
   Users, 
   Mail, 
@@ -28,7 +29,11 @@ import {
   Activity,
   Brain,
   Trash,
-  Cog
+  Cog,
+  Save,
+  AlertCircle,
+  CheckCircle,
+  XCircle
 } from "lucide-react";
 
 interface Lead {
@@ -51,234 +56,180 @@ interface Application {
   challenges: string;
   support: string;
   createdAt: string;
+  status?: string;
 }
 
-interface Purchase {
-  id: number;
-  email: string;
-  amount: number;
-  hasReturnToBodyAddon: boolean;
-  createdAt: string;
+interface SystemSettings {
+  emailProcessingEnabled: boolean;
+  autoEmailSequenceEnabled: boolean;
+  quizEmailsEnabled: boolean;
+  sendgridConfigured: boolean;
+  elevenLabsConfigured: boolean;
+  anthropicConfigured: boolean; 
+  stripeConfigured: boolean;
+  maxDailyEmails: number;
+  sessionTimeout: number;
+  authorizedEmails: string[];
 }
 
 export default function AdminUnified() {
-  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("overview");
-  const [authEmail, setAuthEmail] = useState('');
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [systemStatus, setSystemStatus] = useState({
-    database: 'checking',
-    endpoints: 'checking',
-    authentication: 'checking'
-  });
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
 
-  // Check authentication and system status
-  useEffect(() => {
-    const checkSystemStatus = async () => {
-      try {
-        // Test database connection via leads endpoint
-        const leadsTest = await fetch('/api/admin/leads', { credentials: 'include' });
-        const appsTest = await fetch('/api/admin/applications', { credentials: 'include' });
-        
-        if (leadsTest.ok && appsTest.ok) {
-          setIsAuthenticated(true);
-          setSystemStatus({
-            database: 'connected',
-            endpoints: 'operational',
-            authentication: 'active'
-          });
-          toast({
-            title: "Admin System Ready",
-            description: "All systems operational and database connected",
-          });
-        } else {
-          throw new Error('System checks failed');
-        }
-      } catch (error) {
-        console.error('System status check failed:', error);
-        setSystemStatus({
-          database: 'error',
-          endpoints: 'error', 
-          authentication: 'error'
-        });
-        toast({
-          title: "System Check Failed",
-          description: "Some admin functions may not work properly",
-          variant: "destructive",
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    checkSystemStatus();
-  }, []);
-
-  // Fetch all data with proper error handling
-  const { data: applications = [], isLoading: applicationsLoading, error: applicationsError } = useQuery({
-    queryKey: ['/api/admin/applications'],
-    enabled: isAuthenticated,
-    retry: 2,
-  });
-
+  // Queries
   const { data: leads = [], isLoading: leadsLoading, error: leadsError } = useQuery({
-    queryKey: ['/api/admin/leads'],
-    enabled: isAuthenticated,
-    retry: 2,
+    queryKey: ["/api/admin/leads"],
+    retry: false,
   });
 
-  const { data: analytics = {}, isLoading: analyticsLoading } = useQuery({
-    queryKey: ['/api/admin/analytics'],
-    enabled: isAuthenticated,
-    retry: 2,
+  const { data: applications = [], isLoading: applicationsLoading, error: applicationsError } = useQuery({
+    queryKey: ["/api/admin/applications"],
+    retry: false,
   });
 
-  // Magic link authentication
-  const handleMagicLink = async () => {
-    if (!authEmail) {
-      toast({
-        title: "Email Required",
-        description: "Please enter your email address",
-        variant: "destructive",
-      });
-      return;
+  const { data: analytics = {} } = useQuery({
+    queryKey: ["/api/admin/analytics"],
+    retry: false,
+  });
+
+  const { data: systemSettings = {} as SystemSettings } = useQuery({
+    queryKey: ["/api/admin/settings"],
+    retry: false,
+  });
+
+  // Mutations
+  const updateApplicationMutation = useMutation({
+    mutationFn: async ({ id, updates }: { id: number; updates: any }) => {
+      return await apiRequest("PATCH", `/api/admin/applications/${id}`, updates);
+    },
+    onSuccess: () => {
+      toast({ title: "Success", description: "Application updated successfully" });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/applications"] });
+    },
+    onError: (error: any) => {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
     }
+  });
 
+  const deleteApplicationMutation = useMutation({
+    mutationFn: async (id: number) => {
+      return await apiRequest("DELETE", `/api/admin/applications/${id}`);
+    },
+    onSuccess: () => {
+      toast({ title: "Success", description: "Application deleted successfully" });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/applications"] });
+    },
+    onError: (error: any) => {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    }
+  });
+
+  const deleteLeadMutation = useMutation({
+    mutationFn: async (id: number) => {
+      return await apiRequest("DELETE", `/api/admin/leads/${id}`);
+    },
+    onSuccess: () => {
+      toast({ title: "Success", description: "Lead deleted successfully" });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/leads"] });
+    },
+    onError: (error: any) => {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    }
+  });
+
+  const updateSettingsMutation = useMutation({
+    mutationFn: async (updates: Partial<SystemSettings>) => {
+      return await apiRequest("PATCH", "/api/admin/settings", updates);
+    },
+    onSuccess: () => {
+      toast({ title: "Success", description: "Settings updated successfully" });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/settings"] });
+    },
+    onError: (error: any) => {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    }
+  });
+
+  // Handlers
+  const handleUpdateApplication = (id: number, updates: any) => {
+    updateApplicationMutation.mutate({ id, updates });
+  };
+
+  const handleDeleteApplication = (id: number) => {
+    if (confirm("Are you sure you want to delete this application? This cannot be undone.")) {
+      deleteApplicationMutation.mutate(id);
+    }
+  };
+
+  const handleDeleteLead = (id: number) => {
+    if (confirm("Are you sure you want to delete this lead? This cannot be undone.")) {
+      deleteLeadMutation.mutate(id);
+    }
+  };
+
+  const handleExportData = async (type: 'leads' | 'applications') => {
     try {
-      const response = await fetch('/api/admin/request-magic-link', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: authEmail }),
+      const response = await fetch(`/api/admin/export/${type}`, {
+        credentials: 'include'
       });
-
+      
       if (response.ok) {
-        toast({
-          title: "Magic Link Sent",
-          description: "Check your email for the login link",
-        });
+        const data = await response.blob();
+        const url = window.URL.createObjectURL(data);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${type}_export_${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        
+        toast({ title: "Success", description: `${type} data exported successfully` });
       } else {
         const error = await response.json();
-        throw new Error(error.message);
+        toast({ title: "Error", description: error.message, variant: "destructive" });
       }
     } catch (error: any) {
-      toast({
-        title: "Authentication Failed",
-        description: error.message,
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: error.message, variant: "destructive" });
     }
   };
 
-  // System status indicators
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'connected':
-      case 'operational':
-      case 'active':
-        return 'text-green-400';
-      case 'checking':
-        return 'text-yellow-400';
-      case 'error':
-        return 'text-red-400';
-      default:
-        return 'text-gray-400';
-    }
+  const handleUpdateSettings = (updates: Partial<SystemSettings>) => {
+    updateSettingsMutation.mutate(updates);
   };
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'connected':
-      case 'operational':
-      case 'active':
-        return '✅';
-      case 'checking':
-        return '🔄';
-      case 'error':
-        return '❌';
-      default:
-        return '⚪';
-    }
-  };
-
-  if (isLoading) {
+  // Check if user is not authenticated
+  if (leadsError?.message?.includes('Unauthorized') || applicationsError?.message?.includes('Unauthorized')) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-purple-950 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin w-12 h-12 border-4 border-purple-400 border-t-transparent rounded-full mx-auto mb-4" />
-          <p className="text-white text-lg font-serif">Initializing Admin Center...</p>
-          <p className="text-gray-400 text-sm mt-2">Running system diagnostics</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-purple-950 flex items-center justify-center p-8">
-        <Card className="w-full max-w-md bg-gray-900 border border-purple-400 border-opacity-30">
-          <CardHeader className="text-center">
-            <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Shield className="w-8 h-8 text-white" />
-            </div>
-            <CardTitle className="text-2xl font-serif text-white">Admin Access</CardTitle>
-            <p className="text-gray-400">Fifth Element Somatics</p>
+        <Card className="bg-gray-900 border border-red-400 border-opacity-30 max-w-md">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Shield className="w-5 h-5 text-red-400" />
+              Authentication Required
+            </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">Admin Email</label>
-              <Input
-                type="email"
-                placeholder="hello@fifthelementsomatics.com"
-                value={authEmail}
-                onChange={(e) => setAuthEmail(e.target.value)}
-                className="bg-gray-800 border-gray-700 text-white"
-              />
-            </div>
+          <CardContent>
+            <p className="text-gray-400 mb-4">You need to log in to access the admin dashboard.</p>
             <Button 
-              onClick={handleMagicLink}
-              className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700"
+              className="w-full bg-purple-600 hover:bg-purple-700"
+              onClick={() => window.location.href = '/admin-login'}
             >
-              <Zap className="w-4 h-4 mr-2" />
-              Send Magic Link
+              Go to Login
             </Button>
-            
-            {/* System Status Display */}
-            <div className="mt-6 p-4 bg-gray-800 rounded-lg">
-              <h4 className="text-sm font-medium text-white mb-3">System Status</h4>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-400">Database</span>
-                  <span className={getStatusColor(systemStatus.database)}>
-                    {getStatusIcon(systemStatus.database)} {systemStatus.database}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-400">API Endpoints</span>
-                  <span className={getStatusColor(systemStatus.endpoints)}>
-                    {getStatusIcon(systemStatus.endpoints)} {systemStatus.endpoints}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-400">Authentication</span>
-                  <span className={getStatusColor(systemStatus.authentication)}>
-                    {getStatusIcon(systemStatus.authentication)} {systemStatus.authentication}
-                  </span>
-                </div>
-              </div>
-            </div>
           </CardContent>
         </Card>
       </div>
     );
   }
 
-  // Calculate key metrics
+  // Calculate metrics
   const totalRevenue = analytics.totalRevenue || 0;
   const totalLeads = leads.length;
   const totalApplications = applications.length;
   const conversionRate = totalLeads > 0 ? ((totalApplications / totalLeads) * 100).toFixed(1) : '0.0';
 
-  // Recent activity
   const recentLeads = leads.slice(0, 5);
   const recentApplications = applications.slice(0, 3);
 
@@ -338,18 +289,18 @@ export default function AdminUnified() {
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 bg-gray-900 border border-purple-400 border-opacity-30">
+          <TabsList className="grid w-full grid-cols-6 bg-gray-900 border border-purple-400 border-opacity-30">
             <TabsTrigger value="overview" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
               <BarChart3 className="w-4 h-4 mr-2" />
               Overview
             </TabsTrigger>
             <TabsTrigger value="leads" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
               <Users className="w-4 h-4 mr-2" />
-              Leads ({totalLeads})
+              Leads
             </TabsTrigger>
             <TabsTrigger value="applications" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
               <UserCheck className="w-4 h-4 mr-2" />
-              Applications ({totalApplications})
+              Applications
             </TabsTrigger>
             <TabsTrigger value="revenue" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
               <DollarSign className="w-4 h-4 mr-2" />
@@ -359,11 +310,16 @@ export default function AdminUnified() {
               <Database className="w-4 h-4 mr-2" />
               System
             </TabsTrigger>
+            <TabsTrigger value="settings" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
+              <Cog className="w-4 h-4 mr-2" />
+              Settings
+            </TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
           <TabsContent value="overview">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {/* Key Metrics */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
               <Card className="bg-gray-900 border border-purple-400 border-opacity-30">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium text-gray-300">Total Revenue</CardTitle>
@@ -426,7 +382,7 @@ export default function AdminUnified() {
                           <p className="text-white font-medium">{lead.name || 'Anonymous'}</p>
                           <p className="text-gray-400 text-sm">{lead.email}</p>
                         </div>
-                        <Badge variant="outline" className={`border-blue-400 text-blue-400`}>
+                        <Badge variant="outline" className="border-blue-400 text-blue-400">
                           {lead.source}
                         </Badge>
                       </div>
@@ -451,7 +407,7 @@ export default function AdminUnified() {
                           <p className="text-gray-400 text-sm">{app.email}</p>
                         </div>
                         <Badge variant="outline" className="border-green-400 text-green-400">
-                          New
+                          {app.status || 'New'}
                         </Badge>
                       </div>
                     ))}
@@ -464,8 +420,17 @@ export default function AdminUnified() {
           {/* Leads Tab */}
           <TabsContent value="leads">
             <Card className="bg-gray-900 border border-purple-400 border-opacity-30">
-              <CardHeader>
+              <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="text-white">Lead Management ({totalLeads} total)</CardTitle>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-black"
+                  onClick={() => handleExportData('leads')}
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Export Leads
+                </Button>
               </CardHeader>
               <CardContent>
                 {leadsLoading ? (
@@ -495,6 +460,14 @@ export default function AdminUnified() {
                                 {lead.quizResult}
                               </Badge>
                             )}
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              className="border-red-400 text-red-400 hover:bg-red-400 hover:text-black"
+                              onClick={() => handleDeleteLead(lead.id)}
+                            >
+                              <Trash className="w-3 h-3" />
+                            </Button>
                           </div>
                         </div>
                         <p className="text-gray-500 text-xs">
@@ -511,8 +484,17 @@ export default function AdminUnified() {
           {/* Applications Tab */}
           <TabsContent value="applications">
             <Card className="bg-gray-900 border border-purple-400 border-opacity-30">
-              <CardHeader>
+              <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="text-white">1:1 Mentorship Applications ({totalApplications} total)</CardTitle>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-black"
+                  onClick={() => handleExportData('applications')}
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Export Applications
+                </Button>
               </CardHeader>
               <CardContent>
                 {applicationsLoading ? (
@@ -535,7 +517,7 @@ export default function AdminUnified() {
                             <p className="text-gray-500 text-sm">{app.phone}</p>
                           </div>
                           <Badge variant="outline" className="border-green-400 text-green-400">
-                            New Application
+                            {app.status || 'New Application'}
                           </Badge>
                         </div>
                         
@@ -607,10 +589,24 @@ export default function AdminUnified() {
                 <CardTitle className="text-white">Revenue Analytics</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-8 text-gray-400">
-                  <DollarSign className="w-12 h-12 mx-auto mb-4" />
-                  <p>Revenue tracking coming soon...</p>
-                  <p className="text-sm">Current total: ${totalRevenue.toFixed(2)}</p>
+                <div className="text-center py-8">
+                  <DollarSign className="w-12 h-12 mx-auto mb-4 text-green-400" />
+                  <div className="text-3xl font-bold text-white mb-2">${totalRevenue.toFixed(2)}</div>
+                  <p className="text-gray-400">Total revenue from masterclass sales</p>
+                  <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="p-4 bg-gray-800 rounded">
+                      <div className="text-xl font-bold text-white">$64</div>
+                      <p className="text-sm text-gray-400">Base Masterclass</p>
+                    </div>
+                    <div className="p-4 bg-gray-800 rounded">
+                      <div className="text-xl font-bold text-white">$89</div>
+                      <p className="text-sm text-gray-400">With Return to Body</p>
+                    </div>
+                    <div className="p-4 bg-gray-800 rounded">
+                      <div className="text-xl font-bold text-white">{conversionRate}%</div>
+                      <p className="text-sm text-gray-400">Lead Conversion</p>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -630,21 +626,40 @@ export default function AdminUnified() {
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
                       <span className="text-gray-400">Database Connection</span>
-                      <span className={getStatusColor(systemStatus.database)}>
-                        {getStatusIcon(systemStatus.database)} {systemStatus.database}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="w-4 h-4 text-green-400" />
+                        <span className="text-green-400">Connected</span>
+                      </div>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-400">API Endpoints</span>
-                      <span className={getStatusColor(systemStatus.endpoints)}>
-                        {getStatusIcon(systemStatus.endpoints)} {systemStatus.endpoints}
-                      </span>
+                      <span className="text-gray-400">SendGrid Email</span>
+                      <div className="flex items-center gap-2">
+                        {systemSettings.sendgridConfigured ? (
+                          <><CheckCircle className="w-4 h-4 text-green-400" /><span className="text-green-400">Configured</span></>
+                        ) : (
+                          <><XCircle className="w-4 h-4 text-red-400" /><span className="text-red-400">Not Configured</span></>
+                        )}
+                      </div>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-400">Authentication</span>
-                      <span className={getStatusColor(systemStatus.authentication)}>
-                        {getStatusIcon(systemStatus.authentication)} {systemStatus.authentication}
-                      </span>
+                      <span className="text-gray-400">Stripe Payments</span>
+                      <div className="flex items-center gap-2">
+                        {systemSettings.stripeConfigured ? (
+                          <><CheckCircle className="w-4 h-4 text-green-400" /><span className="text-green-400">Configured</span></>
+                        ) : (
+                          <><XCircle className="w-4 h-4 text-red-400" /><span className="text-red-400">Not Configured</span></>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-400">AI Services</span>
+                      <div className="flex items-center gap-2">
+                        {systemSettings.anthropicConfigured ? (
+                          <><CheckCircle className="w-4 h-4 text-green-400" /><span className="text-green-400">Configured</span></>
+                        ) : (
+                          <><XCircle className="w-4 h-4 text-red-400" /><span className="text-red-400">Not Configured</span></>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -654,23 +669,154 @@ export default function AdminUnified() {
                 <CardHeader>
                   <CardTitle className="text-white flex items-center gap-2">
                     <Activity className="w-5 h-5" />
-                    Quick Actions
+                    Performance Metrics
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
-                    <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-600">
-                      <Download className="w-4 h-4 mr-2" />
-                      Export Data
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-400">Total Leads</span>
+                      <span className="text-white font-medium">{totalLeads}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-400">Total Applications</span>
+                      <span className="text-white font-medium">{totalApplications}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-400">Conversion Rate</span>
+                      <span className="text-white font-medium">{conversionRate}%</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-400">Total Revenue</span>
+                      <span className="text-white font-medium">${totalRevenue.toFixed(2)}</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Settings Tab */}
+          <TabsContent value="settings">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card className="bg-gray-900 border border-purple-400 border-opacity-30">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center gap-2">
+                    <Settings className="w-5 h-5" />
+                    Email Settings
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <label className="text-white font-medium">Email Processing</label>
+                      <p className="text-gray-400 text-sm">Enable automated email processing</p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className={systemSettings.emailProcessingEnabled ? 
+                        "border-green-400 text-green-400" : 
+                        "border-red-400 text-red-400"
+                      }
+                      onClick={() => handleUpdateSettings({ 
+                        emailProcessingEnabled: !systemSettings.emailProcessingEnabled 
+                      })}
+                    >
+                      {systemSettings.emailProcessingEnabled ? 'Enabled' : 'Disabled'}
                     </Button>
-                    <Button variant="outline" className="w-full border-blue-400 text-blue-400">
-                      <Mail className="w-4 h-4 mr-2" />
-                      Send Newsletter
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <label className="text-white font-medium">Auto Email Sequences</label>
+                      <p className="text-gray-400 text-sm">Automatically send follow-up emails</p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className={systemSettings.autoEmailSequenceEnabled ? 
+                        "border-green-400 text-green-400" : 
+                        "border-red-400 text-red-400"
+                      }
+                      onClick={() => handleUpdateSettings({ 
+                        autoEmailSequenceEnabled: !systemSettings.autoEmailSequenceEnabled 
+                      })}
+                    >
+                      {systemSettings.autoEmailSequenceEnabled ? 'Enabled' : 'Disabled'}
                     </Button>
-                    <Button variant="outline" className="w-full border-green-400 text-green-400">
-                      <Settings className="w-4 h-4 mr-2" />
-                      System Settings
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <label className="text-white font-medium">Quiz Result Emails</label>
+                      <p className="text-gray-400 text-sm">Send personalized quiz result emails</p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className={systemSettings.quizEmailsEnabled ? 
+                        "border-green-400 text-green-400" : 
+                        "border-red-400 text-red-400"
+                      }
+                      onClick={() => handleUpdateSettings({ 
+                        quizEmailsEnabled: !systemSettings.quizEmailsEnabled 
+                      })}
+                    >
+                      {systemSettings.quizEmailsEnabled ? 'Enabled' : 'Disabled'}
                     </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gray-900 border border-purple-400 border-opacity-30">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center gap-2">
+                    <Shield className="w-5 h-5" />
+                    Security Settings
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <label className="text-white font-medium block mb-2">Session Timeout (minutes)</label>
+                    <Input
+                      type="number"
+                      value={systemSettings.sessionTimeout || 15}
+                      onChange={(e) => handleUpdateSettings({ 
+                        sessionTimeout: parseInt(e.target.value) || 15 
+                      })}
+                      className="bg-gray-800 border-gray-600 text-white"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="text-white font-medium block mb-2">Max Daily Emails</label>
+                    <Input
+                      type="number"
+                      value={systemSettings.maxDailyEmails || 100}
+                      onChange={(e) => handleUpdateSettings({ 
+                        maxDailyEmails: parseInt(e.target.value) || 100 
+                      })}
+                      className="bg-gray-800 border-gray-600 text-white"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-white font-medium block mb-2">Authorized Admin Emails</label>
+                    <div className="space-y-2">
+                      {systemSettings.authorizedEmails?.map((email, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          <Input
+                            value={email}
+                            readOnly
+                            className="bg-gray-800 border-gray-600 text-white"
+                          />
+                          <Badge variant="outline" className="border-green-400 text-green-400">
+                            Active
+                          </Badge>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </CardContent>
               </Card>

@@ -11,7 +11,7 @@ import Checkout from "@/pages/checkout";
 import Watch from "@/pages/watch";
 import Course from "@/pages/course";
 import Apply from "@/pages/apply";
-import AdminUnified from "@/pages/admin-unified";
+import AdminUnified from "@/pages/admin-unified-new";
 import AdminLogin from "@/pages/admin-login";
 import AdminVerify from "@/pages/admin-verify";
 import Quiz from "@/pages/quiz";
