@@ -437,6 +437,48 @@ Questions? Reply to this email or contact hello@fifthelementsomatics.com
     }
   });
 
+  // Test purchase creation endpoint for Raj
+  app.get("/api/create-test-purchase", async (req, res) => {
+    try {
+      const { email, name, amount, addon } = req.query;
+      
+      if (!email || !name) {
+        return res.status(400).json({ message: "Email and name are required" });
+      }
+
+      // Check if purchase already exists
+      const existingPurchase = await storage.getPurchaseByEmail(email as string);
+      if (existingPurchase) {
+        return res.json({ 
+          success: true, 
+          message: "Purchase already exists", 
+          purchase: existingPurchase 
+        });
+      }
+
+      // Create the purchase record
+      const purchaseData = {
+        email: email as string,
+        stripePaymentIntentId: "test_purchase_" + Date.now(),
+        amount: parseInt(amount as string) || 89,
+        hasReturnToBodyAddon: addon === "true"
+      };
+
+      const purchase = await storage.createPurchase(purchaseData);
+      
+      res.json({ 
+        success: true, 
+        message: "Test purchase created successfully", 
+        purchase 
+      });
+    } catch (error: any) {
+      res.status(500).json({ 
+        success: false, 
+        message: "Error creating test purchase: " + error.message 
+      });
+    }
+  });
+
   // Serve masterclass video files (protected)
   app.get("/api/video/:filename", async (req, res) => {
     try {
