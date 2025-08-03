@@ -25,7 +25,8 @@ import {
   Zap,
   Shield,
   Database,
-  Activity
+  Activity,
+  Brain
 } from "lucide-react";
 
 interface Lead {
@@ -299,10 +300,30 @@ export default function AdminUnified() {
                 <Activity className="w-4 h-4 text-green-400" />
                 <span className="text-green-400">All Systems Operational</span>
               </div>
-              <Button variant="outline" size="sm" className="border-purple-400 text-purple-400">
-                <Settings className="w-4 h-4 mr-2" />
-                Settings
-              </Button>
+              <div className="flex items-center space-x-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white"
+                  onClick={() => window.location.href = '/ai-email-admin'}
+                >
+                  <Mail className="w-4 h-4 mr-2" />
+                  Email Marketing
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-green-400 text-green-400 hover:bg-green-400 hover:text-white"
+                  onClick={() => window.location.href = '/smart-admin'}
+                >
+                  <Brain className="w-4 h-4 mr-2" />
+                  AI Assistant
+                </Button>
+                <Button variant="outline" size="sm" className="border-purple-400 text-purple-400">
+                  <Settings className="w-4 h-4 mr-2" />
+                  Settings
+                </Button>
+              </div>
             </div>
           </div>
         </div>
