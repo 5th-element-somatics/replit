@@ -665,8 +665,15 @@ Questions? Reply to this email or contact hello@fifthelementsomatics.com
       
       const msg = {
         to: email,
-        from: process.env.SENDGRID_FROM_EMAIL!,
-        subject: `🎉 Welcome to The Good Girl Paradox Masterclass!`,
+        from: {
+          email: process.env.SENDGRID_FROM_EMAIL!,
+          name: "Saint - Fifth Element Somatics"
+        },
+        replyTo: {
+          email: process.env.SENDGRID_FROM_EMAIL!,
+          name: "Saint - Fifth Element Somatics"
+        },
+        subject: `Welcome to The Good Girl Paradox Masterclass!`,
         trackingSettings: {
           clickTracking: {
             enable: false
@@ -675,55 +682,88 @@ Questions? Reply to this email or contact hello@fifthelementsomatics.com
             enable: false
           }
         },
+        mailSettings: {
+          spamCheck: {
+            enable: true,
+            threshold: 1
+          }
+        },
+        text: `Dear ${name},
+
+Welcome to The Good Girl Paradox Masterclass!
+
+I'm absolutely thrilled you've joined us for this transformational journey of erotic reclamation and sovereign embodiment.
+
+Your Masterclass Access:
+- Email: ${email}
+- Investment: $${Number(amount).toFixed(2)}
+- Access Level: Complete Masterclass${hasReturnToBodyAddon ? ' + Return to Body Practices' : ''}
+
+Access your videos here: ${accessUrl}
+
+What's waiting for you:
+- Main Masterclass - The foundation of your erotic reclamation
+- Boundary Tapping - EFT techniques for energetic sovereignty  
+- Sovereignty Ritual - Reclaiming your authentic power
+- Eros Activation - Awakening your sensual essence
+${hasReturnToBodyAddon ? '\nYou also have access to our exclusive Return to Body practices - additional embodiment techniques and insights to deepen your somatic journey.' : ''}
+
+"Your body knows the way back to your truth. Trust her wisdom, honor her knowing, and watch as she guides you home to yourself." - Saint
+
+Ready to begin? Your videos are waiting for you at the link above.
+
+With love and in service to your sovereignty,
+Saint
+Fifth Element Somatics
+
+Questions? Reply to this email - I read every single one.`,
         html: `
-          <div style="font-family: Georgia, serif; background: linear-gradient(135deg, #1a0d1f 0%, #2d1b33 100%); margin: 0; padding: 20px; color: #f5f1e8;">
-            <div style="max-width: 600px; margin: 0 auto; background: rgba(26, 13, 31, 0.95); border: 1px solid rgba(199, 125, 255, 0.3); border-radius: 12px; overflow: hidden;">
+          <div style="font-family: Georgia, serif; background: #ffffff; margin: 0; padding: 20px; color: #333333;">
+            <div style="max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px;">
               
-              <div style="background: linear-gradient(135deg, #C77DFF 0%, #e879f9 100%); padding: 30px 20px; text-align: center; color: white;">
-                <h1 style="margin: 0; font-size: 28px; font-weight: bold;">🎉 Welcome to The Good Girl Paradox!</h1>
-                <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">Your transformational journey begins now</p>
+              <div style="background: #8B5CF6; padding: 30px 20px; text-align: center; color: white; border-radius: 8px 8px 0 0;">
+                <h1 style="margin: 0; font-size: 24px; font-weight: bold;">Welcome to The Good Girl Paradox!</h1>
+                <p style="margin: 10px 0 0 0; font-size: 16px;">Your transformational journey begins now</p>
               </div>
               
-              <div style="padding: 30px;">
-                <div style="font-size: 18px; line-height: 1.6; margin-bottom: 25px;">
-                  <p>Beautiful ${name},</p>
+              <div style="padding: 30px; color: #333333;">
+                <div style="font-size: 16px; line-height: 1.6; margin-bottom: 25px;">
+                  <p>Dear ${name},</p>
                   <p>I'm absolutely thrilled you've joined us for <strong>The Good Girl Paradox Masterclass</strong>. This is where your journey of erotic reclamation and sovereign embodiment truly begins.</p>
                   <p>You've just invested in yourself in the most profound way - and I'm here to guide you every step of the way.</p>
                 </div>
 
-                <div style="background: rgba(199, 125, 255, 0.1); border: 1px solid rgba(199, 125, 255, 0.3); border-radius: 8px; padding: 20px; margin: 25px 0;">
-                  <h3 style="color: #C77DFF; margin-top: 0; font-size: 20px;">🔑 Your Masterclass Access</h3>
+                <div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 20px; margin: 25px 0;">
+                  <h3 style="color: #8B5CF6; margin-top: 0; font-size: 18px;">Your Masterclass Access</h3>
                   <p><strong>Email:</strong> ${email}</p>
-                  <p><strong>Investment:</strong> ${amount === 0 ? 'Complimentary Access' : `$${Number(amount).toFixed(2)}`}</p>
+                  <p><strong>Investment:</strong> $${Number(amount).toFixed(2)}</p>
                   <p><strong>Access Level:</strong> Complete Masterclass${hasReturnToBodyAddon ? ' + Return to Body Practices' : ''}</p>
                   
                   <div style="text-align: center; margin: 20px 0;">
-                    <a href="${accessUrl}" style="display: inline-block; background: linear-gradient(135deg, #C77DFF 0%, #e879f9 100%); color: white; text-decoration: none; padding: 15px 30px; border-radius: 25px; font-weight: bold; font-size: 16px;">
-                      Access Your Masterclass Now →
+                    <a href="${accessUrl}" style="display: inline-block; background: #8B5CF6; color: white; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: bold;">
+                      Access Your Masterclass Now
                     </a>
                   </div>
-                  
-                  <p style="font-size: 14px; opacity: 0.8; text-align: center;">
-                    Simply enter your email address on the watch page to verify your purchase and start watching immediately.
-                  </p>
                 </div>
 
-                <div style="background: rgba(0, 0, 0, 0.3); border-radius: 8px; padding: 20px; margin: 25px 0;">
-                  <h4 style="color: #C77DFF; margin-top: 0;">What's Waiting For You:</h4>
-                  <div style="margin: 10px 0; font-size: 15px;">✨ Main Masterclass - The foundation of your erotic reclamation</div>
-                  <div style="margin: 10px 0; font-size: 15px;">✨ Boundary Tapping - EFT techniques for energetic sovereignty</div>
-                  <div style="margin: 10px 0; font-size: 15px;">✨ Sovereignty Ritual - Reclaiming your authentic power</div>
-                  <div style="margin: 10px 0; font-size: 15px;">✨ Eros Activation - Awakening your sensual essence</div>
+                <div style="background: #f8f9fa; border-radius: 8px; padding: 20px; margin: 25px 0;">
+                  <h4 style="color: #8B5CF6; margin-top: 0;">What's Waiting For You:</h4>
+                  <ul style="margin: 0; padding-left: 20px;">
+                    <li style="margin: 8px 0;">Main Masterclass - The foundation of your erotic reclamation</li>
+                    <li style="margin: 8px 0;">Boundary Tapping - EFT techniques for energetic sovereignty</li>
+                    <li style="margin: 8px 0;">Sovereignty Ritual - Reclaiming your authentic power</li>
+                    <li style="margin: 8px 0;">Eros Activation - Awakening your sensual essence</li>
+                  </ul>
                 </div>
 
                 ${hasReturnToBodyAddon ? `
-                <div style="background: linear-gradient(135deg, rgba(231, 121, 249, 0.1) 0%, rgba(199, 125, 255, 0.1) 100%); border: 1px solid rgba(231, 121, 249, 0.3); border-radius: 8px; padding: 20px; margin: 25px 0;">
-                  <h4 style="color: #e879f9; margin-top: 0;">🎁 Return to Body Practices (Included)</h4>
+                <div style="background: #f0f9ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 20px; margin: 25px 0;">
+                  <h4 style="color: #3b82f6; margin-top: 0;">Return to Body Practices (Included)</h4>
                   <p>You also have access to our exclusive Return to Body practices - additional embodiment techniques and insights to deepen your somatic journey.</p>
                 </div>
                 ` : ''}
 
-                <div style="font-style: italic; color: #C77DFF; margin: 20px 0; padding: 15px; border-left: 3px solid #C77DFF; background: rgba(199, 125, 255, 0.05);">
+                <div style="font-style: italic; color: #6b7280; margin: 20px 0; padding: 15px; border-left: 3px solid #8B5CF6; background: #f9fafb;">
                   <p>"Your body knows the way back to your truth. Trust her wisdom, honor her knowing, and watch as she guides you home to yourself."</p>
                   <p style="text-align: right; margin-top: 10px;">- Saint</p>
                 </div>
@@ -735,7 +775,7 @@ Questions? Reply to this email or contact hello@fifthelementsomatics.com
                 Fifth Element Somatics</p>
               </div>
               
-              <div style="text-align: center; padding: 20px; border-top: 1px solid rgba(199, 125, 255, 0.2); font-size: 14px; color: #b8b4b1;">
+              <div style="text-align: center; padding: 20px; border-top: 1px solid #dee2e6; font-size: 14px; color: #6b7280; background: #f8f9fa;">
                 <p>Fifth Element Somatics | Sensual. Sovereign. Sacred.</p>
                 <p>Questions? Reply to this email - I read every single one.</p>
               </div>
