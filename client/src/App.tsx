@@ -20,6 +20,8 @@ import Waitlist from "@/pages/waitlist";
 import AIEmailAdmin from "@/pages/ai-email-admin";
 import SmartAdmin from "@/pages/smart-admin";
 import EmailHeaderTest from "@/pages/email-header-test";
+import EmailDashboard from "@/pages/email-dashboard";
+import WorkshopBuilder from "@/pages/workshop-builder";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -37,6 +39,8 @@ function Router() {
       <Route path="/admin-login" component={AdminLogin} />
       <Route path="/admin-verify" component={AdminVerify} />
       <Route path="/admin/ai-email" component={AIEmailAdmin} />
+      <Route path="/admin/email-dashboard" component={EmailDashboard} />
+      <Route path="/admin/workshop-builder" component={WorkshopBuilder} />
       <Route path="/smart-admin" component={SmartAdmin} />
       <Route path="/free-meditation" component={FreeMeditation} />
       <Route path="/waitlist" component={Waitlist} />

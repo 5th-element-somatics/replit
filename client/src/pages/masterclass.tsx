@@ -198,7 +198,7 @@ export default function Masterclass() {
             <div className="space-y-4 mb-6">
               <div className="flex items-center justify-between p-4 bg-gray-700 rounded-lg">
                 <span className="text-white font-semibold">Masterclass Access</span>
-                <span className="text-purple-400 font-bold">$64</span>
+                <span className="text-purple-400 font-bold">$44</span>
               </div>
               
               <div className="flex items-start space-x-3 p-4 bg-gray-700 rounded-lg">
@@ -216,7 +216,7 @@ export default function Masterclass() {
                     Extended somatic practices and body-based healing exercises
                   </p>
                 </div>
-                <span className="text-pink-400 font-bold">+$25</span>
+                <span className="text-pink-400 font-bold">+$20</span>
               </div>
             </div>
             
@@ -224,7 +224,7 @@ export default function Masterclass() {
               <div className="flex items-center justify-between">
                 <span className="text-xl font-bold text-white">Total:</span>
                 <span className="text-2xl font-bold gradient-text">
-                  ${includeAddon ? "89" : "64"}
+                  ${includeAddon ? "64" : "44"}
                 </span>
               </div>
             </div>
@@ -345,7 +345,7 @@ export default function Masterclass() {
             Are You Ready to <span className="gradient-text">Begin</span>?
           </h2>
           <p className="text-lg text-gray-300 mb-6">
-            Watch the class instantly • Lifetime access • $64
+            Watch the class instantly • Lifetime access • $44 base, $64 with bonus
           </p>
           
           <Button 

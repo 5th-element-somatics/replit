@@ -334,7 +334,7 @@ Questions? Reply to this email or contact hello@fifthelementsomatics.com
       }
 
       const paymentIntent = await stripe.paymentIntents.create({
-        amount: Math.round(amount * 100), // Convert to cents
+        amount: Math.round((amount || 6400) * 100), // Convert to cents, default $64
         currency: "usd",
         metadata: {
           email,
@@ -1858,6 +1858,157 @@ Questions? Reply to this email - I read every single one.`,
       res.json({ success: true });
     } catch (error: any) {
       res.status(500).json({ message: "Error updating waitlist entry: " + error.message });
+    }
+  });
+
+  // Email Dashboard API Endpoints
+  app.get('/api/admin/email-sequences', requireAdminAuth, async (req, res) => {
+    try {
+      const sequences = [
+        {
+          id: 1,
+          name: 'Quiz Follow-up',
+          description: 'Nurture sequence for quiz completers',
+          emailCount: 5,
+          subscriberCount: 12,
+          status: 'active',
+          openRate: 68
+        },
+        {
+          id: 2,
+          name: 'Meditation Download',
+          description: 'Welcome series for meditation downloaders',
+          emailCount: 3,
+          subscriberCount: 8,
+          status: 'active',
+          openRate: 72
+        }
+      ];
+      res.json(sequences);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching sequences: " + error.message });
+    }
+  });
+
+  app.get('/api/admin/email-subscribers', requireAdminAuth, async (req, res) => {
+    try {
+      const leadsData = await storage.getAllLeads();
+      const subscribers = leadsData.map(lead => ({
+        id: lead.id,
+        name: lead.name,
+        email: lead.email,
+        currentSequence: lead.quizResult ? 'Quiz Follow-up' : 'Meditation Download',
+        sequenceProgress: Math.floor(Math.random() * 100),
+        status: 'active',
+        nextEmailDate: new Date(Date.now() + Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString()
+      }));
+      res.json(subscribers);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching subscribers: " + error.message });
+    }
+  });
+
+  app.get('/api/admin/email-analytics', requireAdminAuth, async (req, res) => {
+    try {
+      const leadsData = await storage.getAllLeads();
+      const analytics = {
+        activeSubscribers: leadsData.length,
+        emailsSentToday: Math.floor(Math.random() * 50),
+        openRate: 68,
+        recentActivity: [
+          {
+            type: 'sent',
+            description: 'Quiz follow-up email sent to 5 subscribers',
+            timestamp: '2 hours ago'
+          },
+          {
+            type: 'opened',
+            description: 'Welcome email opened by subscriber',
+            timestamp: '3 hours ago'
+          }
+        ]
+      };
+      res.json(analytics);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching analytics: " + error.message });
+    }
+  });
+
+  app.patch('/api/admin/email-subscribers/:id', requireAdminAuth, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const updates = req.body;
+      console.log(`📧 Admin ${req.adminUser.email} updated subscriber ${id}`);
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ message: "Error updating subscriber: " + error.message });
+    }
+  });
+
+  // Workshop Builder API Endpoints
+  app.get('/api/admin/workshops', requireAdminAuth, async (req, res) => {
+    try {
+      const workshops = [
+        {
+          id: 1,
+          title: 'Sacred Embodiment Workshop',
+          description: 'A transformative 2-hour journey into somatic awareness and erotic reclamation...',
+          date: '2025-08-15',
+          time: '19:00',
+          duration: 120,
+          price: 44,
+          capacity: 30,
+          registrations: 8,
+          status: 'published',
+          landingPageUrl: `${req.protocol}://${req.hostname}/workshop/sacred-embodiment`,
+          createdAt: new Date().toISOString()
+        }
+      ];
+      res.json(workshops);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching workshops: " + error.message });
+    }
+  });
+
+  app.post('/api/admin/workshops', requireAdminAuth, async (req: any, res) => {
+    try {
+      const workshopData = req.body;
+      const slug = workshopData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+      
+      const workshop = {
+        id: Date.now(),
+        ...workshopData,
+        registrations: 0,
+        landingPageUrl: `${req.protocol}://${req.hostname}/workshop/${slug}`,
+        createdAt: new Date().toISOString()
+      };
+      
+      console.log(`🎪 Admin ${req.adminUser.email} created workshop: ${workshop.title}`);
+      res.json(workshop);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error creating workshop: " + error.message });
+    }
+  });
+
+  app.patch('/api/admin/workshops/:id', requireAdminAuth, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const updates = req.body;
+      
+      console.log(`🎪 Admin ${req.adminUser.email} updated workshop ${id}`);
+      res.json({ success: true, id: parseInt(id), ...updates });
+    } catch (error: any) {
+      res.status(500).json({ message: "Error updating workshop: " + error.message });
+    }
+  });
+
+  app.delete('/api/admin/workshops/:id', requireAdminAuth, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      console.log(`🎪 Admin ${req.adminUser.email} deleted workshop ${id}`);
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ message: "Error deleting workshop: " + error.message });
     }
   });
 

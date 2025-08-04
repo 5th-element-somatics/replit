@@ -266,6 +266,24 @@ export default function AdminUnified() {
                 <Button 
                   variant="outline" 
                   size="sm" 
+                  className="border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-white"
+                  onClick={() => window.location.href = '/admin/email-dashboard'}
+                >
+                  <Mail className="w-4 h-4 mr-2" />
+                  Email Dashboard
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-pink-400 text-pink-400 hover:bg-pink-400 hover:text-white"
+                  onClick={() => window.location.href = '/admin/workshop-builder'}
+                >
+                  <Calendar className="w-4 h-4 mr-2" />
+                  Workshops
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
                   className="border-green-400 text-green-400 hover:bg-green-400 hover:text-white"
                   onClick={() => window.location.href = '/smart-admin'}
                 >
