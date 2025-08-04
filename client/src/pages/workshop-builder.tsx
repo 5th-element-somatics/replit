@@ -319,7 +319,7 @@ export default function WorkshopBuilder() {
 
       {/* Workshop Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {workshops.map((workshop: Workshop) => (
+        {(workshops as Workshop[]).map((workshop: Workshop) => (
           <Card key={workshop.id} className="relative">
             <CardHeader>
               <div className="flex items-start justify-between">
@@ -422,7 +422,7 @@ export default function WorkshopBuilder() {
         ))}
       </div>
 
-      {workshops.length === 0 && (
+      {(workshops as Workshop[]).length === 0 && (
         <Card className="text-center py-12">
           <CardContent>
             <h3 className="text-lg font-semibold mb-2">No workshops yet</h3>

@@ -27,12 +27,12 @@ export default function EmailDashboard() {
     queryKey: ['/api/admin/email-subscribers'],
   });
 
-  const { data: analytics } = useQuery({
+  const { data: analytics = {} } = useQuery({
     queryKey: ['/api/admin/email-analytics'],
   });
 
   // Filter subscribers based on search and filters
-  const filteredSubscribers = subscribers.filter((subscriber: any) => {
+  const filteredSubscribers = (subscribers as any[]).filter((subscriber: any) => {
     const matchesSearch = subscriber.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          subscriber.name?.toLowerCase().includes(searchTerm.toLowerCase() || "");
     const matchesStatus = statusFilter === "all" || subscriber.status === statusFilter;
@@ -99,7 +99,7 @@ export default function EmailDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Active Subscribers</p>
-                <p className="text-2xl font-bold">{analytics?.activeSubscribers || 0}</p>
+                <p className="text-2xl font-bold">{(analytics as any)?.activeSubscribers || 0}</p>
               </div>
               <Users className="h-8 w-8 text-primary" />
             </div>
@@ -111,7 +111,7 @@ export default function EmailDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Active Sequences</p>
-                <p className="text-2xl font-bold">{sequences.filter((s: any) => s.status === 'active').length}</p>
+                <p className="text-2xl font-bold">{(sequences as any[]).filter((s: any) => s.status === 'active').length}</p>
               </div>
               <Mail className="h-8 w-8 text-primary" />
             </div>
@@ -123,7 +123,7 @@ export default function EmailDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Emails Sent Today</p>
-                <p className="text-2xl font-bold">{analytics?.emailsSentToday || 0}</p>
+                <p className="text-2xl font-bold">{(analytics as any)?.emailsSentToday || 0}</p>
               </div>
               <Clock className="h-8 w-8 text-primary" />
             </div>
@@ -135,7 +135,7 @@ export default function EmailDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Open Rate</p>
-                <p className="text-2xl font-bold">{analytics?.openRate || '0'}%</p>
+                <p className="text-2xl font-bold">{(analytics as any)?.openRate || '0'}%</p>
               </div>
               <Eye className="h-8 w-8 text-primary" />
             </div>
@@ -184,7 +184,7 @@ export default function EmailDashboard() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Sequences</SelectItem>
-                    {sequences.map((seq: any) => (
+                    {(sequences as any[]).map((seq: any) => (
                       <SelectItem key={seq.id} value={seq.name}>
                         {seq.name}
                       </SelectItem>
@@ -293,7 +293,7 @@ export default function EmailDashboard() {
             </CardHeader>
             <CardContent>
               <div className="grid gap-4">
-                {sequences.map((sequence: any) => (
+                {(sequences as any[]).map((sequence: any) => (
                   <Card key={sequence.id}>
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between">
@@ -342,7 +342,7 @@ export default function EmailDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {sequences.map((sequence: any) => (
+                  {(sequences as any[]).map((sequence: any) => (
                     <div key={sequence.id} className="flex items-center justify-between p-3 border rounded">
                       <div>
                         <div className="font-medium">{sequence.name}</div>
@@ -366,7 +366,7 @@ export default function EmailDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {analytics?.recentActivity?.map((activity: any, index: number) => (
+                  {((analytics as any)?.recentActivity || []).map((activity: any, index: number) => (
                     <div key={index} className="flex items-center gap-3 p-2">
                       <div className={`w-2 h-2 rounded-full ${
                         activity.type === 'sent' ? 'bg-green-500' :
