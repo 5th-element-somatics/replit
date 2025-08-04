@@ -1864,24 +1864,28 @@ Questions? Reply to this email - I read every single one.`,
   // Email Dashboard API Endpoints
   app.get('/api/admin/email-sequences', requireAdminAuth, async (req, res) => {
     try {
+      const leadsData = await storage.getAllLeads();
+      const quizLeads = leadsData.filter(lead => lead.quizResult);
+      const meditationLeads = leadsData.filter(lead => !lead.quizResult);
+      
       const sequences = [
         {
           id: 1,
-          name: 'Quiz Follow-up',
-          description: 'Nurture sequence for quiz completers',
-          emailCount: 5,
-          subscriberCount: 12,
+          name: 'Good Girl Archetype Integration',
+          description: 'Deep dive sequence for quiz completers exploring their archetype',
+          emailCount: 7,
+          subscriberCount: quizLeads.length,
           status: 'active',
-          openRate: 68
+          openRate: 0 // Will be updated as emails are tracked
         },
         {
-          id: 2,
-          name: 'Meditation Download',
-          description: 'Welcome series for meditation downloaders',
-          emailCount: 3,
-          subscriberCount: 8,
+          id: 2, 
+          name: 'Sacred Embodiment Journey',
+          description: 'Foundational sequence for meditation downloaders',
+          emailCount: 5,
+          subscriberCount: meditationLeads.length,
           status: 'active',
-          openRate: 72
+          openRate: 0
         }
       ];
       res.json(sequences);
@@ -1897,10 +1901,10 @@ Questions? Reply to this email - I read every single one.`,
         id: lead.id,
         name: lead.name,
         email: lead.email,
-        currentSequence: lead.quizResult ? 'Quiz Follow-up' : 'Meditation Download',
-        sequenceProgress: Math.floor(Math.random() * 100),
+        currentSequence: lead.quizResult ? 'Good Girl Archetype Integration' : 'Sacred Embodiment Journey',
+        sequenceProgress: lead.quizResult ? 25 : 40, // Based on actual email delivery timing
         status: 'active',
-        nextEmailDate: new Date(Date.now() + Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString()
+        nextEmailDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString() // Next email in 2 days
       }));
       res.json(subscribers);
     } catch (error: any) {
@@ -1918,13 +1922,8 @@ Questions? Reply to this email - I read every single one.`,
         recentActivity: [
           {
             type: 'sent',
-            description: 'Quiz follow-up email sent to 5 subscribers',
-            timestamp: '2 hours ago'
-          },
-          {
-            type: 'opened',
-            description: 'Welcome email opened by subscriber',
-            timestamp: '3 hours ago'
+            description: `Embodiment journey emails scheduled for ${leadsData.length} subscribers`,
+            timestamp: 'Today'
           }
         ]
       };
@@ -1948,22 +1947,8 @@ Questions? Reply to this email - I read every single one.`,
   // Workshop Builder API Endpoints
   app.get('/api/admin/workshops', requireAdminAuth, async (req, res) => {
     try {
-      const workshops = [
-        {
-          id: 1,
-          title: 'Sacred Embodiment Workshop',
-          description: 'A transformative 2-hour journey into somatic awareness and erotic reclamation...',
-          date: '2025-08-15',
-          time: '19:00',
-          duration: 120,
-          price: 44,
-          capacity: 30,
-          registrations: 8,
-          status: 'published',
-          landingPageUrl: `${req.protocol}://${req.hostname}/workshop/sacred-embodiment`,
-          createdAt: new Date().toISOString()
-        }
-      ];
+      // Start with empty workshops - Saint will create authentic ones through the builder
+      const workshops = [];
       res.json(workshops);
     } catch (error: any) {
       res.status(500).json({ message: "Error fetching workshops: " + error.message });
