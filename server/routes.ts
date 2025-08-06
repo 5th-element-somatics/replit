@@ -19,7 +19,9 @@ import {
   applications,
   purchases,
   adminSessions,
-  magicLinks
+  magicLinks,
+  workshopRegistrations,
+  insertWorkshopRegistrationSchema
 } from "@shared/schema";
 import { sql, count, sum, eq, desc, and, gte, lt } from 'drizzle-orm';
 import { db } from "./db";
@@ -1941,6 +1943,55 @@ Questions? Reply to this email - I read every single one.`,
       res.json({ success: true });
     } catch (error: any) {
       res.status(500).json({ message: "Error updating subscriber: " + error.message });
+    }
+  });
+
+  // Workshop Registration API
+  app.post('/api/workshop/holy-mess/register', async (req, res) => {
+    try {
+      const { name, email, workshopTitle, price } = req.body;
+      
+      if (!name || !email) {
+        return res.status(400).json({ message: "Name and email are required" });
+      }
+
+      // Create Stripe checkout session
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price_data: {
+              currency: 'usd',
+              product_data: {
+                name: workshopTitle,
+                description: 'Holy Mess Workshop - Sunday, August 17, 2025 at 2:30-4:30 PM',
+              },
+              unit_amount: price * 100, // $45 in cents
+            },
+            quantity: 1,
+          },
+        ],
+        mode: 'payment',
+        success_url: `${req.protocol}://${req.hostname}/workshop/holy-mess?success=true`,
+        cancel_url: `${req.protocol}://${req.hostname}/workshop/holy-mess`,
+        customer_email: email,
+        metadata: {
+          workshopTitle,
+          participantName: name,
+          participantEmail: email,
+        },
+      });
+
+      console.log(`🎪 Workshop registration initiated for ${name} (${email}) - ${workshopTitle}`);
+
+      res.json({
+        sessionId: session.id,
+        url: session.url
+      });
+
+    } catch (error: any) {
+      console.error('Workshop registration error:', error);
+      res.status(500).json({ message: "Error processing registration: " + error.message });
     }
   });
 

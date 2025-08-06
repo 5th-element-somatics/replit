@@ -22,6 +22,7 @@ import SmartAdmin from "@/pages/smart-admin";
 import EmailHeaderTest from "@/pages/email-header-test";
 import EmailDashboard from "@/pages/email-dashboard";
 import WorkshopBuilder from "@/pages/workshop-builder";
+import HolyMessWorkshop from "@/pages/workshop-holy-mess";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -45,6 +46,7 @@ function Router() {
       <Route path="/free-meditation" component={FreeMeditation} />
       <Route path="/waitlist" component={Waitlist} />
       <Route path="/quiz" component={Quiz} />
+      <Route path="/workshop/holy-mess" component={HolyMessWorkshop} />
       <Route path="/email-header-test" component={EmailHeaderTest} />
       <Route component={NotFound} />
     </Switch>

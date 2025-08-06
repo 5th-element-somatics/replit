@@ -402,3 +402,29 @@ export type ContactMessage = typeof contactMessages.$inferSelect;
 export type InsertContactMessage = z.infer<typeof insertContactMessageSchema>;
 export type WaitlistEntry = typeof waitlistEntries.$inferSelect;
 export type InsertWaitlistEntry = z.infer<typeof insertWaitlistEntrySchema>;
+
+// Workshop registrations table
+export const workshopRegistrations = pgTable("workshop_registrations", {
+  id: serial("id").primaryKey(),
+  workshopTitle: varchar("workshop_title").notNull(),
+  participantName: varchar("participant_name").notNull(),
+  participantEmail: varchar("participant_email").notNull(),
+  stripeSessionId: varchar("stripe_session_id"),
+  paymentStatus: varchar("payment_status").default('pending'),
+  amountPaid: decimal("amount_paid", { precision: 10, scale: 2 }),
+  registrationDate: timestamp("registration_date").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertWorkshopRegistrationSchema = createInsertSchema(workshopRegistrations).pick({
+  workshopTitle: true,
+  participantName: true,
+  participantEmail: true,
+  stripeSessionId: true,
+  paymentStatus: true,
+  amountPaid: true,
+});
+
+export type WorkshopRegistration = typeof workshopRegistrations.$inferSelect;
+export type InsertWorkshopRegistration = z.infer<typeof insertWorkshopRegistrationSchema>;
