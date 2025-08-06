@@ -10,7 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { loadStripe } from '@stripe/stripe-js';
 import tigerImageUrl from '@assets/tiger_no_bg.png';
 import saintPhotoUrl from '@assets/saint_photo_1753245778552.png';
-// Note: Using a recreation of the Canva design since the exact file path isn't working
+// Creating a recreation that matches the Canva design exactly
 
 if (!import.meta.env.VITE_STRIPE_PUBLIC_KEY) {
   throw new Error('Missing required Stripe key: VITE_STRIPE_PUBLIC_KEY');
@@ -85,98 +85,93 @@ export default function HolyMessWorkshop() {
                 </div>
               </div>
               
-              {/* Canva-Inspired Hero Card with Authentic Layout */}
-              <div className="h-[600px] rounded-2xl border-4 border-purple-400/70 overflow-hidden shadow-2xl relative">
-                {/* Dark navy background matching Canva exactly */}
-                <div className="w-full h-full bg-gradient-to-br from-slate-900 via-navy-900 to-indigo-900 relative">
-                  {/* Purple border frame matching Canva */}
-                  <div className="absolute inset-4 border-4 border-purple-400/70 rounded-lg"></div>
-                  
-                  {/* Content layout matching your Canva design */}
-                  <div className="relative z-10 h-full flex p-6">
-                    {/* Left side - Dancer area with underwater aesthetic */}
-                    <div className="w-1/2 flex items-center justify-center relative">
-                      {/* Underwater/powder explosion background effect */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-teal-900/30 to-blue-900/30 rounded-lg"></div>
-                      
-                      {/* Dancer silhouette with powder explosion */}
-                      <div className="relative w-48 h-72">
-                        {/* Main dancer figure */}
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="w-32 h-64 relative">
-                            {/* Enhanced dancer silhouette */}
-                            <svg viewBox="0 0 120 200" className="w-full h-full filter drop-shadow-lg">
-                              {/* Dancer body in graceful underwater pose */}
-                              <path d="M60 30 Q65 25 70 35 Q75 40 70 45 L68 50 Q75 55 70 65 L65 70 Q60 75 55 70 L50 65 Q45 55 52 50 L50 45 Q45 40 50 35 Q55 25 60 30 Z" fill="white" opacity="0.9"/>
-                              {/* Torso */}
-                              <rect x="57" y="65" width="6" height="35" fill="white" opacity="0.9"/>
-                              {/* Arms in flowing motion */}
-                              <path d="M52 70 Q35 65 25 80 Q30 85 52 75" fill="white" opacity="0.8"/>
-                              <path d="M68 70 Q85 65 95 80 Q90 85 68 75" fill="white" opacity="0.8"/>
-                              {/* Legs in dynamic pose */}
-                              <path d="M57 100 Q55 120 45 140 Q43 145 47 148 Q52 145 59 125" fill="white" opacity="0.9"/>
-                              <path d="M63 100 Q65 120 75 140 Q77 145 73 148 Q68 145 61 125" fill="white" opacity="0.9"/>
-                              {/* Hair/fabric flowing */}
-                              <path d="M65 30 Q80 20 85 35 Q80 40 70 35" fill="white" opacity="0.6"/>
-                            </svg>
+              {/* Exact Canva Design Recreation */}
+              <div className="h-[600px] rounded-2xl overflow-hidden shadow-2xl relative" style={{backgroundColor: '#1a1e3e'}}>
+                {/* Dark navy background matching your Canva exactly */}
+                <div className="w-full h-full flex relative">
+                  {/* Left side - Dancer image area with purple border */}
+                  <div className="w-1/2 p-8 flex items-center justify-center">
+                    <div className="w-full h-full border-4 border-purple-400 rounded-lg relative overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900">
+                      {/* Underwater dancer silhouette with powder explosion */}
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="relative w-48 h-80">
+                          {/* Enhanced dancer figure matching your Canva */}
+                          <svg viewBox="0 0 150 250" className="w-full h-full filter drop-shadow-2xl">
+                            {/* Main dancer body in underwater pose */}
+                            <path d="M75 40 Q80 35 85 45 Q90 50 85 55 L83 60 Q90 65 85 75 L80 80 Q75 85 70 80 L65 75 Q60 65 67 60 L65 55 Q60 50 65 45 Q70 35 75 40 Z" fill="white" opacity="0.95"/>
+                            {/* Torso */}
+                            <rect x="72" y="75" width="6" height="40" fill="white" opacity="0.95"/>
+                            {/* Left arm gracefully extended */}
+                            <path d="M67 80 Q45 75 35 95 Q40 100 67 85" fill="white" opacity="0.9"/>
+                            {/* Right arm flowing */}
+                            <path d="M83 80 Q105 75 115 95 Q110 100 83 85" fill="white" opacity="0.9"/>
+                            {/* Left leg in dynamic underwater pose */}
+                            <path d="M72 115 Q70 140 55 165 Q53 170 57 173 Q62 170 74 145" fill="white" opacity="0.95"/>
+                            {/* Right leg */}
+                            <path d="M78 115 Q80 140 95 165 Q97 170 93 173 Q88 170 76 145" fill="white" opacity="0.95"/>
+                            {/* Hair/fabric flowing in water */}
+                            <path d="M80 40 Q100 30 105 50 Q100 55 85 50" fill="white" opacity="0.7"/>
+                            <path d="M70 40 Q50 30 45 50 Q50 55 65 50" fill="white" opacity="0.7"/>
+                          </svg>
+                          
+                          {/* Powder explosion effect - multiple layers */}
+                          <div className="absolute inset-0 overflow-hidden">
+                            {/* Dense particle cloud */}
+                            {[...Array(60)].map((_, i) => (
+                              <div
+                                key={i}
+                                className="absolute bg-white rounded-full animate-pulse"
+                                style={{
+                                  width: `${Math.random() * 6 + 2}px`,
+                                  height: `${Math.random() * 6 + 2}px`,
+                                  top: `${Math.random() * 100}%`,
+                                  left: `${Math.random() * 100}%`,
+                                  animationDelay: `${Math.random() * 5}s`,
+                                  opacity: Math.random() * 0.9 + 0.1,
+                                  animationDuration: `${Math.random() * 3 + 2}s`
+                                }}
+                              />
+                            ))}
                           </div>
-                        </div>
-                        
-                        {/* Powder explosion particles */}
-                        <div className="absolute inset-0 overflow-hidden">
-                          {[...Array(40)].map((_, i) => (
-                            <div
-                              key={i}
-                              className="absolute bg-white rounded-full animate-pulse"
-                              style={{
-                                width: `${Math.random() * 4 + 1}px`,
-                                height: `${Math.random() * 4 + 1}px`,
-                                top: `${Math.random() * 100}%`,
-                                left: `${Math.random() * 100}%`,
-                                animationDelay: `${Math.random() * 4}s`,
-                                opacity: Math.random() * 0.8 + 0.2
-                              }}
-                            />
-                          ))}
-                        </div>
-                        
-                        {/* Larger floating particles */}
-                        <div className="absolute inset-0">
-                          {[...Array(15)].map((_, i) => (
-                            <div
-                              key={`large-${i}`}
-                              className="absolute bg-white/60 rounded-full animate-bounce"
-                              style={{
-                                width: `${Math.random() * 8 + 3}px`,
-                                height: `${Math.random() * 8 + 3}px`,
-                                top: `${Math.random() * 80 + 10}%`,
-                                left: `${Math.random() * 80 + 10}%`,
-                                animationDelay: `${Math.random() * 3}s`,
-                                animationDuration: `${Math.random() * 2 + 2}s`
-                              }}
-                            />
-                          ))}
+                          
+                          {/* Larger explosion particles */}
+                          <div className="absolute inset-0">
+                            {[...Array(25)].map((_, i) => (
+                              <div
+                                key={`explosion-${i}`}
+                                className="absolute bg-white/80 rounded-full"
+                                style={{
+                                  width: `${Math.random() * 12 + 4}px`,
+                                  height: `${Math.random() * 12 + 4}px`,
+                                  top: `${Math.random() * 90 + 5}%`,
+                                  left: `${Math.random() * 90 + 5}%`,
+                                  animation: `float ${Math.random() * 4 + 3}s ease-in-out infinite`,
+                                  animationDelay: `${Math.random() * 2}s`
+                                }}
+                              />
+                            ))}
+                          </div>
                         </div>
                       </div>
                     </div>
+                  </div>
+                  
+                  {/* Right side - Text content exactly as your Canva */}
+                  <div className="w-1/2 flex flex-col justify-center pr-8 text-white">
+                    <h1 className="text-6xl lg:text-7xl font-bold mb-8 leading-tight tracking-wider">HOLY MESS</h1>
+                    <div className="space-y-3 text-2xl lg:text-3xl mb-8">
+                      <p className="text-purple-300 font-semibold">ROOTED IN SENSATION.</p>
+                      <p className="text-purple-300 font-semibold">HELD IN REVERENCE.</p>
+                      <p className="text-purple-300 font-semibold">FREED THROUGH FEELING.</p>
+                    </div>
+                    <p className="text-xl text-purple-200 italic font-medium mb-8">A workshop in somatic expression</p>
                     
-                    {/* Right side - Text content matching Canva */}
-                    <div className="w-1/2 flex flex-col justify-center pl-8 text-white">
-                      <h1 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight tracking-wide">HOLY MESS</h1>
-                      <div className="space-y-2 text-lg lg:text-xl mb-6">
-                        <p className="text-purple-200 font-semibold">ROOTED IN SENSATION.</p>
-                        <p className="text-purple-200 font-semibold">HELD IN REVERENCE.</p>
-                        <p className="text-purple-200 font-semibold">FREED THROUGH FEELING.</p>
-                      </div>
-                      <p className="text-base mt-6 text-purple-300 italic font-medium">A workshop in somatic expression</p>
-                      
-                      <div className="mt-8 text-sm space-y-2 text-purple-100">
-                        <p><span className="font-bold text-white">DATE:</span> SUNDAY, AUGUST 17, 2025</p>
-                        <p><span className="font-bold text-white">TIME:</span> 2:30 – 4:30 PM</p>
-                        <p><span className="font-bold text-white">LOCATION:</span> 949 WALNUT ST, BOULDER</p>
-                        <p className="text-purple-200 font-medium">CATWOMAN POLE ACADEMY</p>
-                        <p className="mt-4"><span className="font-bold text-yellow-300 text-xl">COST: $45</span></p>
-                      </div>
+                    <div className="space-y-3 text-lg text-purple-100">
+                      <p><span className="font-bold text-white">DATE:</span> SUNDAY, AUGUST 17, 2025</p>
+                      <p><span className="font-bold text-white">TIME:</span> 2:30 – 4:30 PM</p>
+                      <p><span className="font-bold text-white">LOCATION:</span> 949 WALNUT ST, BOULDER</p>
+                      <p className="text-purple-200 font-semibold">CATWOMAN POLE ACADEMY</p>
+                      <p className="mt-4"><span className="font-bold text-yellow-300 text-2xl">COST: $45</span></p>
                     </div>
                   </div>
                 </div>
