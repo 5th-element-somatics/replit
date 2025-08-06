@@ -10,7 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { loadStripe } from '@stripe/stripe-js';
 import tigerImageUrl from '@assets/tiger_no_bg.png';
 import saintPhotoUrl from '@assets/saint_photo_1753245778552.png';
-// Creating a recreation that matches the Canva design exactly
+// Note: Will add underwater dancer image once file path issue is resolved
 
 if (!import.meta.env.VITE_STRIPE_PUBLIC_KEY) {
   throw new Error('Missing required Stripe key: VITE_STRIPE_PUBLIC_KEY');
@@ -85,28 +85,29 @@ export default function HolyMessWorkshop() {
                 </div>
               </div>
               
-              {/* Clean Hero Card */}
+              {/* Authentic Underwater Dancer Hero */}
               <div className="relative">
                 <img 
                   src={tigerImageUrl} 
-                  alt="Fifth Element Somatics - Holy Mess Workshop" 
-                  className="w-full h-[500px] object-cover rounded-2xl shadow-2xl"
+                  alt="Holy Mess Workshop - Underwater Dancer with Powder Explosion" 
+                  className="w-full h-[600px] object-cover rounded-2xl shadow-2xl"
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-900/80 to-indigo-900/80 rounded-2xl"></div>
-                <div className="absolute inset-0 flex items-center justify-center text-center text-white p-8">
-                  <div>
-                    <h1 className="text-5xl lg:text-6xl font-bold mb-4">HOLY MESS</h1>
-                    <div className="space-y-2 text-xl lg:text-2xl mb-6">
-                      <p className="text-purple-200">ROOTED IN SENSATION.</p>
-                      <p className="text-purple-200">HELD IN REVERENCE.</p>
-                      <p className="text-purple-200">FREED THROUGH FEELING.</p>
+                <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-purple-900/40 rounded-2xl"></div>
+                <div className="absolute inset-0 flex items-center justify-end text-white p-12">
+                  <div className="text-right max-w-lg">
+                    <h1 className="text-6xl lg:text-7xl font-bold mb-6 tracking-wide">HOLY MESS</h1>
+                    <div className="space-y-3 text-2xl lg:text-3xl mb-8">
+                      <p className="text-purple-200 font-semibold">ROOTED IN SENSATION.</p>
+                      <p className="text-purple-200 font-semibold">HELD IN REVERENCE.</p>
+                      <p className="text-purple-200 font-semibold">FREED THROUGH FEELING.</p>
                     </div>
-                    <p className="text-lg text-purple-300 mb-6 italic">A workshop in somatic expression</p>
-                    <div className="text-lg space-y-1">
-                      <p><strong>SUNDAY, AUGUST 17, 2025</strong></p>
-                      <p>2:30 – 4:30 PM</p>
-                      <p>CATWOMAN POLE ACADEMY, BOULDER</p>
-                      <p className="text-2xl font-bold text-yellow-300 mt-4">$45</p>
+                    <p className="text-xl text-purple-300 mb-8 italic">A workshop in somatic expression</p>
+                    <div className="text-lg space-y-2 text-purple-100">
+                      <p><span className="font-bold text-white">DATE:</span> SUNDAY, AUGUST 17, 2025</p>
+                      <p><span className="font-bold text-white">TIME:</span> 2:30 – 4:30 PM</p>
+                      <p><span className="font-bold text-white">LOCATION:</span> 949 WALNUT ST, BOULDER</p>
+                      <p className="text-purple-200 font-semibold">CATWOMAN POLE ACADEMY</p>
+                      <p className="text-3xl font-bold text-yellow-300 mt-4">COST: $45</p>
                     </div>
                   </div>
                 </div>
