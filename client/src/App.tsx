@@ -23,6 +23,7 @@ import EmailHeaderTest from "@/pages/email-header-test";
 import EmailDashboard from "@/pages/email-dashboard";
 import WorkshopBuilder from "@/pages/workshop-builder";
 import HolyMessWorkshop from "@/pages/workshop-holy-mess";
+import HolyMessWorkshopVarB from "@/pages/workshop-holy-mess-var-b";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -47,6 +48,7 @@ function Router() {
       <Route path="/waitlist" component={Waitlist} />
       <Route path="/quiz" component={Quiz} />
       <Route path="/workshop/holy-mess" component={HolyMessWorkshop} />
+      <Route path="/holy-mess-var-b" component={HolyMessWorkshopVarB} />
       <Route path="/email-header-test" component={EmailHeaderTest} />
       <Route component={NotFound} />
     </Switch>
