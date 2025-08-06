@@ -83,31 +83,77 @@ export default function HolyMessWorkshop() {
                 </div>
               </div>
               
-              <div className="aspect-[3/4] bg-gradient-to-br from-purple-600/40 to-pink-600/40 rounded-2xl border-4 border-purple-300/50 p-8 flex flex-col items-center justify-center relative overflow-hidden">
-                {/* Tiger silhouette */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-10">
-                  <img 
-                    src={tigerImageUrl} 
-                    alt="Sacred Tiger Spirit" 
-                    className="w-full h-full object-contain filter grayscale"
-                  />
-                </div>
-                
-                {/* Main content */}
-                <div className="text-center text-white relative z-10">
-                  <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center shadow-2xl relative">
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 animate-pulse opacity-50"></div>
-                    <Star className="w-16 h-16 relative z-10 animate-pulse" />
-                  </div>
-                  <p className="text-xl font-bold opacity-90 mb-2">Sacred Movement</p>
-                  <p className="text-lg opacity-70 mb-4">Expression & Release</p>
-                  <div className="flex justify-center space-x-4 text-purple-200">
-                    <Heart className="w-6 h-6 animate-pulse" />
-                    <Sparkles className="w-6 h-6 animate-pulse delay-500" />
-                    <Heart className="w-6 h-6 animate-pulse delay-1000" />
+              {/* Hero Card inspired by Canva Design */}
+              <div className="aspect-[4/5] rounded-2xl border-4 border-purple-300/50 overflow-hidden shadow-2xl relative">
+                {/* Dark navy background like Canva */}
+                <div className="w-full h-full bg-gradient-to-br from-indigo-900 via-navy-900 to-purple-900 relative p-8">
+                  {/* Purple frame border like in Canva */}
+                  <div className="absolute inset-4 border-4 border-purple-400/70 rounded-lg"></div>
+                  
+                  {/* Left side - Dancer silhouette area */}
+                  <div className="relative z-10 h-full flex">
+                    <div className="w-1/2 flex items-center justify-center">
+                      {/* Underwater powder explosion dancer effect using CSS */}
+                      <div className="relative">
+                        {/* Base dancer silhouette */}
+                        <div className="w-32 h-48 relative">
+                          <svg viewBox="0 0 100 150" className="w-full h-full">
+                            {/* Dancer silhouette */}
+                            <path d="M50 20 Q55 15 60 25 Q65 30 60 35 L58 40 Q65 45 60 55 L55 60 Q50 65 45 60 L40 55 Q35 45 42 40 L40 35 Q35 30 40 25 Q45 15 50 20 Z" fill="white" opacity="0.7"/>
+                            {/* Body */}
+                            <rect x="47" y="55" width="6" height="25" fill="white" opacity="0.7"/>
+                            {/* Arms in graceful pose */}
+                            <path d="M42 60 Q30 55 25 65 Q30 70 42 65" fill="white" opacity="0.6"/>
+                            <path d="M58 60 Q70 55 75 65 Q70 70 58 65" fill="white" opacity="0.6"/>
+                            {/* Legs in dance position */}
+                            <path d="M47 80 Q45 95 40 110 Q38 115 42 118 Q47 115 49 100" fill="white" opacity="0.7"/>
+                            <path d="M53 80 Q55 95 60 110 Q62 115 58 118 Q53 115 51 100" fill="white" opacity="0.7"/>
+                          </svg>
+                          
+                          {/* Particle explosion effects */}
+                          <div className="absolute inset-0 overflow-hidden">
+                            {[...Array(20)].map((_, i) => (
+                              <div
+                                key={i}
+                                className="absolute w-1 h-1 bg-white rounded-full animate-pulse"
+                                style={{
+                                  top: `${Math.random() * 100}%`,
+                                  left: `${Math.random() * 100}%`,
+                                  animationDelay: `${Math.random() * 2}s`,
+                                  opacity: Math.random() * 0.8 + 0.2
+                                }}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Right side - Text content */}
+                    <div className="w-1/2 flex flex-col justify-center pl-4 text-white">
+                      <h1 className="text-2xl font-bold mb-2 leading-tight">HOLY MESS</h1>
+                      <div className="space-y-1 text-sm">
+                        <p className="text-purple-200">ROOTED IN SENSATION.</p>
+                        <p className="text-purple-200">HELD IN REVERENCE.</p>
+                        <p className="text-purple-200">FREED THROUGH FEELING.</p>
+                      </div>
+                      <p className="text-xs mt-4 text-purple-300">A workshop in somatic expression</p>
+                      
+                      <div className="mt-6 text-xs space-y-1 text-purple-100">
+                        <p><span className="font-bold">DATE:</span> SUNDAY, AUGUST 17, 2025</p>
+                        <p><span className="font-bold">TIME:</span> 2:30 – 4:30 PM</p>
+                        <p><span className="font-bold">LOCATION:</span> 949 WALNUT ST, BOULDER</p>
+                        <p className="text-purple-200">CATWOMAN POLE ACADEMY</p>
+                        <p><span className="font-bold text-yellow-300">COST: $45</span></p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
+              
+              {/* Floating elements around the main image */}
+              <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full animate-pulse opacity-70"></div>
+              <div className="absolute -bottom-6 -left-6 w-12 h-12 border-2 border-purple-300 rounded-full animate-pulse delay-1000 opacity-60"></div>
             </div>
 
             {/* Right Column - Content */}
@@ -172,282 +218,166 @@ export default function HolyMessWorkshop() {
         </div>
       </section>
 
-      {/* Problem/Solution Section */}
-      <section className="py-20 bg-gradient-to-r from-indigo-900 to-purple-900 relative overflow-hidden">
-        {/* Background decorative elements */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-1/4 w-32 h-32">
-            <img src={tigerImageUrl} alt="" className="w-full h-full object-contain filter grayscale rotate-12" />
-          </div>
-          <div className="absolute bottom-20 right-1/4 w-24 h-24">
-            <img src={tigerImageUrl} alt="" className="w-full h-full object-contain filter grayscale -rotate-12" />
-          </div>
-        </div>
+      {/* Problem/Solution Section - Matching Canva Page 2 */}
+      <section className="py-20 bg-gradient-to-r from-indigo-900 via-navy-900 to-purple-900 relative overflow-hidden">
+        {/* Dark navy background to match Canva exactly */}
+        <div className="absolute inset-0 bg-navy-900/80"></div>
         
         <div className="container mx-auto px-6 relative z-10">
-          <div className="max-w-4xl mx-auto">
-            <Card className="bg-black/50 border-purple-500/40 backdrop-blur-md shadow-2xl">
-              <CardHeader className="relative">
-                <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
-                  <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center shadow-lg">
-                    <Heart className="w-8 h-8 text-white" />
-                  </div>
-                </div>
-                <CardTitle className="text-3xl font-bold text-white text-center mb-8 pt-8">
-                  YOU'RE CRAVING A SPACE WHERE NOTHING ABOUT YOU IS TOO MUCH.
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6 text-white text-lg">
-                <ul className="space-y-6">
-                  <li className="flex items-start gap-4 p-4 rounded-lg bg-purple-900/30 border border-purple-400/20">
-                    <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <Star className="w-4 h-4 text-white" />
-                    </div>
-                    <span>YOU HOLD IT ALL TOGETHER BUT SECRETLY ACHE TO FALL APART</span>
-                  </li>
-                  <li className="flex items-start gap-4 p-4 rounded-lg bg-purple-900/30 border border-purple-400/20">
-                    <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <Heart className="w-4 h-4 text-white" />
-                    </div>
-                    <span>YOU CRAVE EMOTIONAL FREEDOM, NOT JUST NERVOUS SYSTEM REGULATION</span>
-                  </li>
-                  <li className="flex items-start gap-4 p-4 rounded-lg bg-purple-900/30 border border-purple-400/20">
-                    <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <Sparkles className="w-4 h-4 text-white" />
-                    </div>
-                    <span>YOU KNOW YOUR FEELINGS ARE SACRED, NOT SHAMEFUL</span>
-                  </li>
-                  <li className="flex items-start gap-4 p-4 rounded-lg bg-purple-900/30 border border-purple-400/20">
-                    <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <Star className="w-4 h-4 text-white" />
-                    </div>
-                    <span>YOU'RE READY TO LET YOUR BODY SPEAK ITS NATIVE TONGUE: SENSATION</span>
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* What to Expect Section */}
-      <section className="py-20 bg-gradient-to-r from-purple-900 to-pink-900 relative overflow-hidden">
-        {/* Floating sacred elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-1/4 left-10 w-3 h-3 bg-purple-400 rounded-full animate-pulse opacity-70"></div>
-          <div className="absolute top-1/2 right-16 w-2 h-2 bg-pink-400 rounded-full animate-pulse delay-1000 opacity-60"></div>
-          <div className="absolute bottom-1/3 left-1/4 w-4 h-4 border border-purple-300 rounded-full animate-pulse delay-500 opacity-50"></div>
-          <div className="absolute top-3/4 right-1/3 w-1 h-1 bg-white rounded-full animate-pulse delay-1500 opacity-80"></div>
-        </div>
-        
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="max-w-4xl mx-auto">
-            <Card className="bg-black/50 border-pink-500/40 backdrop-blur-md shadow-2xl">
-              <CardHeader className="relative">
-                <div className="absolute -top-12 left-1/2 transform -translate-x-1/2">
-                  <div className="w-24 h-24 relative">
-                    <img 
-                      src={tigerImageUrl} 
-                      alt="Sacred Tiger" 
-                      className="w-full h-full object-contain filter brightness-0 invert opacity-60"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-r from-pink-400/40 to-purple-400/40 rounded-full blur-xl"></div>
-                  </div>
-                </div>
-                <CardTitle className="text-3xl font-bold text-white text-center border-2 border-pink-400 inline-block px-8 py-4 mx-auto rounded-lg shadow-lg bg-gradient-to-r from-pink-900/50 to-purple-900/50 backdrop-blur-sm mt-12">
-                  WHAT TO EXPECT INSIDE RITUAL BODY:
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-8 text-white">
-                <div className="grid md:grid-cols-2 gap-8 text-lg">
-                  <div className="space-y-4">
-                    <div className="flex items-start gap-4 p-6 rounded-lg bg-gradient-to-br from-pink-900/40 to-purple-900/40 border border-pink-400/30 shadow-lg">
-                      <div className="w-12 h-12 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full flex items-center justify-center text-lg font-bold shadow-lg">
-                        1
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-pink-300 mb-3 text-xl">WE MOVE</h3>
-                        <p className="text-purple-100">GUIDED EMBODIMENT & CATHARTIC RELEASE</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <div className="flex items-start gap-4 p-6 rounded-lg bg-gradient-to-br from-purple-900/40 to-pink-900/40 border border-purple-400/30 shadow-lg">
-                      <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full flex items-center justify-center text-lg font-bold shadow-lg">
-                        2
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-purple-300 mb-3 text-xl">WE SOUND</h3>
-                        <p className="text-pink-100">ACTIVATING YOUR VOICE AS MEDICINE</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <div className="flex items-start gap-4 p-6 rounded-lg bg-gradient-to-br from-purple-900/40 to-pink-900/40 border border-purple-400/30 shadow-lg">
-                      <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full flex items-center justify-center text-lg font-bold shadow-lg">
-                        3
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-purple-300 mb-3 text-xl">WE EXPRESS</h3>
-                        <p className="text-pink-100">WELCOMING THE FULL RANGE OF EMOTIONS</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <div className="flex items-start gap-4 p-6 rounded-lg bg-gradient-to-br from-pink-900/40 to-purple-900/40 border border-pink-400/30 shadow-lg">
-                      <div className="w-12 h-12 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full flex items-center justify-center text-lg font-bold shadow-lg">
-                        4
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-pink-300 mb-3 text-xl">WE ALCHEMIZE</h3>
-                        <p className="text-purple-100">INTEGRATING WITH CLARITY AND SOFTNESS</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Registration Section */}
-      <section id="registration" className="py-20 bg-gradient-to-r from-pink-900 to-purple-900 relative overflow-hidden">
-        {/* Mystical background elements */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-1/4 left-1/3 w-40 h-40">
-            <img src={tigerImageUrl} alt="" className="w-full h-full object-contain filter grayscale animate-pulse" />
-          </div>
-          <div className="absolute bottom-1/4 right-1/3 w-32 h-32">
-            <img src={tigerImageUrl} alt="" className="w-full h-full object-contain filter grayscale animate-pulse delay-1000" />
-          </div>
-        </div>
-        
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="max-w-2xl mx-auto">
-            <Card className="bg-black/60 border-purple-500/50 backdrop-blur-lg shadow-2xl relative overflow-hidden">
-              {/* Glowing border effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-pink-500/20 to-purple-500/20 rounded-lg blur-xl"></div>
-              
-              <CardHeader className="text-center relative z-10">
-                <div className="absolute -top-16 left-1/2 transform -translate-x-1/2">
-                  <div className="w-32 h-32 relative">
-                    <div className="absolute inset-0 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full animate-pulse opacity-50"></div>
-                    <div className="absolute inset-2 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full flex items-center justify-center">
-                      <Star className="w-16 h-16 text-white animate-pulse" />
-                    </div>
-                  </div>
-                </div>
+          <div className="max-w-6xl mx-auto">
+            {/* Recreating the exact Canva layout */}
+            <div className="grid lg:grid-cols-3 gap-8 items-center">
+              {/* Left Column - Main Message */}
+              <div className="lg:col-span-2">
+                <Card className="bg-transparent border-2 border-white/30 backdrop-blur-sm p-8">
+                  <CardHeader>
+                    <CardTitle className="text-3xl lg:text-4xl font-bold text-white mb-8 leading-tight">
+                      YOU'RE CRAVING A SPACE WHERE NOTHING ABOUT YOU IS TOO MUCH.
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6 text-white text-lg">
+                    <ul className="space-y-4">
+                      <li className="flex items-start gap-3">
+                        <span className="text-purple-300 font-bold">•</span>
+                        <span className="font-semibold">YOU HOLD IT ALL TOGETHER BUT SECRETLY ACHE TO FALL APART</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-purple-300 font-bold">•</span>
+                        <span className="font-semibold">YOU CRAVE EMOTIONAL FREEDOM, NOT JUST NERVOUS SYSTEM REGULATION</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-purple-300 font-bold">•</span>
+                        <span className="font-semibold">YOU KNOW YOUR FEELINGS ARE SACRED, NOT SHAMEFUL</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-purple-300 font-bold">•</span>
+                        <span className="font-semibold">YOU'RE READY TO LET YOUR BODY SPEAK ITS NATIVE TONGUE: SENSATION</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
                 
-                <CardTitle className="text-4xl font-bold text-white mb-6 mt-16">
-                  HOLY MESS WORKSHOP
-                </CardTitle>
-                <div className="text-5xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent mb-8">$45</div>
-                <Button 
-                  size="lg" 
-                  className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white text-xl px-12 py-6 rounded-full mb-8 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
-                  onClick={() => document.getElementById('form')?.scrollIntoView({ behavior: 'smooth' })}
-                  data-testid="button-claim-spot"
-                >
-                  <Sparkles className="w-6 h-6 mr-2" />
-                  CLAIM YOUR SPOT
-                  <Sparkles className="w-6 h-6 ml-2" />
-                </Button>
-              </CardHeader>
-              <CardContent className="relative z-10">
-                <div className="text-white text-center space-y-8">
-                  <div className="p-6 rounded-lg bg-gradient-to-r from-purple-900/50 to-pink-900/50 border border-purple-400/30">
-                    <p className="text-xl leading-relaxed font-bold mb-4">
-                      THIS IS AN INTIMATE, IN-PERSON EXPERIENCE. SPACES ARE LIMITED.
-                    </p>
-                    <p className="text-lg leading-relaxed text-purple-100">
-                      WHEN YOU CLAIM YOUR SPOT, YOU SAY YES TO EMOTIONAL FREEDOM, SACRED EMBODIMENT, AND THE POWER OF YOUR HOLY MESS.
-                    </p>
-                  </div>
-                  
-                  {/* Registration Form */}
-                  <form id="form" onSubmit={handleRegister} className="space-y-6 mt-8">
+                {/* What to Expect Section */}
+                <Card className="bg-transparent border-2 border-white/30 backdrop-blur-sm p-8 mt-8">
+                  <CardHeader>
+                    <CardTitle className="text-2xl font-bold text-white text-center mb-8 border-2 border-white/50 inline-block px-6 py-3 mx-auto">
+                      WHAT TO EXPECT INSIDE RITUAL BODY:
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6 text-white text-lg">
                     <div className="space-y-4">
-                      <div className="relative">
-                        <Input
-                          type="text"
-                          placeholder="Your Name"
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
-                          className="bg-white/10 border-purple-300/50 text-white placeholder:text-purple-200 text-lg py-4 pl-6 pr-12 rounded-lg backdrop-blur-sm"
-                          data-testid="input-name"
-                        />
-                        <Heart className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-300" />
-                      </div>
-                      <div className="relative">
-                        <Input
-                          type="email"
-                          placeholder="Your Email"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className="bg-white/10 border-purple-300/50 text-white placeholder:text-purple-200 text-lg py-4 pl-6 pr-12 rounded-lg backdrop-blur-sm"
-                          data-testid="input-email"
-                        />
-                        <Sparkles className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-300" />
-                      </div>
+                      <p><span className="font-bold">WE MOVE</span> — GUIDED EMBODIMENT & CATHARTIC RELEASE</p>
+                      <p><span className="font-bold">WE SOUND</span> — ACTIVATING YOUR VOICE AS MEDICINE</p>
+                      <p><span className="font-bold">WE EXPRESS</span> — WELCOMING THE FULL RANGE OF EMOTIONS</p>
+                      <p><span className="font-bold">WE ALCHEMIZE</span> — INTEGRATING WITH CLARITY AND SOFTNESS</p>
                     </div>
-                    
-                    <Button 
-                      type="submit" 
-                      size="lg" 
-                      disabled={registerMutation.isPending || isProcessing}
-                      className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white text-xl py-6 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-                      data-testid="button-register-submit"
-                    >
-                      {registerMutation.isPending || isProcessing ? (
-                        <div className="flex items-center justify-center">
-                          <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mr-3"></div>
-                          Processing...
-                        </div>
-                      ) : (
-                        <div className="flex items-center justify-center">
-                          <Star className="w-6 h-6 mr-3" />
-                          SECURE YOUR SPOT - $45
-                          <Star className="w-6 h-6 ml-3" />
-                        </div>
-                      )}
-                    </Button>
-                  </form>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer Section */}
-      <section className="py-16 bg-gradient-to-r from-purple-800 to-indigo-800">
-        <div className="container mx-auto px-6 text-center">
-          <div className="max-w-2xl mx-auto space-y-8">
-            <div className="border border-purple-300/50 rounded-lg p-8 bg-black/20">
-              <h3 className="text-2xl font-bold text-white mb-4">My Website</h3>
-              <p className="text-xl text-purple-200 mb-6">FIFTHELEMENTSOMATICS.COM</p>
+                  </CardContent>
+                </Card>
+              </div>
               
-              <h3 className="text-2xl font-bold text-white mb-4">My Socials</h3>
-              <div className="flex justify-center space-x-6">
-                <a href="#" className="text-purple-200 hover:text-white transition-colors">
-                  <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center">
-                    <span className="text-xl font-bold">f</span>
-                  </div>
-                </a>
-                <a href="#" className="text-purple-200 hover:text-white transition-colors">
-                  <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full flex items-center justify-center">
-                    <span className="text-xl font-bold">@</span>
-                  </div>
-                </a>
+              {/* Right Column - CTA matching Canva */}
+              <div className="lg:col-span-1">
+                <Card className="bg-black/40 border border-purple-400/30 p-8 text-center">
+                  <CardContent className="space-y-6">
+                    <h3 className="text-2xl font-bold text-white">HOLY MESS</h3>
+                    <h4 className="text-xl text-white">WORKSHOP</h4>
+                    <div className="text-3xl font-bold text-white">$45</div>
+                    <Button 
+                      className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold px-8 py-4 rounded-full w-full text-lg"
+                      onClick={() => document.getElementById('registration')?.scrollIntoView({ behavior: 'smooth' })}
+                      data-testid="button-claim-spot-sidebar"
+                    >
+                      CLAIM YOUR SPOT
+                    </Button>
+                  </CardContent>
+                </Card>
               </div>
             </div>
           </div>
         </div>
       </section>
+
+
+
+      {/* Registration Section - Matching Canva Page 3 */}
+      <section id="registration" className="py-20 bg-gradient-to-br from-purple-400 via-blue-500 to-purple-600 relative overflow-hidden">
+        {/* Light purple gradient background to match Canva page 3 */}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-300/80 via-blue-400/80 to-purple-500/80"></div>
+        
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="max-w-6xl mx-auto">
+            {/* Recreating Canva Page 3 Layout */}
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Left Column - Main Message */}
+              <div>
+                <div className="text-navy-900 space-y-8">
+                  <h2 className="text-3xl lg:text-4xl font-bold leading-tight">
+                    THIS IS AN INTIMATE, IN-PERSON EXPERIENCE. SPACES ARE LIMITED.
+                  </h2>
+                  <p className="text-xl lg:text-2xl leading-relaxed">
+                    WHEN YOU CLAIM YOUR SPOT, YOU SAY YES TO EMOTIONAL FREEDOM, SACRED EMBODIMENT, AND THE POWER OF YOUR HOLY MESS.
+                  </p>
+                </div>
+              </div>
+              
+              {/* Right Column - Contact Card matching Canva */}
+              <div>
+                <Card className="bg-white/10 border-2 border-white/30 backdrop-blur-md p-8 text-center">
+                  <CardContent className="space-y-6">
+                    <h3 className="text-xl font-bold text-white">My Website</h3>
+                    <p className="text-2xl font-bold text-white">FIFTHELEMENTSOMATICS.COM</p>
+                    
+                    <h3 className="text-xl font-bold text-white mt-8">My Socials</h3>
+                    <div className="flex justify-center space-x-4">
+                      <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                        <span className="text-white font-bold">f</span>
+                      </div>
+                      <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                        <span className="text-white font-bold">@</span>
+                      </div>
+                    </div>
+                    
+                    {/* Registration Form */}
+                    <form id="form" onSubmit={handleRegister} className="space-y-6 mt-8 pt-8 border-t border-white/20">
+                      <h4 className="text-lg font-bold text-white">Register for Workshop</h4>
+                      <div className="space-y-4">
+                        <Input
+                          type="text"
+                          placeholder="Your Name"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          className="bg-white/20 border-white/30 text-white placeholder:text-white/70 text-lg py-3"
+                          data-testid="input-name"
+                        />
+                        <Input
+                          type="email"
+                          placeholder="Your Email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="bg-white/20 border-white/30 text-white placeholder:text-white/70 text-lg py-3"
+                          data-testid="input-email"
+                        />
+                      </div>
+                      
+                      <Button 
+                        type="submit" 
+                        size="lg" 
+                        disabled={registerMutation.isPending || isProcessing}
+                        className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white text-xl py-4 rounded-full font-bold"
+                        data-testid="button-register-submit"
+                      >
+                        {registerMutation.isPending || isProcessing ? 'Processing...' : 'SECURE YOUR SPOT - $45'}
+                      </Button>
+                    </form>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
     </div>
   );
 }
