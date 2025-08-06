@@ -67,10 +67,10 @@ export default function HolyMessWorkshop() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden min-h-screen">
         <div className="absolute inset-0 bg-black/20" />
-        <div className="relative container mx-auto px-6 py-20">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="relative container mx-auto px-6 py-32">
+          <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[80vh]">
             {/* Left Column - Hero Image */}
             <div className="relative">
               {/* Background sacred geometry */}
@@ -84,43 +84,43 @@ export default function HolyMessWorkshop() {
               </div>
               
               {/* Hero Card inspired by Canva Design */}
-              <div className="aspect-[4/5] rounded-2xl border-4 border-purple-300/50 overflow-hidden shadow-2xl relative">
+              <div className="h-[600px] rounded-2xl border-4 border-purple-300/50 overflow-hidden shadow-2xl relative">
                 {/* Dark navy background like Canva */}
-                <div className="w-full h-full bg-gradient-to-br from-indigo-900 via-navy-900 to-purple-900 relative p-8">
+                <div className="w-full h-full bg-gradient-to-br from-indigo-900 via-slate-900 to-purple-900 relative p-6">
                   {/* Purple frame border like in Canva */}
-                  <div className="absolute inset-4 border-4 border-purple-400/70 rounded-lg"></div>
+                  <div className="absolute inset-3 border-4 border-purple-400/70 rounded-lg"></div>
                   
-                  {/* Left side - Dancer silhouette area */}
-                  <div className="relative z-10 h-full flex">
+                  {/* Content with proper spacing */}
+                  <div className="relative z-10 h-full flex p-4">
                     <div className="w-1/2 flex items-center justify-center">
                       {/* Underwater powder explosion dancer effect using CSS */}
                       <div className="relative">
                         {/* Base dancer silhouette */}
-                        <div className="w-32 h-48 relative">
+                        <div className="w-40 h-60 relative">
                           <svg viewBox="0 0 100 150" className="w-full h-full">
                             {/* Dancer silhouette */}
-                            <path d="M50 20 Q55 15 60 25 Q65 30 60 35 L58 40 Q65 45 60 55 L55 60 Q50 65 45 60 L40 55 Q35 45 42 40 L40 35 Q35 30 40 25 Q45 15 50 20 Z" fill="white" opacity="0.7"/>
+                            <path d="M50 20 Q55 15 60 25 Q65 30 60 35 L58 40 Q65 45 60 55 L55 60 Q50 65 45 60 L40 55 Q35 45 42 40 L40 35 Q35 30 40 25 Q45 15 50 20 Z" fill="white" opacity="0.8"/>
                             {/* Body */}
-                            <rect x="47" y="55" width="6" height="25" fill="white" opacity="0.7"/>
+                            <rect x="47" y="55" width="6" height="25" fill="white" opacity="0.8"/>
                             {/* Arms in graceful pose */}
-                            <path d="M42 60 Q30 55 25 65 Q30 70 42 65" fill="white" opacity="0.6"/>
-                            <path d="M58 60 Q70 55 75 65 Q70 70 58 65" fill="white" opacity="0.6"/>
+                            <path d="M42 60 Q30 55 25 65 Q30 70 42 65" fill="white" opacity="0.7"/>
+                            <path d="M58 60 Q70 55 75 65 Q70 70 58 65" fill="white" opacity="0.7"/>
                             {/* Legs in dance position */}
-                            <path d="M47 80 Q45 95 40 110 Q38 115 42 118 Q47 115 49 100" fill="white" opacity="0.7"/>
-                            <path d="M53 80 Q55 95 60 110 Q62 115 58 118 Q53 115 51 100" fill="white" opacity="0.7"/>
+                            <path d="M47 80 Q45 95 40 110 Q38 115 42 118 Q47 115 49 100" fill="white" opacity="0.8"/>
+                            <path d="M53 80 Q55 95 60 110 Q62 115 58 118 Q53 115 51 100" fill="white" opacity="0.8"/>
                           </svg>
                           
                           {/* Particle explosion effects */}
                           <div className="absolute inset-0 overflow-hidden">
-                            {[...Array(20)].map((_, i) => (
+                            {[...Array(25)].map((_, i) => (
                               <div
                                 key={i}
                                 className="absolute w-1 h-1 bg-white rounded-full animate-pulse"
                                 style={{
                                   top: `${Math.random() * 100}%`,
                                   left: `${Math.random() * 100}%`,
-                                  animationDelay: `${Math.random() * 2}s`,
-                                  opacity: Math.random() * 0.8 + 0.2
+                                  animationDelay: `${Math.random() * 3}s`,
+                                  opacity: Math.random() * 0.9 + 0.1
                                 }}
                               />
                             ))}
@@ -130,21 +130,21 @@ export default function HolyMessWorkshop() {
                     </div>
                     
                     {/* Right side - Text content */}
-                    <div className="w-1/2 flex flex-col justify-center pl-4 text-white">
-                      <h1 className="text-2xl font-bold mb-2 leading-tight">HOLY MESS</h1>
-                      <div className="space-y-1 text-sm">
-                        <p className="text-purple-200">ROOTED IN SENSATION.</p>
-                        <p className="text-purple-200">HELD IN REVERENCE.</p>
-                        <p className="text-purple-200">FREED THROUGH FEELING.</p>
+                    <div className="w-1/2 flex flex-col justify-center pl-6 text-white">
+                      <h1 className="text-3xl lg:text-4xl font-bold mb-4 leading-tight">HOLY MESS</h1>
+                      <div className="space-y-2 text-base lg:text-lg">
+                        <p className="text-purple-200 font-medium">ROOTED IN SENSATION.</p>
+                        <p className="text-purple-200 font-medium">HELD IN REVERENCE.</p>
+                        <p className="text-purple-200 font-medium">FREED THROUGH FEELING.</p>
                       </div>
-                      <p className="text-xs mt-4 text-purple-300">A workshop in somatic expression</p>
+                      <p className="text-sm mt-6 text-purple-300 italic">A workshop in somatic expression</p>
                       
-                      <div className="mt-6 text-xs space-y-1 text-purple-100">
-                        <p><span className="font-bold">DATE:</span> SUNDAY, AUGUST 17, 2025</p>
-                        <p><span className="font-bold">TIME:</span> 2:30 – 4:30 PM</p>
-                        <p><span className="font-bold">LOCATION:</span> 949 WALNUT ST, BOULDER</p>
-                        <p className="text-purple-200">CATWOMAN POLE ACADEMY</p>
-                        <p><span className="font-bold text-yellow-300">COST: $45</span></p>
+                      <div className="mt-8 text-sm space-y-2 text-purple-100">
+                        <p><span className="font-bold text-white">DATE:</span> SUNDAY, AUGUST 17, 2025</p>
+                        <p><span className="font-bold text-white">TIME:</span> 2:30 – 4:30 PM</p>
+                        <p><span className="font-bold text-white">LOCATION:</span> 949 WALNUT ST, BOULDER</p>
+                        <p className="text-purple-200 font-medium">CATWOMAN POLE ACADEMY</p>
+                        <p className="mt-4"><span className="font-bold text-yellow-300 text-lg">COST: $45</span></p>
                       </div>
                     </div>
                   </div>
@@ -156,62 +156,46 @@ export default function HolyMessWorkshop() {
               <div className="absolute -bottom-6 -left-6 w-12 h-12 border-2 border-purple-300 rounded-full animate-pulse delay-1000 opacity-60"></div>
             </div>
 
-            {/* Right Column - Content */}
-            <div className="text-white space-y-8">
-              <div>
-                <h1 className="text-6xl font-bold mb-4 leading-tight">
-                  HOLY MESS
-                </h1>
-                <div className="text-2xl md:text-3xl space-y-2 text-purple-200">
-                  <p>ROOTED IN SENSATION.</p>
-                  <p>HELD IN REVERENCE.</p>
-                  <p>FREED THROUGH FEELING.</p>
+            {/* Right Column - Additional CTA */}
+            <div className="text-white space-y-8 flex flex-col justify-center">
+              <div className="text-center lg:text-left">
+                <div className="inline-block bg-gradient-to-r from-pink-500 to-purple-600 text-white px-8 py-4 rounded-full text-lg font-bold mb-8">
+                  SPACES LIMITED
                 </div>
-                <p className="text-xl mt-6 text-purple-100">
-                  A workshop in somatic expression
+                
+                <h2 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight">
+                  TRANSFORM YOUR<br />
+                  RELATIONSHIP<br />
+                  WITH FEELING
+                </h2>
+                
+                <p className="text-xl text-purple-200 mb-8 leading-relaxed">
+                  Join us for an intimate somatic journey where your emotions become medicine and your body becomes your guide.
                 </p>
-              </div>
-
-              {/* Workshop Details */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-lg">
-                <div className="flex items-center gap-3">
-                  <CalendarDays className="w-6 h-6 text-purple-300" />
-                  <div>
-                    <p className="font-semibold">SUNDAY, AUGUST 17, 2025</p>
-                  </div>
+                
+                <div className="flex flex-col gap-4">
+                  <Button 
+                    size="lg" 
+                    className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white text-xl px-12 py-8 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300"
+                    onClick={() => document.getElementById('registration')?.scrollIntoView({ behavior: 'smooth' })}
+                    data-testid="button-register-hero"
+                  >
+                    <Users className="mr-3 w-6 h-6" />
+                    CLAIM YOUR SPOT
+                    <ArrowRight className="ml-3 w-6 h-6" />
+                  </Button>
+                  
+                  <Button 
+                    variant="outline" 
+                    size="lg" 
+                    className="border-2 border-purple-300 text-purple-300 hover:bg-purple-300 hover:text-purple-900 text-lg px-10 py-6 rounded-full transition-all duration-300"
+                    onClick={() => document.getElementById('details')?.scrollIntoView({ behavior: 'smooth' })}
+                    data-testid="button-learn-more"
+                  >
+                    Learn More
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </Button>
                 </div>
-                <div className="flex items-center gap-3">
-                  <Clock className="w-6 h-6 text-purple-300" />
-                  <div>
-                    <p className="font-semibold">2:30 – 4:30 PM</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 md:col-span-2">
-                  <MapPin className="w-6 h-6 text-purple-300" />
-                  <div>
-                    <p className="font-semibold">949 WALNUT ST, BOULDER</p>
-                    <p className="text-purple-200">CATWOMAN POLE ACADEMY</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <DollarSign className="w-6 h-6 text-purple-300" />
-                  <div>
-                    <p className="font-semibold text-2xl">$45</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* CTA Button */}
-              <div className="pt-4">
-                <Button 
-                  size="lg" 
-                  className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white text-xl px-12 py-6 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300"
-                  onClick={() => document.getElementById('registration')?.scrollIntoView({ behavior: 'smooth' })}
-                  data-testid="button-register-hero"
-                >
-                  CLAIM YOUR SPOT
-                  <ArrowRight className="ml-2 w-6 h-6" />
-                </Button>
               </div>
             </div>
           </div>
