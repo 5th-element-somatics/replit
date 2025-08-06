@@ -9,6 +9,7 @@ import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { loadStripe } from '@stripe/stripe-js';
 import tigerImageUrl from '@assets/tiger_no_bg.png';
+import saintPhotoUrl from '@assets/saint_photo_1753245778552.png';
 
 if (!import.meta.env.VITE_STRIPE_PUBLIC_KEY) {
   throw new Error('Missing required Stripe key: VITE_STRIPE_PUBLIC_KEY');
@@ -169,6 +170,22 @@ export default function HolyMessWorkshop() {
                   WITH FEELING
                 </h2>
                 
+                {/* Saint's Photo - Brand Connection */}
+                <div className="flex items-center gap-6 mb-8">
+                  <div className="relative">
+                    <img 
+                      src={saintPhotoUrl} 
+                      alt="Saint - Workshop Facilitator" 
+                      className="w-16 h-16 rounded-full object-cover border-2 border-purple-300 shadow-lg"
+                    />
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-400/20 to-pink-400/20"></div>
+                  </div>
+                  <div>
+                    <p className="text-lg font-semibold text-white">Facilitated by Saint</p>
+                    <p className="text-purple-200">Somatic Sexology Guide</p>
+                  </div>
+                </div>
+                
                 <p className="text-xl text-purple-200 mb-8 leading-relaxed">
                   Join us for an intimate somatic journey where your emotions become medicine and your body becomes your guide.
                 </p>
@@ -308,11 +325,24 @@ export default function HolyMessWorkshop() {
               <div>
                 <Card className="bg-white/10 border-2 border-white/30 backdrop-blur-md p-8 text-center">
                   <CardContent className="space-y-6">
-                    <h3 className="text-xl font-bold text-white">My Website</h3>
-                    <p className="text-2xl font-bold text-white">FIFTHELEMENTSOMATICS.COM</p>
+                    {/* Saint's Photo in Contact Section */}
+                    <div className="flex items-center justify-center gap-4 mb-6">
+                      <img 
+                        src={saintPhotoUrl} 
+                        alt="Saint - Fifth Element Somatics" 
+                        className="w-20 h-20 rounded-full object-cover border-3 border-white/30 shadow-xl"
+                      />
+                      <div className="text-left">
+                        <h3 className="text-xl font-bold text-white">Saint</h3>
+                        <p className="text-purple-200">Your Guide</p>
+                      </div>
+                    </div>
                     
-                    <h3 className="text-xl font-bold text-white mt-8">My Socials</h3>
-                    <div className="flex justify-center space-x-4">
+                    <h3 className="text-lg font-bold text-white">My Website</h3>
+                    <p className="text-xl font-bold text-white mb-6">FIFTHELEMENTSOMATICS.COM</p>
+                    
+                    <h3 className="text-lg font-bold text-white">My Socials</h3>
+                    <div className="flex justify-center space-x-4 mb-6">
                       <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
                         <span className="text-white font-bold">f</span>
                       </div>
