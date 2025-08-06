@@ -10,7 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { loadStripe } from '@stripe/stripe-js';
 import tigerImageUrl from '@assets/tiger_no_bg.png';
 import saintPhotoUrl from '@assets/saint_photo_1753245778552.png';
-// Note: Will add underwater dancer image once file path issue is resolved
+import underwaterDancerUrl from '@assets/holy-mess-dancer.png';
 
 if (!import.meta.env.VITE_STRIPE_PUBLIC_KEY) {
   throw new Error('Missing required Stripe key: VITE_STRIPE_PUBLIC_KEY');
@@ -88,7 +88,7 @@ export default function HolyMessWorkshop() {
               {/* Authentic Underwater Dancer Hero */}
               <div className="relative">
                 <img 
-                  src={tigerImageUrl} 
+                  src={underwaterDancerUrl} 
                   alt="Holy Mess Workshop - Underwater Dancer with Powder Explosion" 
                   className="w-full h-[600px] object-cover rounded-2xl shadow-2xl"
                 />
