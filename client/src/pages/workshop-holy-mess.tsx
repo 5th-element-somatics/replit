@@ -67,11 +67,88 @@ export default function HolyMessWorkshop() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-blue-900 to-black text-white relative overflow-hidden">
+      {/* Animated Underwater Background */}
+      <div className="fixed inset-0 z-0">
+        {/* Deep water gradient with shimmer */}
+        <div className="absolute inset-0 depth-gradient"></div>
+        
+        {/* Floating particles (water bubbles/particles) */}
+        <div className="absolute inset-0">
+          {[...Array(40)].map((_, i) => (
+            <div
+              key={`bubble-${i}`}
+              className="absolute bg-cyan-300/20 rounded-full underwater-bubble"
+              style={{
+                width: `${Math.random() * 6 + 2}px`,
+                height: `${Math.random() * 6 + 2}px`,
+                left: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 12}s`,
+                animationDuration: `${8 + Math.random() * 8}s`
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Flowing light rays */}
+        <div className="absolute inset-0 opacity-20">
+          {[...Array(5)].map((_, i) => (
+            <div
+              key={`ray-${i}`}
+              className="absolute bg-gradient-to-b from-cyan-400/30 to-transparent underwater-sway"
+              style={{
+                width: '1px',
+                height: '100vh',
+                left: `${(i + 1) * 18}%`,
+                animationDelay: `${i * 0.8}s`,
+                animationDuration: `${5 + i}s`
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Underwater waves */}
+        <div className="absolute inset-0">
+          {[...Array(3)].map((_, i) => (
+            <div
+              key={`wave-${i}`}
+              className="absolute underwater-wave opacity-10"
+              style={{
+                top: `${20 + i * 25}%`,
+                height: '2px',
+                width: '200px',
+                background: 'linear-gradient(90deg, transparent, cyan, transparent)',
+                animationDelay: `${i * 6}s`,
+                animationDuration: `${15 + i * 3}s`
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Depth atmosphere */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-blue-900/30"></div>
+      </div>
+      {/* Header with Navigation */}
+      <header className="relative z-50 bg-black/30 backdrop-blur-md border-b border-cyan-500/20">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <img src={tigerImageUrl} alt="Fifth Element Somatics" className="h-10 w-10 drop-shadow-glow" />
+              <span className="text-xl font-bold text-cyan-200 glow-text">Fifth Element Somatics</span>
+            </div>
+            <nav className="hidden md:flex space-x-6">
+              <a href="/" className="text-cyan-200 hover:text-white transition-all duration-300 hover:drop-shadow-glow hover:glow-text">Home</a>
+              <a href="/about" className="text-cyan-200 hover:text-white transition-all duration-300 hover:drop-shadow-glow hover:glow-text">About</a>
+              <a href="/work-with-me" className="text-cyan-200 hover:text-white transition-all duration-300 hover:drop-shadow-glow hover:glow-text">Work With Me</a>
+              <a href="/masterclass" className="text-cyan-200 hover:text-white transition-all duration-300 hover:drop-shadow-glow hover:glow-text">Masterclass</a>
+            </nav>
+          </div>
+        </div>
+      </header>
+
       {/* Hero Section */}
-      <section className="relative overflow-hidden min-h-screen">
-        <div className="absolute inset-0 bg-black/20" />
-        <div className="relative container mx-auto px-6 py-32">
+      <section className="relative overflow-hidden min-h-screen z-10">
+        <div className="relative container mx-auto px-6 py-20">
           <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[80vh]">
             {/* Left Column - Hero Image */}
             <div className="relative">
@@ -86,23 +163,42 @@ export default function HolyMessWorkshop() {
               </div>
               
               {/* Authentic Underwater Dancer Hero */}
-              <div className="relative">
+              <div className="relative underwater-pulse">
+                <div className="absolute -inset-4 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-3xl blur-lg underwater-sway"></div>
                 <img 
                   src={underwaterDancerUrl} 
                   alt="Holy Mess Workshop - Underwater Dancer with Powder Explosion" 
-                  className="w-full h-[600px] object-cover rounded-2xl shadow-2xl"
+                  className="relative w-full h-[600px] object-cover rounded-2xl shadow-2xl border border-cyan-300/30"
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-purple-900/40 rounded-2xl"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-cyan-900/30 rounded-2xl"></div>
+                
+                {/* Floating particles around the image */}
+                <div className="absolute inset-0">
+                  {[...Array(20)].map((_, i) => (
+                    <div
+                      key={`image-particle-${i}`}
+                      className="absolute bg-cyan-300/40 rounded-full underwater-float"
+                      style={{
+                        width: `${Math.random() * 4 + 1}px`,
+                        height: `${Math.random() * 4 + 1}px`,
+                        left: `${Math.random() * 100}%`,
+                        top: `${Math.random() * 100}%`,
+                        animationDelay: `${Math.random() * 15}s`
+                      }}
+                    />
+                  ))}
+                </div>
+                
                 <div className="absolute inset-0 flex items-center justify-end text-white p-12">
                   <div className="text-right max-w-lg">
-                    <h1 className="text-6xl lg:text-7xl font-bold mb-6 tracking-wide">HOLY MESS</h1>
+                    <h1 className="text-6xl lg:text-7xl font-bold mb-6 tracking-wide glow-text underwater-sway">HOLY MESS</h1>
                     <div className="space-y-3 text-2xl lg:text-3xl mb-8">
-                      <p className="text-purple-200 font-semibold">ROOTED IN SENSATION.</p>
-                      <p className="text-purple-200 font-semibold">HELD IN REVERENCE.</p>
-                      <p className="text-purple-200 font-semibold">FREED THROUGH FEELING.</p>
+                      <p className="text-cyan-200 font-semibold glow-text">ROOTED IN SENSATION.</p>
+                      <p className="text-cyan-200 font-semibold glow-text">HELD IN REVERENCE.</p>
+                      <p className="text-cyan-200 font-semibold glow-text">FREED THROUGH FEELING.</p>
                     </div>
-                    <p className="text-xl text-purple-300 mb-8 italic">A workshop in somatic expression</p>
-                    <div className="text-lg space-y-2 text-purple-100">
+                    <p className="text-xl text-cyan-300 mb-8 italic underwater-pulse">A workshop in somatic expression</p>
+                    <div className="text-lg space-y-2 text-cyan-100">
                       <p><span className="font-bold text-white">DATE:</span> SUNDAY, AUGUST 17, 2025</p>
                       <p><span className="font-bold text-white">TIME:</span> 2:30 – 4:30 PM</p>
                       <p><span className="font-bold text-white">LOCATION:</span> 949 WALNUT ST, BOULDER</p>
