@@ -85,93 +85,28 @@ export default function HolyMessWorkshop() {
                 </div>
               </div>
               
-              {/* Exact Canva Design Recreation */}
-              <div className="h-[600px] rounded-2xl overflow-hidden shadow-2xl relative" style={{backgroundColor: '#1a1e3e'}}>
-                {/* Dark navy background matching your Canva exactly */}
-                <div className="w-full h-full flex relative">
-                  {/* Left side - Dancer image area with purple border */}
-                  <div className="w-1/2 p-8 flex items-center justify-center">
-                    <div className="w-full h-full border-4 border-purple-400 rounded-lg relative overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900">
-                      {/* Underwater dancer silhouette with powder explosion */}
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="relative w-48 h-80">
-                          {/* Enhanced dancer figure matching your Canva */}
-                          <svg viewBox="0 0 150 250" className="w-full h-full filter drop-shadow-2xl">
-                            {/* Main dancer body in underwater pose */}
-                            <path d="M75 40 Q80 35 85 45 Q90 50 85 55 L83 60 Q90 65 85 75 L80 80 Q75 85 70 80 L65 75 Q60 65 67 60 L65 55 Q60 50 65 45 Q70 35 75 40 Z" fill="white" opacity="0.95"/>
-                            {/* Torso */}
-                            <rect x="72" y="75" width="6" height="40" fill="white" opacity="0.95"/>
-                            {/* Left arm gracefully extended */}
-                            <path d="M67 80 Q45 75 35 95 Q40 100 67 85" fill="white" opacity="0.9"/>
-                            {/* Right arm flowing */}
-                            <path d="M83 80 Q105 75 115 95 Q110 100 83 85" fill="white" opacity="0.9"/>
-                            {/* Left leg in dynamic underwater pose */}
-                            <path d="M72 115 Q70 140 55 165 Q53 170 57 173 Q62 170 74 145" fill="white" opacity="0.95"/>
-                            {/* Right leg */}
-                            <path d="M78 115 Q80 140 95 165 Q97 170 93 173 Q88 170 76 145" fill="white" opacity="0.95"/>
-                            {/* Hair/fabric flowing in water */}
-                            <path d="M80 40 Q100 30 105 50 Q100 55 85 50" fill="white" opacity="0.7"/>
-                            <path d="M70 40 Q50 30 45 50 Q50 55 65 50" fill="white" opacity="0.7"/>
-                          </svg>
-                          
-                          {/* Powder explosion effect - multiple layers */}
-                          <div className="absolute inset-0 overflow-hidden">
-                            {/* Dense particle cloud */}
-                            {[...Array(60)].map((_, i) => (
-                              <div
-                                key={i}
-                                className="absolute bg-white rounded-full animate-pulse"
-                                style={{
-                                  width: `${Math.random() * 6 + 2}px`,
-                                  height: `${Math.random() * 6 + 2}px`,
-                                  top: `${Math.random() * 100}%`,
-                                  left: `${Math.random() * 100}%`,
-                                  animationDelay: `${Math.random() * 5}s`,
-                                  opacity: Math.random() * 0.9 + 0.1,
-                                  animationDuration: `${Math.random() * 3 + 2}s`
-                                }}
-                              />
-                            ))}
-                          </div>
-                          
-                          {/* Larger explosion particles */}
-                          <div className="absolute inset-0">
-                            {[...Array(25)].map((_, i) => (
-                              <div
-                                key={`explosion-${i}`}
-                                className="absolute bg-white/80 rounded-full"
-                                style={{
-                                  width: `${Math.random() * 12 + 4}px`,
-                                  height: `${Math.random() * 12 + 4}px`,
-                                  top: `${Math.random() * 90 + 5}%`,
-                                  left: `${Math.random() * 90 + 5}%`,
-                                  animation: `float ${Math.random() * 4 + 3}s ease-in-out infinite`,
-                                  animationDelay: `${Math.random() * 2}s`
-                                }}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                      </div>
+              {/* Clean Hero Card */}
+              <div className="relative">
+                <img 
+                  src={tigerImageUrl} 
+                  alt="Fifth Element Somatics - Holy Mess Workshop" 
+                  className="w-full h-[500px] object-cover rounded-2xl shadow-2xl"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-900/80 to-indigo-900/80 rounded-2xl"></div>
+                <div className="absolute inset-0 flex items-center justify-center text-center text-white p-8">
+                  <div>
+                    <h1 className="text-5xl lg:text-6xl font-bold mb-4">HOLY MESS</h1>
+                    <div className="space-y-2 text-xl lg:text-2xl mb-6">
+                      <p className="text-purple-200">ROOTED IN SENSATION.</p>
+                      <p className="text-purple-200">HELD IN REVERENCE.</p>
+                      <p className="text-purple-200">FREED THROUGH FEELING.</p>
                     </div>
-                  </div>
-                  
-                  {/* Right side - Text content exactly as your Canva */}
-                  <div className="w-1/2 flex flex-col justify-center pr-8 text-white">
-                    <h1 className="text-6xl lg:text-7xl font-bold mb-8 leading-tight tracking-wider">HOLY MESS</h1>
-                    <div className="space-y-3 text-2xl lg:text-3xl mb-8">
-                      <p className="text-purple-300 font-semibold">ROOTED IN SENSATION.</p>
-                      <p className="text-purple-300 font-semibold">HELD IN REVERENCE.</p>
-                      <p className="text-purple-300 font-semibold">FREED THROUGH FEELING.</p>
-                    </div>
-                    <p className="text-xl text-purple-200 italic font-medium mb-8">A workshop in somatic expression</p>
-                    
-                    <div className="space-y-3 text-lg text-purple-100">
-                      <p><span className="font-bold text-white">DATE:</span> SUNDAY, AUGUST 17, 2025</p>
-                      <p><span className="font-bold text-white">TIME:</span> 2:30 – 4:30 PM</p>
-                      <p><span className="font-bold text-white">LOCATION:</span> 949 WALNUT ST, BOULDER</p>
-                      <p className="text-purple-200 font-semibold">CATWOMAN POLE ACADEMY</p>
-                      <p className="mt-4"><span className="font-bold text-yellow-300 text-2xl">COST: $45</span></p>
+                    <p className="text-lg text-purple-300 mb-6 italic">A workshop in somatic expression</p>
+                    <div className="text-lg space-y-1">
+                      <p><strong>SUNDAY, AUGUST 17, 2025</strong></p>
+                      <p>2:30 – 4:30 PM</p>
+                      <p>CATWOMAN POLE ACADEMY, BOULDER</p>
+                      <p className="text-2xl font-bold text-yellow-300 mt-4">$45</p>
                     </div>
                   </div>
                 </div>
