@@ -403,9 +403,28 @@ export type InsertContactMessage = z.infer<typeof insertContactMessageSchema>;
 export type WaitlistEntry = typeof waitlistEntries.$inferSelect;
 export type InsertWaitlistEntry = z.infer<typeof insertWaitlistEntrySchema>;
 
+// Admin-created workshops table
+export const workshops = pgTable("workshops", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description"),
+  date: timestamp("date").notNull(),
+  time: text("time").notNull(),
+  location: text("location").notNull(),
+  price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+  maxParticipants: integer("max_participants").default(20),
+  currentRegistrations: integer("current_registrations").default(0),
+  slug: varchar("slug", { length: 255 }).notNull().unique(),
+  landingPageUrl: text("landing_page_url"),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 // Workshop registrations table
 export const workshopRegistrations = pgTable("workshop_registrations", {
   id: serial("id").primaryKey(),
+  workshopId: integer("workshop_id").references(() => workshops.id),
   workshopTitle: varchar("workshop_title").notNull(),
   participantName: varchar("participant_name").notNull(),
   participantEmail: varchar("participant_email").notNull(),
@@ -417,7 +436,20 @@ export const workshopRegistrations = pgTable("workshop_registrations", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+export const insertWorkshopSchema = createInsertSchema(workshops).pick({
+  title: true,
+  description: true,
+  date: true,
+  time: true,
+  location: true,
+  price: true,
+  maxParticipants: true,
+  slug: true,
+  isActive: true,
+});
+
 export const insertWorkshopRegistrationSchema = createInsertSchema(workshopRegistrations).pick({
+  workshopId: true,
   workshopTitle: true,
   participantName: true,
   participantEmail: true,
@@ -426,5 +458,7 @@ export const insertWorkshopRegistrationSchema = createInsertSchema(workshopRegis
   amountPaid: true,
 });
 
+export type Workshop = typeof workshops.$inferSelect;
+export type InsertWorkshop = z.infer<typeof insertWorkshopSchema>;
 export type WorkshopRegistration = typeof workshopRegistrations.$inferSelect;
 export type InsertWorkshopRegistration = z.infer<typeof insertWorkshopRegistrationSchema>;

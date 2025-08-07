@@ -9,8 +9,9 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Calendar, Clock, DollarSign, Users, Eye, Edit, Copy, Trash2, Plus } from "lucide-react";
+import { Calendar, Clock, DollarSign, Users, Eye, Edit, Copy, Trash2, Plus, MapPin, ArrowLeft } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Link } from "wouter";
 
 interface Workshop {
   id: number;
@@ -18,13 +19,15 @@ interface Workshop {
   description: string;
   date: string;
   time: string;
-  duration: number;
+  location: string;
   price: number;
-  capacity: number;
-  registrations: number;
-  status: 'draft' | 'published' | 'closed';
+  maxParticipants: number;
+  currentRegistrations: number;
+  slug: string;
   landingPageUrl: string;
+  isActive: boolean;
   createdAt: string;
+  updatedAt: string;
 }
 
 export default function WorkshopBuilder() {
@@ -39,10 +42,10 @@ export default function WorkshopBuilder() {
     description: '',
     date: '',
     time: '',
-    duration: 120,
+    location: '',
     price: 44,
-    capacity: 50,
-    status: 'draft' as 'draft' | 'published' | 'closed'
+    maxParticipants: 50,
+    isActive: true
   });
 
   // Fetch workshops
@@ -112,10 +115,10 @@ export default function WorkshopBuilder() {
       description: '',
       date: '',
       time: '',
-      duration: 120,
+      location: '',
       price: 44,
-      capacity: 50,
-      status: 'draft'
+      maxParticipants: 50,
+      isActive: true
     });
     setSelectedWorkshop(null);
   };
@@ -123,13 +126,13 @@ export default function WorkshopBuilder() {
   const handleEdit = (workshop: Workshop) => {
     setFormData({
       title: workshop.title,
-      description: workshop.description,
+      description: workshop.description || '',
       date: workshop.date,
       time: workshop.time,
-      duration: workshop.duration,
-      price: workshop.price,
-      capacity: workshop.capacity,
-      status: workshop.status
+      location: workshop.location,
+      price: Number(workshop.price),
+      maxParticipants: workshop.maxParticipants,
+      isActive: workshop.isActive
     });
     setSelectedWorkshop(workshop);
     setIsDialogOpen(true);
@@ -148,10 +151,10 @@ export default function WorkshopBuilder() {
     }
   };
 
-  const handleStatusChange = (workshop: Workshop, newStatus: 'draft' | 'published' | 'closed') => {
+  const handleStatusChange = (workshop: Workshop, newIsActive: boolean) => {
     updateWorkshopMutation.mutate({
       id: workshop.id,
-      updates: { status: newStatus }
+      updates: { isActive: newIsActive }
     });
   };
 
@@ -165,6 +168,19 @@ export default function WorkshopBuilder() {
 
   return (
     <div className="container mx-auto p-8 max-w-7xl">
+      {/* Back Navigation */}
+      <div className="flex items-center mb-6">
+        <Link href="/admin-unified">
+          <Button variant="outline" className="mr-4">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Admin
+          </Button>
+        </Link>
+        <div className="text-sm text-muted-foreground">
+          Admin Dashboard / Workshop Builder
+        </div>
+      </div>
+      
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold text-foreground mb-2">Workshop Builder</h1>
@@ -251,14 +267,13 @@ export default function WorkshopBuilder() {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="duration">Duration (minutes)</Label>
+                  <Label htmlFor="location">Location</Label>
                   <Input
-                    id="duration"
-                    type="number"
-                    value={formData.duration}
-                    onChange={(e) => setFormData({ ...formData, duration: Number(e.target.value) })}
-                    min="30"
-                    step="30"
+                    id="location"
+                    type="text"
+                    value={formData.location}
+                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    placeholder="949 Walnut St, Boulder"
                     required
                   />
                 </div>
@@ -266,34 +281,29 @@ export default function WorkshopBuilder() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="capacity">Max Capacity</Label>
+                  <Label htmlFor="maxParticipants">Max Participants</Label>
                   <Input
-                    id="capacity"
+                    id="maxParticipants"
                     type="number"
-                    value={formData.capacity}
-                    onChange={(e) => setFormData({ ...formData, capacity: Number(e.target.value) })}
+                    value={formData.maxParticipants}
+                    onChange={(e) => setFormData({ ...formData, maxParticipants: Number(e.target.value) })}
                     min="1"
                     required
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="status">Status</Label>
-                  <Select 
-                    value={formData.status} 
-                    onValueChange={(value: 'draft' | 'published' | 'closed') => 
-                      setFormData({ ...formData, status: value })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="draft">Draft</SelectItem>
-                      <SelectItem value="published">Published</SelectItem>
-                      <SelectItem value="closed">Closed</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Label htmlFor="isActive">Status</Label>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="isActive"
+                      checked={formData.isActive}
+                      onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
+                    />
+                    <Label htmlFor="isActive" className="text-sm">
+                      {formData.isActive ? 'Active' : 'Inactive'}
+                    </Label>
+                  </div>
                 </div>
               </div>
 
@@ -330,12 +340,9 @@ export default function WorkshopBuilder() {
                   </CardDescription>
                 </div>
                 <Badge 
-                  variant={
-                    workshop.status === 'published' ? 'default' :
-                    workshop.status === 'draft' ? 'secondary' : 'destructive'
-                  }
+                  variant={workshop.isActive ? 'default' : 'secondary'}
                 >
-                  {workshop.status}
+                  {workshop.isActive ? 'Active' : 'Inactive'}
                 </Badge>
               </div>
             </CardHeader>
@@ -356,9 +363,16 @@ export default function WorkshopBuilder() {
                 </div>
                 <div className="flex items-center gap-2">
                   <Users className="h-4 w-4 text-muted-foreground" />
-                  <span>{workshop.registrations}/{workshop.capacity}</span>
+                  <span>{workshop.currentRegistrations}/{workshop.maxParticipants}</span>
                 </div>
               </div>
+              
+              {workshop.location && (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <MapPin className="h-4 w-4" />
+                  <span>{workshop.location}</span>
+                </div>
+              )}
 
               <div className="pt-4 border-t">
                 <div className="flex gap-2">

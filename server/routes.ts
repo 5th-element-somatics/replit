@@ -20,6 +20,8 @@ import {
   purchases,
   adminSessions,
   magicLinks,
+  workshops,
+  insertWorkshopSchema,
   workshopRegistrations,
   insertWorkshopRegistrationSchema
 } from "@shared/schema";
@@ -1577,6 +1579,31 @@ Questions? Reply to this email - I read every single one.`,
     }
   });
 
+  // Create new campaign
+  app.post("/api/admin/ai-email/campaigns", requireAdminAuth, async (req: any, res) => {
+    try {
+      const campaignData = req.body;
+      
+      const [newCampaign] = await db
+        .insert(aiEmailCampaigns)
+        .values({
+          name: campaignData.name,
+          description: campaignData.description || '',
+          triggerType: campaignData.triggerType,
+          targetAudience: campaignData.targetAudience,
+          aiPersonalization: campaignData.aiPersonalization !== false,
+          isActive: true
+        })
+        .returning();
+      
+      console.log(`📧 Admin ${req.adminUser.email} created email campaign: ${newCampaign.name}`);
+      res.json(newCampaign);
+    } catch (error: any) {
+      console.error('Error creating campaign:', error);
+      res.status(500).json({ message: "Error creating campaign: " + error.message });
+    }
+  });
+
   app.patch("/api/admin/ai-email/campaigns/:id", requireAdminAuth, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
@@ -1998,10 +2025,10 @@ Questions? Reply to this email - I read every single one.`,
   // Workshop Builder API Endpoints
   app.get('/api/admin/workshops', requireAdminAuth, async (req, res) => {
     try {
-      // Start with empty workshops - Saint will create authentic ones through the builder
-      const workshops = [];
-      res.json(workshops);
+      const allWorkshops = await db.select().from(workshops).orderBy(desc(workshops.createdAt));
+      res.json(allWorkshops);
     } catch (error: any) {
+      console.error('Error fetching workshops:', error);
       res.status(500).json({ message: "Error fetching workshops: " + error.message });
     }
   });
@@ -2011,17 +2038,19 @@ Questions? Reply to this email - I read every single one.`,
       const workshopData = req.body;
       const slug = workshopData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
       
-      const workshop = {
-        id: Date.now(),
+      const newWorkshop = {
         ...workshopData,
-        registrations: 0,
+        slug,
         landingPageUrl: `${req.protocol}://${req.hostname}/workshop/${slug}`,
-        createdAt: new Date().toISOString()
+        currentRegistrations: 0
       };
       
-      console.log(`🎪 Admin ${req.adminUser.email} created workshop: ${workshop.title}`);
-      res.json(workshop);
+      const [createdWorkshop] = await db.insert(workshops).values(newWorkshop).returning();
+      
+      console.log(`🎪 Admin ${req.adminUser.email} created workshop: ${createdWorkshop.title}`);
+      res.json(createdWorkshop);
     } catch (error: any) {
+      console.error('Error creating workshop:', error);
       res.status(500).json({ message: "Error creating workshop: " + error.message });
     }
   });
@@ -2031,9 +2060,26 @@ Questions? Reply to this email - I read every single one.`,
       const { id } = req.params;
       const updates = req.body;
       
+      // Update slug if title changed
+      if (updates.title) {
+        updates.slug = updates.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+        updates.landingPageUrl = `${req.protocol}://${req.hostname}/workshop/${updates.slug}`;
+      }
+      
+      const [updatedWorkshop] = await db
+        .update(workshops)
+        .set({ ...updates, updatedAt: new Date() })
+        .where(eq(workshops.id, parseInt(id)))
+        .returning();
+      
+      if (!updatedWorkshop) {
+        return res.status(404).json({ message: "Workshop not found" });
+      }
+      
       console.log(`🎪 Admin ${req.adminUser.email} updated workshop ${id}`);
-      res.json({ success: true, id: parseInt(id), ...updates });
+      res.json(updatedWorkshop);
     } catch (error: any) {
+      console.error('Error updating workshop:', error);
       res.status(500).json({ message: "Error updating workshop: " + error.message });
     }
   });
@@ -2041,9 +2087,20 @@ Questions? Reply to this email - I read every single one.`,
   app.delete('/api/admin/workshops/:id', requireAdminAuth, async (req: any, res) => {
     try {
       const { id } = req.params;
-      console.log(`🎪 Admin ${req.adminUser.email} deleted workshop ${id}`);
-      res.json({ success: true });
+      
+      const [deletedWorkshop] = await db
+        .delete(workshops)
+        .where(eq(workshops.id, parseInt(id)))
+        .returning();
+      
+      if (!deletedWorkshop) {
+        return res.status(404).json({ message: "Workshop not found" });
+      }
+      
+      console.log(`🎪 Admin ${req.adminUser.email} deleted workshop: ${deletedWorkshop.title}`);
+      res.json({ success: true, deletedWorkshop });
     } catch (error: any) {
+      console.error('Error deleting workshop:', error);
       res.status(500).json({ message: "Error deleting workshop: " + error.message });
     }
   });

@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { 
   Bot, 
   Mail, 
@@ -90,7 +91,7 @@ export default function AIEmailAdmin() {
 
   // Fetch templates for selected campaign
   const { data: templates = [], isLoading: templatesLoading } = useQuery({
-    queryKey: ['/api/admin/ai-email/templates', selectedCampaign?.id],
+    queryKey: [`/api/admin/ai-email/templates/${selectedCampaign?.id}`],
     enabled: !!selectedCampaign,
     retry: false,
   });
@@ -101,7 +102,44 @@ export default function AIEmailAdmin() {
     retry: false,
   });
 
+  // Campaign form state
+  const [campaignForm, setCampaignForm] = useState({
+    name: '',
+    description: '',
+    triggerType: 'quiz_completion',
+    targetAudience: 'all',
+    aiPersonalization: true
+  });
+
   // Mutations
+  const createCampaignMutation = useMutation({
+    mutationFn: async (campaignData: any) => {
+      return apiRequest('POST', '/api/admin/ai-email/campaigns', campaignData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/ai-email/campaigns'] });
+      setIsCreatingCampaign(false);
+      setCampaignForm({
+        name: '',
+        description: '',
+        triggerType: 'quiz_completion',
+        targetAudience: 'all',
+        aiPersonalization: true
+      });
+      toast({
+        title: "✅ Campaign Created",
+        description: "Your new email campaign has been created successfully.",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Campaign Creation Failed",
+        description: error.message || "There was an error creating your campaign",
+        variant: "destructive",
+      });
+    }
+  });
+
   const toggleCampaignMutation = useMutation({
     mutationFn: async ({ id, isActive }: { id: number; isActive: boolean }) => {
       return apiRequest('PATCH', `/api/admin/ai-email/campaigns/${id}`, { isActive });
@@ -130,6 +168,18 @@ export default function AIEmailAdmin() {
 
   const handleNavClick = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleCreateCampaign = () => {
+    if (!campaignForm.name.trim()) {
+      toast({
+        title: "Campaign Name Required",
+        description: "Please enter a name for your campaign",
+        variant: "destructive",
+      });
+      return;
+    }
+    createCampaignMutation.mutate(campaignForm);
   };
 
   const triggerTypeLabels: Record<string, string> = {
@@ -577,6 +627,109 @@ export default function AIEmailAdmin() {
             </Card>
           </TabsContent>
         </Tabs>
+        
+        {/* Campaign Creation Dialog */}
+        <Dialog open={isCreatingCampaign} onOpenChange={setIsCreatingCampaign}>
+          <DialogContent className="max-w-2xl bg-gray-800 border-gray-600">
+            <DialogHeader>
+              <DialogTitle className="text-white">Create New Email Campaign</DialogTitle>
+              <DialogDescription className="text-gray-300">
+                Set up a new AI-powered email campaign to nurture your leads
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="space-y-6 mt-6">
+              <div className="space-y-2">
+                <Label className="text-white">Campaign Name</Label>
+                <Input
+                  value={campaignForm.name}
+                  onChange={(e) => setCampaignForm({ ...campaignForm, name: e.target.value })}
+                  placeholder="Welcome Series for People-Pleasers"
+                  className="bg-gray-700 border-gray-600 text-white"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label className="text-white">Description</Label>
+                <Textarea
+                  value={campaignForm.description}
+                  onChange={(e) => setCampaignForm({ ...campaignForm, description: e.target.value })}
+                  placeholder="Describe the purpose and goals of this campaign..."
+                  className="bg-gray-700 border-gray-600 text-white min-h-[80px]"
+                />
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-white">Trigger Type</Label>
+                  <Select 
+                    value={campaignForm.triggerType} 
+                    onValueChange={(value) => setCampaignForm({ ...campaignForm, triggerType: value })}
+                  >
+                    <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="quiz_completion">Quiz Completion</SelectItem>
+                      <SelectItem value="meditation_download">Meditation Download</SelectItem>
+                      <SelectItem value="lead_created">New Lead</SelectItem>
+                      <SelectItem value="manual">Manual Trigger</SelectItem>
+                      <SelectItem value="time_delay">Time-Based</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label className="text-white">Target Audience</Label>
+                  <Select 
+                    value={campaignForm.targetAudience} 
+                    onValueChange={(value) => setCampaignForm({ ...campaignForm, targetAudience: value })}
+                  >
+                    <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Leads</SelectItem>
+                      <SelectItem value="quiz_takers">Quiz Takers</SelectItem>
+                      <SelectItem value="meditation_downloaders">Meditation Downloaders</SelectItem>
+                      <SelectItem value="specific_archetype">Specific Archetype</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <Switch
+                  checked={campaignForm.aiPersonalization}
+                  onCheckedChange={(checked) => setCampaignForm({ ...campaignForm, aiPersonalization: checked })}
+                />
+                <Label className="text-white">Enable AI Personalization</Label>
+              </div>
+              
+              <div className="flex gap-3 pt-4">
+                <Button 
+                  onClick={handleCreateCampaign}
+                  disabled={createCampaignMutation.isPending}
+                  className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white"
+                >
+                  {createCampaignMutation.isPending ? (
+                    <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2" />
+                  ) : (
+                    <Plus className="w-4 h-4 mr-2" />
+                  )}
+                  {createCampaignMutation.isPending ? "Creating..." : "Create Campaign"}
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => setIsCreatingCampaign(false)}
+                  className="border-gray-600 text-gray-300 hover:bg-gray-700"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Bot, Brain, Zap, MessageSquare, Users, TrendingUp, Send, Mic, MicOff } from "lucide-react";
+import { Bot, Brain, Zap, MessageSquare, Users, TrendingUp, Send, Mic, MicOff, ArrowLeft, Settings } from "lucide-react";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
 
 export default function SmartAdmin() {
@@ -17,6 +18,9 @@ export default function SmartAdmin() {
   const [prompt, setPrompt] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [aiResponse, setAiResponse] = useState<any>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState("");
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
 
@@ -33,12 +37,19 @@ export default function SmartAdmin() {
   // AI command processor
   const aiCommandMutation = useMutation({
     mutationFn: async (command: string) => {
-      return await apiRequest("POST", "/api/admin/ai-command", { command });
+      const response = await apiRequest("POST", "/api/admin/ai-command", { command });
+      return response.json();
     },
     onSuccess: (result: any) => {
+      const responseWithCommand = {
+        ...result,
+        originalCommand: prompt.trim()
+      };
+      setAiResponse(responseWithCommand);
+      setEditedContent(result?.details || "");
       toast({
-        title: "AI Command Executed",
-        description: result?.summary || "Command completed successfully",
+        title: "✨ AI Content Generated",
+        description: "Review and edit the content below, then accept or regenerate",
       });
       queryClient.invalidateQueries({ queryKey: ['/api/admin/ai-insights'] });
       setPrompt("");
@@ -126,6 +137,44 @@ export default function SmartAdmin() {
     }
   };
 
+  const handleAcceptContent = () => {
+    toast({
+      title: "✅ Content Accepted",
+      description: "AI-generated content has been saved and implemented",
+    });
+    setAiResponse(null);
+    setIsEditing(false);
+  };
+
+  const handleEditContent = () => {
+    setIsEditing(true);
+  };
+
+  const handleSaveEdit = () => {
+    if (aiResponse) {
+      setAiResponse({
+        ...aiResponse,
+        details: editedContent
+      });
+    }
+    setIsEditing(false);
+    toast({
+      title: "✏️ Content Updated",
+      description: "Your edits have been saved",
+    });
+  };
+
+  const handleRegenerateContent = () => {
+    if (aiResponse?.originalCommand) {
+      aiCommandMutation.mutate(aiResponse.originalCommand);
+    }
+  };
+
+  const handleDismissContent = () => {
+    setAiResponse(null);
+    setIsEditing(false);
+  };
+
   const quickCommands = [
     {
       label: "Send nurture sequence to new leads",
@@ -167,6 +216,12 @@ export default function SmartAdmin() {
         </div>
         
         <div className="flex items-center space-x-4">
+          <Link href="/admin-unified">
+            <Button variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-700">
+              <Settings className="w-4 h-4 mr-2" />
+              Admin Dashboard
+            </Button>
+          </Link>
           <Badge variant="outline" className="border-purple-400 text-purple-400">
             <Bot className="w-4 h-4 mr-2" />
             AI Admin
@@ -268,6 +323,121 @@ Examples:
             ))}
           </div>
         </div>
+
+        {/* AI Generated Content Display */}
+        {aiResponse && (
+          <Card className="bg-gray-800 border-green-400 border-opacity-30 mb-8">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-white flex items-center space-x-2">
+                  <Brain className="w-5 h-5 text-green-400" />
+                  <span>AI Generated Content</span>
+                </CardTitle>
+                <Badge variant="outline" className="border-green-400 text-green-400">
+                  {aiResponse.action || "Content Ready"}
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {/* Command Summary */}
+                <div className="p-3 bg-gray-900 rounded-lg border border-gray-700">
+                  <h4 className="text-white font-semibold mb-2">Command: "{aiResponse.originalCommand}"</h4>
+                  <p className="text-gray-300 text-sm">{aiResponse.summary}</p>
+                </div>
+
+                {/* Generated Content */}
+                <div className="space-y-3">
+                  <Label className="text-white font-medium">Generated Content:</Label>
+                  {isEditing ? (
+                    <div className="space-y-3">
+                      <Textarea
+                        value={editedContent}
+                        onChange={(e) => setEditedContent(e.target.value)}
+                        className="bg-gray-900 border-gray-600 text-white min-h-[200px]"
+                        placeholder="Edit the AI-generated content..."
+                      />
+                      <div className="flex gap-2">
+                        <Button 
+                          onClick={handleSaveEdit}
+                          className="bg-green-600 hover:bg-green-700 text-white"
+                        >
+                          ✓ Save Changes
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          onClick={() => setIsEditing(false)}
+                          className="border-gray-600 text-gray-300"
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="p-4 bg-gray-900 rounded-lg border border-gray-700">
+                      <pre className="text-gray-200 whitespace-pre-wrap font-mono text-sm">
+                        {editedContent}
+                      </pre>
+                    </div>
+                  )}
+                </div>
+
+                {/* Recommendations */}
+                {aiResponse.recommendations && aiResponse.recommendations.length > 0 && (
+                  <div className="space-y-2">
+                    <Label className="text-white font-medium">AI Recommendations:</Label>
+                    <ul className="space-y-1">
+                      {aiResponse.recommendations.map((rec: string, index: number) => (
+                        <li key={index} className="text-gray-300 text-sm flex items-start space-x-2">
+                          <span className="text-purple-400">•</span>
+                          <span>{rec}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                {!isEditing && (
+                  <div className="flex gap-3 pt-4 border-t border-gray-700">
+                    <Button 
+                      onClick={handleAcceptContent}
+                      className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white"
+                    >
+                      ✅ Accept & Implement
+                    </Button>
+                    <Button 
+                      onClick={handleEditContent}
+                      variant="outline"
+                      className="border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black"
+                    >
+                      ✏️ Edit Content
+                    </Button>
+                    <Button 
+                      onClick={handleRegenerateContent}
+                      variant="outline"
+                      className="border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-white"
+                      disabled={aiCommandMutation.isPending}
+                    >
+                      {aiCommandMutation.isPending ? (
+                        <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
+                      ) : (
+                        "🔄 Regenerate"
+                      )}
+                    </Button>
+                    <Button 
+                      onClick={handleDismissContent}
+                      variant="outline"
+                      className="border-gray-600 text-gray-400 hover:bg-gray-600 hover:text-white"
+                    >
+                      ✕ Dismiss
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* AI Insights Dashboard */}
         {!insightsLoading && insights && Object.keys(insights).length > 0 && (
