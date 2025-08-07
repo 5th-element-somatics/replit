@@ -68,19 +68,19 @@ export default function HolyMessWorkshopVarC() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-blue-900 to-black text-white relative overflow-hidden">
       
-      {/* Navigation Header */}
-      <nav className="absolute top-0 left-0 right-0 z-50 p-6">
+      {/* Navigation Header - Mobile Optimized */}
+      <nav className="absolute top-0 left-0 right-0 z-50 p-4 sm:p-6">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center space-x-3 hover:opacity-90 transition-opacity">
+          <Link href="/" className="flex items-center space-x-2 sm:space-x-3 hover:opacity-90 transition-opacity min-h-[44px]">
             <img 
               src={tigerImageUrl} 
               alt="Fifth Element Somatics" 
-              className="h-12 w-auto cursor-pointer"
+              className="h-10 sm:h-12 w-auto cursor-pointer"
             />
-            <span className="text-lg font-serif font-semibold text-white">FIFTH ELEMENT SOMATICS</span>
+            <span className="text-sm sm:text-lg font-serif font-semibold text-white hidden xs:inline">FIFTH ELEMENT SOMATICS</span>
           </Link>
-          <Link href="/" className="text-white/80 hover:text-white transition-colors text-sm">
-            ← Back to Home
+          <Link href="/" className="text-white/80 hover:text-white transition-colors text-xs sm:text-sm bg-black/20 px-3 py-2 rounded-full backdrop-blur-sm min-h-[44px] flex items-center">
+            ← Home
           </Link>
         </div>
       </nav>
@@ -169,22 +169,22 @@ export default function HolyMessWorkshopVarC() {
 
 
 
-      {/* Professional Hero Section */}
+      {/* Professional Hero Section - Mobile Optimized */}
       <section className="relative overflow-hidden min-h-screen z-10">
-        <div className="relative container mx-auto px-6 py-24">
-          <div className="grid lg:grid-cols-2 gap-16 items-center min-h-[85vh]">
+        <div className="relative container mx-auto px-4 sm:px-6 py-16 sm:py-24">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center min-h-[85vh]">
             
-            {/* Left Column - Hero Image with Refined Effects */}
-            <div className="relative">
+            {/* Left Column - Hero Image with Refined Effects - Mobile Optimized */}
+            <div className="relative order-2 lg:order-1">
               {/* Divine subtle aura */}
-              <div className="absolute -inset-6 bg-gradient-to-r from-purple-500/15 to-cyan-500/10 rounded-3xl blur-xl divine-glow opacity-50"></div>
-              <div className="absolute -inset-3 divine-shimmer rounded-2xl"></div>
+              <div className="absolute -inset-3 sm:-inset-6 bg-gradient-to-r from-purple-500/15 to-cyan-500/10 rounded-2xl sm:rounded-3xl blur-xl divine-glow opacity-50"></div>
+              <div className="absolute -inset-2 sm:-inset-3 divine-shimmer rounded-xl sm:rounded-2xl"></div>
               
               <div className="relative">
                 <img 
                   src={underwaterDancerUrl} 
                   alt="Holy Mess Workshop - Underwater Dancer with Powder Explosion" 
-                  className="relative w-full h-[650px] object-cover rounded-2xl shadow-2xl border border-purple-300/30 divine-pulse"
+                  className="relative w-full h-[400px] sm:h-[500px] lg:h-[650px] object-cover rounded-xl sm:rounded-2xl shadow-2xl border border-purple-300/30 divine-pulse"
                 />
                 
                 {/* Professional overlay */}
@@ -208,106 +208,120 @@ export default function HolyMessWorkshopVarC() {
                   ))}
                 </div>
                 
-                {/* Professional Text Overlay */}
-                <div className="absolute inset-0 flex items-center justify-end text-white p-12">
-                  <div className="text-right max-w-lg">
-                    <h1 className="text-6xl lg:text-7xl font-bold mb-8 tracking-wide text-shadow-lg">
+                {/* Professional Text Overlay - Mobile Optimized */}
+                <div className="absolute inset-0 flex items-center justify-center sm:justify-end text-white p-4 sm:p-8 lg:p-12">
+                  <div className="text-center sm:text-right max-w-lg">
+                    <h1 className="text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6 lg:mb-8 tracking-wide text-shadow-lg">
                       HOLY MESS
                     </h1>
-                    <div className="space-y-3 text-2xl lg:text-3xl mb-8">
+                    <div className="space-y-1 sm:space-y-2 lg:space-y-3 text-sm sm:text-lg lg:text-2xl xl:text-3xl mb-4 sm:mb-6 lg:mb-8">
                       <p className="text-cyan-200 font-semibold">ROOTED IN SENSATION.</p>
                       <p className="text-cyan-200 font-semibold">HELD IN REVERENCE.</p>
                       <p className="text-cyan-200 font-semibold">FREED THROUGH FEELING.</p>
                     </div>
-                    <p className="text-xl text-cyan-300 mb-8 italic">A workshop in somatic expression</p>
+                    <p className="text-sm sm:text-lg lg:text-xl text-cyan-300 mb-4 sm:mb-6 lg:mb-8 italic">A workshop in somatic expression</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Right Column - Professional Content Layout */}
-            <div className="space-y-10">
+            {/* Right Column - Professional Content Layout - Mobile Optimized */}
+            <div className="space-y-6 sm:space-y-8 lg:space-y-10 order-1 lg:order-2">
               
               {/* Workshop Details Card */}
-              <Card className="bg-black/15 backdrop-blur-lg border border-purple-400/30 divine-glow p-8">
-                <div className="space-y-6">
-                  <h2 className="text-2xl font-bold text-white text-center mb-6">Workshop Details</h2>
-                  <div className="flex items-center space-x-4">
-                    <CalendarDays className="h-6 w-6 text-cyan-400" />
-                    <span className="text-lg font-medium">Sunday, August 17, 2025</span>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <Clock className="h-6 w-6 text-cyan-400" />
-                    <span className="text-lg">2:30 – 4:30 PM</span>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <MapPin className="h-6 w-6 text-cyan-400" />
-                    <div>
-                      <div className="text-lg">949 Walnut St, Boulder</div>
-                      <div className="text-cyan-300">Catwoman Pole Academy</div>
+              <Card className="bg-black/15 backdrop-blur-lg border border-purple-400/30 divine-glow p-4 sm:p-6 lg:p-8">
+                <div className="space-y-4 sm:space-y-6">
+                  <h2 className="text-xl sm:text-2xl font-bold text-white text-center mb-4 sm:mb-6">Workshop Details</h2>
+                  <div className="grid gap-3 sm:gap-4">
+                    <div className="flex items-center space-x-3 sm:space-x-4 min-h-[44px]">
+                      <CalendarDays className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-400 flex-shrink-0" />
+                      <div>
+                        <p className="text-white font-semibold text-base sm:text-lg">Sunday, August 17</p>
+                        <p className="text-cyan-200 text-xs sm:text-sm">2025</p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <DollarSign className="h-6 w-6 text-cyan-400" />
-                    <span className="text-2xl font-bold text-yellow-400">$45</span>
+                    
+                    <div className="flex items-center space-x-3 sm:space-x-4 min-h-[44px]">
+                      <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-400 flex-shrink-0" />
+                      <div>
+                        <p className="text-white font-semibold text-base sm:text-lg">2:30 – 4:30 PM</p>
+                        <p className="text-cyan-200 text-xs sm:text-sm">2 hours of deep work</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start space-x-3 sm:space-x-4 min-h-[44px]">
+                      <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-400 flex-shrink-0 mt-1" />
+                      <div>
+                        <p className="text-white font-semibold text-base sm:text-lg">949 Walnut St, Boulder</p>
+                        <p className="text-cyan-200 text-xs sm:text-sm">Catwoman Pole Academy</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center space-x-3 sm:space-x-4 min-h-[44px]">
+                      <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-400 flex-shrink-0" />
+                      <div>
+                        <p className="text-white font-semibold text-xl sm:text-2xl text-yellow-400">$45</p>
+                        <p className="text-cyan-200 text-xs sm:text-sm">One-time investment in your healing</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </Card>
 
-              {/* Professional CTA Section */}
-              <div className="space-y-8">
+              {/* Professional CTA Section - Mobile Optimized */}
+              <div className="space-y-6 sm:space-y-8">
                 <div className="text-center">
                   <Badge className="bg-gradient-to-r from-pink-500/80 to-purple-600/80 text-white px-6 py-2 text-lg mb-6">
                     LIMITED SPACES AVAILABLE
                   </Badge>
                 </div>
                 
-                <h2 className="text-3xl lg:text-4xl font-bold mb-6 leading-tight text-center">
-                  Transform Your Relationship<br />
-                  With Feeling
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 leading-tight text-center">
+                  Transform Your Relationship<br className="hidden sm:block" />
+                  <span className="sm:hidden"> </span>With Feeling
                 </h2>
                 
-                {/* Saint's Photo - Professional Styling */}
-                <div className="flex items-center gap-6 mb-8 justify-center">
+                {/* Saint's Photo - Mobile Optimized */}
+                <div className="flex items-center gap-4 sm:gap-6 mb-6 sm:mb-8 justify-center">
                   <div className="relative">
                     <img 
                       src={saintPhotoUrl} 
                       alt="Saint - Workshop Facilitator" 
-                      className="w-16 h-16 rounded-full object-cover border-2 border-cyan-300/50 shadow-lg"
+                      className="w-12 h-12 sm:w-16 sm:h-16 rounded-full object-cover border-2 border-cyan-300/50 shadow-lg"
                     />
                   </div>
                   <div>
-                    <p className="text-lg font-semibold text-white">Facilitated by Saint</p>
-                    <p className="text-cyan-200">Somatic Sexology Guide</p>
+                    <p className="text-base sm:text-lg font-semibold text-white">Facilitated by Saint</p>
+                    <p className="text-sm sm:text-base text-cyan-200">Somatic Sexology Guide</p>
                   </div>
                 </div>
                 
-                <p className="text-lg text-cyan-200 mb-8 leading-relaxed text-center">
+                <p className="text-base sm:text-lg text-cyan-200 mb-6 sm:mb-8 leading-relaxed text-center px-2">
                   Join us for an intimate somatic journey where your emotions become medicine and your body becomes your guide.
                 </p>
                 
-                {/* Professional CTA Buttons */}
-                <div className="flex flex-col gap-4">
+                {/* Professional CTA Buttons - Mobile Optimized */}
+                <div className="flex flex-col gap-3 sm:gap-4 px-4 sm:px-0">
                   <Button 
                     size="lg" 
-                    className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white text-xl px-12 py-6 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 divine-pulse"
+                    className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white text-lg sm:text-xl px-8 sm:px-12 py-4 sm:py-6 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 divine-pulse min-h-[48px] w-full"
                     onClick={() => document.getElementById('registration')?.scrollIntoView({ behavior: 'smooth' })}
                     data-testid="button-register-hero"
                   >
-                    <Users className="mr-3 w-6 h-6" />
+                    <Users className="mr-2 sm:mr-3 w-5 h-5 sm:w-6 sm:h-6" />
                     Secure Your Spot
-                    <ArrowRight className="ml-3 w-6 h-6" />
+                    <ArrowRight className="ml-2 sm:ml-3 w-5 h-5 sm:w-6 sm:h-6" />
                   </Button>
                   
                   <Button 
                     variant="outline" 
                     size="lg" 
-                    className="border-2 border-cyan-300/60 text-cyan-300 hover:bg-cyan-300/10 hover:text-cyan-200 text-lg px-10 py-4 rounded-full transition-all duration-300"
+                    className="border-2 border-cyan-300/60 text-cyan-300 hover:bg-cyan-300/10 hover:text-cyan-200 text-base sm:text-lg px-6 sm:px-10 py-3 sm:py-4 rounded-full transition-all duration-300 min-h-[48px] w-full"
                     onClick={() => document.getElementById('details')?.scrollIntoView({ behavior: 'smooth' })}
                     data-testid="button-learn-more"
                   >
                     Learn More
-                    <ArrowRight className="ml-2 w-5 h-5" />
+                    <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
                   </Button>
                 </div>
               </div>
@@ -374,41 +388,41 @@ export default function HolyMessWorkshopVarC() {
         </div>
       </section>
 
-      {/* Professional Registration Section */}
-      <section id="registration" className="py-20 relative z-10">
+      {/* Professional Registration Section - Mobile Optimized */}
+      <section id="registration" className="py-12 sm:py-16 lg:py-20 relative z-10">
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/70"></div>
-        <div className="container mx-auto px-6 relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
           <div className="max-w-2xl mx-auto">
-            <Card className="bg-black/20 backdrop-blur-lg border border-purple-400/35 divine-glow p-10">
+            <Card className="bg-black/20 backdrop-blur-lg border border-purple-400/35 divine-glow p-6 sm:p-8 lg:p-10">
               <CardHeader>
-                <CardTitle className="text-3xl font-bold text-center mb-6 text-white">
+                <CardTitle className="text-2xl sm:text-3xl font-bold text-center mb-4 sm:mb-6 text-white">
                   Secure Your Spot
                 </CardTitle>
-                <p className="text-lg text-cyan-200 text-center mb-6">
+                <p className="text-base sm:text-lg text-cyan-200 text-center mb-4 sm:mb-6 px-2">
                   This is an intimate, in-person experience. Spaces are limited.
                 </p>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <form onSubmit={handleRegister} className="space-y-6">
+              <CardContent className="space-y-4 sm:space-y-6">
+                <form onSubmit={handleRegister} className="space-y-4 sm:space-y-6">
                   <div>
-                    <label className="block text-lg font-medium text-cyan-200 mb-2">Name</label>
+                    <label className="block text-base sm:text-lg font-medium text-cyan-200 mb-2">Name</label>
                     <input
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full px-4 py-3 bg-black/30 border border-cyan-400/40 rounded-lg text-white focus:border-cyan-300 focus:ring-cyan-300 focus:ring-1 focus:ring-opacity-50 transition-all duration-300"
+                      className="w-full px-4 py-3 bg-black/30 border border-cyan-400/40 rounded-lg text-white focus:border-cyan-300 focus:ring-cyan-300 focus:ring-1 focus:ring-opacity-50 transition-all duration-300 text-base min-h-[48px]"
                       placeholder="Your full name"
                       required
                       data-testid="input-name"
                     />
                   </div>
                   <div>
-                    <label className="block text-lg font-medium text-cyan-200 mb-2">Email</label>
+                    <label className="block text-base sm:text-lg font-medium text-cyan-200 mb-2">Email</label>
                     <input
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full px-4 py-3 bg-black/30 border border-cyan-400/40 rounded-lg text-white focus:border-cyan-300 focus:ring-cyan-300 focus:ring-1 focus:ring-opacity-50 transition-all duration-300"
+                      className="w-full px-4 py-3 bg-black/30 border border-cyan-400/40 rounded-lg text-white focus:border-cyan-300 focus:ring-cyan-300 focus:ring-1 focus:ring-opacity-50 transition-all duration-300 text-base min-h-[48px]"
                       placeholder="your@email.com"
                       required
                       data-testid="input-email"
@@ -416,26 +430,26 @@ export default function HolyMessWorkshopVarC() {
                   </div>
                   
                   <div className="text-center">
-                    <div className="text-4xl font-bold text-yellow-400 mb-4">$45</div>
-                    <p className="text-cyan-200 mb-6">Secure payment processing via Stripe</p>
+                    <div className="text-3xl sm:text-4xl font-bold text-yellow-400 mb-3 sm:mb-4">$45</div>
+                    <p className="text-sm sm:text-base text-cyan-200 mb-4 sm:mb-6">Secure payment processing via Stripe</p>
                     
                     <Button 
                       type="submit"
                       size="lg"
                       disabled={registerMutation.isPending}
-                      className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white text-xl px-12 py-6 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 w-full"
+                      className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white text-lg sm:text-xl px-8 sm:px-12 py-4 sm:py-6 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 w-full min-h-[48px]"
                       data-testid="button-register-submit"
                     >
                       {registerMutation.isPending ? (
                         <>
-                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                          <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-white mr-2 sm:mr-3"></div>
                           Processing...
                         </>
                       ) : (
                         <>
-                          <Heart className="mr-3 w-6 h-6" />
+                          <Heart className="mr-2 sm:mr-3 w-5 h-5 sm:w-6 sm:h-6" />
                           Register Now
-                          <Sparkles className="ml-3 w-6 h-6" />
+                          <Sparkles className="ml-2 sm:ml-3 w-5 h-5 sm:w-6 sm:h-6" />
                         </>
                       )}
                     </Button>
