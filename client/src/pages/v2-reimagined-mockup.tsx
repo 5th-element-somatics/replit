@@ -992,9 +992,9 @@ export default function V2ReimagiedMockup() {
       {/* Video Modal */}
       {isVideoPlaying && (
         <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-          <div className="bg-gray-900 rounded-xl p-6 max-w-4xl w-full border border-purple-400/30 max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-2xl font-bold text-white">Saint's Transformation Story</h3>
+          <div className="bg-gray-900 rounded-xl p-4 max-w-4xl w-full border border-purple-400/30 max-h-[85vh] overflow-hidden flex flex-col">
+            <div className="flex justify-between items-center mb-4 flex-shrink-0">
+              <h3 className="text-xl font-bold text-white">Saint's Transformation Story</h3>
               <Button
                 onClick={() => setIsVideoPlaying(false)}
                 className="bg-transparent hover:bg-gray-700 p-2"
@@ -1004,7 +1004,7 @@ export default function V2ReimagiedMockup() {
               </Button>
             </div>
             
-            <div className="aspect-video bg-gradient-to-br from-purple-900 via-pink-900 to-indigo-900 rounded-lg mb-4 overflow-hidden relative">
+            <div className="aspect-video bg-gradient-to-br from-purple-900 via-pink-900 to-indigo-900 rounded-lg overflow-hidden relative flex-grow min-h-0">
               {/* Animated Background */}
               <div className="absolute inset-0 opacity-30">
                 <div className="absolute top-0 left-0 w-full h-full">
@@ -1097,13 +1097,13 @@ export default function V2ReimagiedMockup() {
                 </svg>
 
               {/* Video Controls Bar */}
-              <div className="absolute bottom-0 left-0 right-0 bg-black/80 backdrop-blur-sm p-4 rounded-b-lg">
-                <div className="flex items-center space-x-4">
-                  <div className="text-white text-sm font-mono">
+              <div className="absolute bottom-0 left-0 right-0 bg-black/80 backdrop-blur-sm p-3 rounded-b-lg">
+                <div className="flex items-center space-x-3">
+                  <div className="text-white text-xs font-mono">
                     {formatTime(videoCurrentTime)} / {formatTime(videoDuration)}
                   </div>
                   
-                  <div className="flex-1 bg-gray-600 rounded-full h-1 relative">
+                  <div className="flex-1 bg-gray-600 rounded-full h-1 relative mx-2">
                     <div 
                       className="bg-gradient-to-r from-purple-400 to-pink-400 h-1 rounded-full transition-all duration-1000"
                       style={{ width: `${videoProgress}%` }}
