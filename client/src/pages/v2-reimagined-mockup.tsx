@@ -21,6 +21,7 @@ export default function V2ReimagiedMockup() {
   const [isVideoMuted, setIsVideoMuted] = useState(false);
   const [videoCurrentTime, setVideoCurrentTime] = useState(0);
   const videoDuration = 45; // 45 seconds total
+  const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
   const [liveMembersCount, setLiveMembersCount] = useState(2847);
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -154,6 +155,21 @@ export default function V2ReimagiedMockup() {
     }
   };
 
+  // Stop audio and close video function
+  const stopAudioAndCloseVideo = () => {
+    // Stop any playing audio
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+      setCurrentAudio(null);
+    }
+    
+    // Reset video state
+    setIsVideoPlaying(false);
+    setVideoCurrentTime(0);
+    setVideoProgress(0);
+  };
+
   // Enhanced audio system with ElevenLabs professional voice
   const playNarrationAudio = async () => {
     if (isVideoMuted) return;
@@ -207,21 +223,27 @@ This is your invitation to step into your own transformation.`;
           
           console.log("Playing ElevenLabs audio...");
           
+          // Store the audio reference so we can stop it later
+          setCurrentAudio(audio);
+          
           audio.onended = () => {
             console.log("Audio playback completed");
             URL.revokeObjectURL(audioUrl);
+            setCurrentAudio(null);
             resolve();
           };
           
           audio.onerror = (error) => {
             console.log("Audio playback failed:", error);
             URL.revokeObjectURL(audioUrl);
+            setCurrentAudio(null);
             reject(error);
           };
           
           audio.play().catch(error => {
             console.log("Audio play failed:", error);
             URL.revokeObjectURL(audioUrl);
+            setCurrentAudio(null);
             reject(error);
           });
         } else {
@@ -1005,7 +1027,7 @@ This is your invitation to step into your own transformation.`;
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-bold text-white">Saint's Transformation Story</h3>
               <Button
-                onClick={() => setIsVideoPlaying(false)}
+                onClick={stopAudioAndCloseVideo}
                 className="bg-transparent hover:bg-gray-700 p-2"
                 data-testid="button-close-video"
               >
@@ -1177,7 +1199,7 @@ This is your invitation to step into your own transformation.`;
                   Discover Your Archetype
                 </Button>
                 <Button 
-                  onClick={() => setIsVideoPlaying(false)}
+                  onClick={stopAudioAndCloseVideo}
                   className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-full"
                   data-testid="button-video-close"
                 >
