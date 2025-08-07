@@ -103,15 +103,15 @@ export default function V2ReimagiedMockup() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Video play functionality with sound and progress tracking
+  // Video play functionality with enhanced audio and progress tracking
   const handlePlayVideo = () => {
     setIsVideoPlaying(true);
     setVideoCurrentTime(0);
     setVideoProgress(0);
     
     toast({
-      title: "Video Loading",
-      description: "Opening Saint's transformation story...",
+      title: "🎬 Video Starting",
+      description: "Saint's transformation story with audio narration...",
     });
     
     // Start video progress simulation
@@ -127,16 +127,33 @@ export default function V2ReimagiedMockup() {
             setIsVideoPlaying(false);
             setVideoCurrentTime(0);
             setVideoProgress(0);
+            toast({
+              title: "✨ Video Complete",
+              description: "Ready to discover your Good Girl archetype?",
+            });
           }, 2000);
         }
         return newTime;
       });
     }, 1000);
     
-    // Play audio narration
-    if (!isVideoMuted) {
-      playNarrationAudio();
-    }
+    // Play audio narration with user interaction
+    setTimeout(() => {
+      if (!isVideoMuted) {
+        // Request audio permission first
+        if ('speechSynthesis' in window) {
+          const welcomeMsg = new SpeechSynthesisUtterance("Welcome to Saint's transformation story");
+          welcomeMsg.volume = 0.8;
+          speechSynthesis.speak(welcomeMsg);
+          
+          setTimeout(() => {
+            playNarrationAudio();
+          }, 2000);
+        } else {
+          playNarrationAudio();
+        }
+      }
+    }, 1000);
     
     // Track video engagement
     if (typeof window !== 'undefined' && (window as any).gtag) {
@@ -147,29 +164,76 @@ export default function V2ReimagiedMockup() {
     }
   };
 
-  // Audio narration using Web Speech API
+  // Enhanced audio system with multiple fallbacks
   const playNarrationAudio = () => {
+    if (isVideoMuted) return;
+    
+    // Primary: Use existing meditation audio file
+    try {
+      const audio = new Audio('/attached_assets/Grounding Into The Body - Guided Meditation_1753289930696.mp3');
+      audio.volume = 0.3;
+      audio.currentTime = 0;
+      audio.play().catch(() => {
+        // Fallback: Use Web Speech API with better voice
+        playTextToSpeech();
+      });
+    } catch (error) {
+      // Fallback: Use Web Speech API
+      playTextToSpeech();
+    }
+  };
+
+  const playTextToSpeech = () => {
     if ('speechSynthesis' in window) {
+      // Stop any existing speech
+      speechSynthesis.cancel();
+      
       const narrationTexts = [
         "For over thirty years, I lived as the perfect good girl.",
-        "Always pleasing others, never honoring my own desires.",
+        "Always pleasing others, never honoring my own desires.", 
         "But something deep inside was calling for freedom.",
         "Through somatic practices, I discovered my authentic self.",
         "I reclaimed my erotic truth and sovereign power.",
         "Now I guide other women on this sacred journey home."
       ];
       
-      narrationTexts.forEach((text, index) => {
-        setTimeout(() => {
-          if (isVideoPlaying && !isVideoMuted) {
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.rate = 0.9;
-            utterance.pitch = 1.1;
-            utterance.volume = 0.8;
-            speechSynthesis.speak(utterance);
-          }
-        }, index * 7000); // Space out narration
-      });
+      // Wait for voices to load
+      const speakText = () => {
+        narrationTexts.forEach((text, index) => {
+          setTimeout(() => {
+            if (isVideoPlaying && !isVideoMuted) {
+              const utterance = new SpeechSynthesisUtterance(text);
+              
+              // Try to use a female voice
+              const voices = speechSynthesis.getVoices();
+              const femaleVoice = voices.find(voice => 
+                voice.name.toLowerCase().includes('female') ||
+                voice.name.toLowerCase().includes('woman') ||
+                voice.name.toLowerCase().includes('samantha') ||
+                voice.name.toLowerCase().includes('karen') ||
+                voice.name.toLowerCase().includes('sara')
+              );
+              
+              if (femaleVoice) {
+                utterance.voice = femaleVoice;
+              }
+              
+              utterance.rate = 0.8;
+              utterance.pitch = 1.2;
+              utterance.volume = 0.9;
+              
+              speechSynthesis.speak(utterance);
+            }
+          }, index * 7000);
+        });
+      };
+
+      // Ensure voices are loaded
+      if (speechSynthesis.getVoices().length === 0) {
+        speechSynthesis.addEventListener('voiceschanged', speakText, { once: true });
+      } else {
+        speakText();
+      }
     }
   };
 
@@ -1004,9 +1068,21 @@ export default function V2ReimagiedMockup() {
                   </div>
 
                   <button
-                    onClick={() => setIsVideoMuted(!isVideoMuted)}
+                    onClick={() => {
+                      setIsVideoMuted(!isVideoMuted);
+                      if (!isVideoMuted) {
+                        // Muting - stop any audio
+                        speechSynthesis.cancel();
+                      } else {
+                        // Unmuting - restart audio if video is playing
+                        if (isVideoPlaying) {
+                          playNarrationAudio();
+                        }
+                      }
+                    }}
                     className="text-white hover:text-purple-300 transition-colors"
                     data-testid="button-video-mute"
+                    title={isVideoMuted ? "Unmute audio" : "Mute audio"}
                   >
                     {isVideoMuted ? (
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -1017,6 +1093,21 @@ export default function V2ReimagiedMockup() {
                         <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.818L4.236 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.236l4.147-3.818zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clipRule="evenodd" />
                       </svg>
                     )}
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      // Test audio immediately
+                      if ('speechSynthesis' in window) {
+                        const test = new SpeechSynthesisUtterance("Audio test - can you hear me?");
+                        test.volume = 1.0;
+                        speechSynthesis.speak(test);
+                      }
+                    }}
+                    className="text-white text-xs bg-green-600 hover:bg-green-700 px-2 py-1 rounded-full transition-colors"
+                    title="Test audio"
+                  >
+                    🔊 TEST
                   </button>
 
                   <div className="text-white text-xs bg-red-600 px-2 py-1 rounded-full animate-pulse">
