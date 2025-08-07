@@ -176,14 +176,15 @@ export default function HolyMessWorkshopVarC() {
             
             {/* Left Column - Hero Image with Refined Effects */}
             <div className="relative">
-              {/* Subtle professional aura */}
-              <div className="absolute -inset-6 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 rounded-3xl blur-xl underwater-pulse opacity-40"></div>
+              {/* Divine subtle aura */}
+              <div className="absolute -inset-6 bg-gradient-to-r from-purple-500/15 to-cyan-500/10 rounded-3xl blur-xl divine-glow opacity-50"></div>
+              <div className="absolute -inset-3 divine-shimmer rounded-2xl"></div>
               
               <div className="relative">
                 <img 
                   src={underwaterDancerUrl} 
                   alt="Holy Mess Workshop - Underwater Dancer with Powder Explosion" 
-                  className="relative w-full h-[650px] object-cover rounded-2xl shadow-2xl border border-cyan-300/20"
+                  className="relative w-full h-[650px] object-cover rounded-2xl shadow-2xl border border-purple-300/30 divine-pulse"
                 />
                 
                 {/* Professional overlay */}
@@ -228,7 +229,7 @@ export default function HolyMessWorkshopVarC() {
             <div className="space-y-10">
               
               {/* Workshop Details Card */}
-              <Card className="bg-black/15 backdrop-blur-lg border border-cyan-500/25 p-8">
+              <Card className="bg-black/15 backdrop-blur-lg border border-purple-400/30 divine-glow p-8">
                 <div className="space-y-6">
                   <h2 className="text-2xl font-bold text-white text-center mb-6">Workshop Details</h2>
                   <div className="flex items-center space-x-4">
@@ -289,7 +290,7 @@ export default function HolyMessWorkshopVarC() {
                 <div className="flex flex-col gap-4">
                   <Button 
                     size="lg" 
-                    className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white text-xl px-12 py-6 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300"
+                    className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white text-xl px-12 py-6 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 divine-pulse"
                     onClick={() => document.getElementById('registration')?.scrollIntoView({ behavior: 'smooth' })}
                     data-testid="button-register-hero"
                   >
@@ -320,7 +321,7 @@ export default function HolyMessWorkshopVarC() {
         <div className="absolute inset-0 bg-gradient-to-b from-blue-900/40 to-black/60"></div>
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-4xl mx-auto">
-            <Card className="bg-black/20 backdrop-blur-lg border border-cyan-400/30 p-10">
+            <Card className="bg-black/20 backdrop-blur-lg border border-purple-400/35 divine-glow p-10">
               <CardHeader>
                 <CardTitle className="text-3xl lg:text-4xl font-bold text-white mb-8 leading-tight text-center">
                   You're Craving A Space Where Nothing About You Is Too Much
@@ -378,7 +379,7 @@ export default function HolyMessWorkshopVarC() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/70"></div>
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-2xl mx-auto">
-            <Card className="bg-black/20 backdrop-blur-lg border border-cyan-400/30 p-10">
+            <Card className="bg-black/20 backdrop-blur-lg border border-purple-400/35 divine-glow p-10">
               <CardHeader>
                 <CardTitle className="text-3xl font-bold text-center mb-6 text-white">
                   Secure Your Spot
