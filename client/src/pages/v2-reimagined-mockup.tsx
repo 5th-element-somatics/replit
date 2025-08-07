@@ -102,20 +102,16 @@ export default function V2ReimagiedMockup() {
   // Video play functionality
   const handlePlayVideo = () => {
     setIsVideoPlaying(true);
-    // Simulate video modal or redirect to video content
     toast({
       title: "Video Loading",
-      description: "Saint's transformation story is loading...",
+      description: "Opening Saint's transformation story...",
     });
     
-    // In a real implementation, this would open a video modal or navigate to video
-    setTimeout(() => {
-      setIsVideoPlaying(false);
-      toast({
-        title: "Video Experience",
-        description: "Watch Saint share her powerful journey from good girl to sovereign woman",
-      });
-    }, 2000);
+    // Track video engagement
+    window.gtag?.('event', 'video_play', {
+      event_category: 'engagement',
+      event_label: 'saints_story_v2_homepage'
+    });
   };
 
   // Quiz functionality
@@ -823,8 +819,8 @@ export default function V2ReimagiedMockup() {
 
       {/* Video Modal */}
       {isVideoPlaying && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-          <div className="bg-gray-900 rounded-xl p-6 max-w-2xl w-full border border-purple-400/30">
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+          <div className="bg-gray-900 rounded-xl p-6 max-w-4xl w-full border border-purple-400/30 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-2xl font-bold text-white">Saint's Transformation Story</h3>
               <Button
@@ -836,19 +832,29 @@ export default function V2ReimagiedMockup() {
               </Button>
             </div>
             
-            <div className="aspect-video bg-gray-800 rounded-lg mb-4 flex items-center justify-center">
-              <div className="text-center text-gray-300">
-                <Play className="w-16 h-16 mx-auto mb-4 text-purple-400" />
-                <p className="text-lg mb-2">From Good Girl to Sovereign Woman</p>
-                <p className="text-sm">Saint shares her powerful journey of reclaiming her erotic truth</p>
-              </div>
+            <div className="aspect-video bg-gray-800 rounded-lg mb-4 overflow-hidden">
+              <iframe
+                width="100%"
+                height="100%" 
+                src="https://www.youtube.com/embed/7lEYoULiBYQ?autoplay=1&rel=0&modestbranding=1&start=30"
+                title="Saint's Transformation Story - From Good Girl to Sovereign Woman"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="rounded-lg"
+              ></iframe>
             </div>
             
             <div className="space-y-4">
-              <p className="text-gray-300">
-                In this intimate 2-minute story, Saint reveals how she broke free from decades of 
-                people-pleasing and disconnection to become the embodied, sovereign woman she is today.
-              </p>
+              <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-lg p-4 border border-purple-400/30">
+                <h4 className="text-white font-bold mb-2">What You'll Discover:</h4>
+                <ul className="text-gray-300 text-sm space-y-1">
+                  <li>• Saint's journey from perfectionist to sovereign woman</li>
+                  <li>• The somatic practices that changed everything</li>
+                  <li>• How she reclaimed her authentic desires</li>
+                  <li>• Why traditional approaches weren't enough for true healing</li>
+                </ul>
+              </div>
               
               <div className="flex gap-4">
                 <Button 
