@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="tigerGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#C77DFF;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#8B5CF6;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#6C5CE7;stop-opacity:0.6" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Tiger silhouette based on Fifth Element Somatics branding -->
+  <circle cx="50" cy="50" r="48" fill="url(#tigerGlow)" stroke="#C77DFF" stroke-width="2"/>
+  
+  <!-- Stylized tiger face -->
+  <g transform="translate(50,50)">
+    <!-- Tiger head shape -->
+    <ellipse cx="0" cy="-5" rx="25" ry="22" fill="#FFB347" stroke="#FF8C00" stroke-width="1"/>
+    
+    <!-- Tiger stripes -->
+    <path d="M-15,-15 Q-10,-20 -5,-15" stroke="#FF6B35" stroke-width="2" fill="none"/>
+    <path d="M5,-15 Q10,-20 15,-15" stroke="#FF6B35" stroke-width="2" fill="none"/>
+    <path d="M-20,0 Q-15,-5 -10,0" stroke="#FF6B35" stroke-width="2" fill="none"/>
+    <path d="M10,0 Q15,-5 20,0" stroke="#FF6B35" stroke-width="2" fill="none"/>
+    
+    <!-- Eyes -->
+    <circle cx="-8" cy="-8" r="3" fill="#2D1B69"/>
+    <circle cx="8" cy="-8" r="3" fill="#2D1B69"/>
+    <circle cx="-8" cy="-8" r="1" fill="#C77DFF"/>
+    <circle cx="8" cy="-8" r="1" fill="#C77DFF"/>
+    
+    <!-- Nose -->
+    <path d="M-2,2 Q0,0 2,2 Q0,4 -2,2" fill="#FF6B35"/>
+    
+    <!-- Whiskers -->
+    <path d="M-20,-3 L-12,-2" stroke="#2D1B69" stroke-width="1"/>
+    <path d="M-20,3 L-12,2" stroke="#2D1B69" stroke-width="1"/>
+    <path d="M12,-2 L20,-3" stroke="#2D1B69" stroke-width="1"/>
+    <path d="M12,2 L20,3" stroke="#2D1B69" stroke-width="1"/>
+  </g>
+</svg>
