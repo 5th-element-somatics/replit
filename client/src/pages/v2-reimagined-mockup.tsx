@@ -5,6 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { Menu, X, Star, ArrowRight, Play, Heart, Sparkles, Users, Calendar, Clock, Quote, ChevronDown, Eye, Shield, Zap } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 import saintPhotoUrl from "@assets/saint_photo_1753245778552.png";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
 import underwaterDancerUrl from "@assets/holy-mess-dancer.png";
@@ -15,6 +18,10 @@ export default function V2ReimagiedMockup() {
   const [scrollY, setScrollY] = useState(0);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [liveMembersCount, setLiveMembersCount] = useState(2847);
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [showQuizModal, setShowQuizModal] = useState(false);
+  const { toast } = useToast();
 
   // Enhanced testimonials with star ratings and specific outcomes
   const testimonials = [
@@ -90,6 +97,109 @@ export default function V2ReimagiedMockup() {
   const handleNavClick = () => {
     setIsMenuOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Video play functionality
+  const handlePlayVideo = () => {
+    setIsVideoPlaying(true);
+    // Simulate video modal or redirect to video content
+    toast({
+      title: "Video Loading",
+      description: "Saint's transformation story is loading...",
+    });
+    
+    // In a real implementation, this would open a video modal or navigate to video
+    setTimeout(() => {
+      setIsVideoPlaying(false);
+      toast({
+        title: "Video Experience",
+        description: "Watch Saint share her powerful journey from good girl to sovereign woman",
+      });
+    }, 2000);
+  };
+
+  // Quiz functionality
+  const startQuiz = () => {
+    setShowQuizModal(true);
+    // Track quiz start
+    window.gtag?.('event', 'quiz_started', {
+      event_category: 'engagement',
+      event_label: 'v2_homepage'
+    });
+  };
+
+  const handleQuizStart = () => {
+    window.location.href = '/quiz';
+  };
+
+  // Email capture for breakthrough package
+  const emailCaptureMutation = useMutation({
+    mutationFn: async (emailData: { email: string; name?: string }) => {
+      return apiRequest("POST", "/api/leads", emailData);
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success! 🎉",
+        description: "Your breakthrough package is on the way! Check your email in the next few minutes.",
+      });
+      setEmail("");
+      setName("");
+      // Redirect to quiz
+      setTimeout(() => {
+        window.location.href = '/quiz';
+      }, 1500);
+    },
+    onError: (error) => {
+      toast({
+        title: "Almost there!",
+        description: "Let's get you connected. Try again or contact support.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleBreakthroughClaim = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) {
+      toast({
+        title: "Email needed",
+        description: "Enter your email to claim your breakthrough package",
+        variant: "destructive",
+      });
+      return;
+    }
+    emailCaptureMutation.mutate({ email, name });
+  };
+
+  // Workshop registration functionality  
+  const workshopMutation = useMutation({
+    mutationFn: async () => {
+      return apiRequest("POST", "/api/workshop/holy-mess/register", {
+        name: name || "VIP Member",
+        email: email || "member@example.com"
+      });
+    },
+    onSuccess: (data) => {
+      if (data.sessionUrl) {
+        window.location.href = data.sessionUrl;
+      } else {
+        toast({
+          title: "Registration Started! 🎉",
+          description: "Redirecting to secure payment...",
+        });
+      }
+    },
+    onError: (error) => {
+      toast({
+        title: "Registration Issue",
+        description: "Let's get you registered. Try again or contact support.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleWorkshopRegister = () => {
+    workshopMutation.mutate();
   };
 
   return (
@@ -170,7 +280,11 @@ export default function V2ReimagiedMockup() {
           <Badge className="bg-red-600 text-white animate-pulse">
             Limited Time
           </Badge>
-          <Button className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold px-6 py-2 rounded-full">
+          <Button 
+            onClick={startQuiz}
+            className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold px-6 py-2 rounded-full"
+            data-testid="button-nav-join"
+          >
             JOIN NOW
           </Button>
         </div>
@@ -191,7 +305,11 @@ export default function V2ReimagiedMockup() {
               <Link href="/free-meditation" onClick={handleNavClick} className="text-gray-300 text-lg">FREE AUDIO</Link>
               <Link href="/masterclass" onClick={handleNavClick} className="text-gray-300 text-lg">MASTERCLASS</Link>
               <Link href="/workshop/holy-mess" onClick={handleNavClick} className="text-gray-300 text-lg">WORKSHOP</Link>
-              <Button className="bg-gradient-to-r from-pink-500 to-purple-600 text-white w-full mt-4">
+              <Button 
+                onClick={startQuiz}
+                className="bg-gradient-to-r from-pink-500 to-purple-600 text-white w-full mt-4"
+                data-testid="button-mobile-join"
+              >
                 JOIN NOW
               </Button>
             </div>
@@ -241,13 +359,15 @@ export default function V2ReimagiedMockup() {
 
               {/* Primary CTA with urgency */}
               <div className="space-y-4">
-                <Link href="/quiz">
-                  <Button className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold px-8 sm:px-12 py-4 sm:py-6 rounded-full text-lg sm:text-xl transition-all duration-300 mystique-glow w-full max-w-md mx-auto lg:mx-0 lg:w-auto shadow-2xl">
-                    <Zap className="mr-3 w-6 h-6" />
-                    DISCOVER YOUR ARCHETYPE
-                    <ArrowRight className="ml-3 w-6 h-6" />
-                  </Button>
-                </Link>
+                <Button 
+                  onClick={startQuiz}
+                  className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold px-8 sm:px-12 py-4 sm:py-6 rounded-full text-lg sm:text-xl transition-all duration-300 mystique-glow w-full max-w-md mx-auto lg:mx-0 lg:w-auto shadow-2xl"
+                  data-testid="button-discover-archetype-main"
+                >
+                  <Zap className="mr-3 w-6 h-6" />
+                  DISCOVER YOUR ARCHETYPE
+                  <ArrowRight className="ml-3 w-6 h-6" />
+                </Button>
                 
                 <p className="text-sm text-gray-400">
                   🎁 Free 3-minute quiz reveals your Good Girl type + custom breakthrough plan
@@ -256,8 +376,9 @@ export default function V2ReimagiedMockup() {
                 {/* Secondary CTA */}
                 <div className="pt-4">
                   <button 
-                    onClick={() => setIsVideoPlaying(true)}
+                    onClick={handlePlayVideo}
                     className="flex items-center text-purple-300 hover:text-purple-200 transition-colors"
+                    data-testid="button-watch-video"
                   >
                     <Play className="w-5 h-5 mr-2" />
                     Watch Saint's Story (2 min)
@@ -280,8 +401,9 @@ export default function V2ReimagiedMockup() {
                 {/* Video play overlay */}
                 {!isVideoPlaying && (
                   <button 
-                    onClick={() => setIsVideoPlaying(true)}
+                    onClick={handlePlayVideo}
                     className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    data-testid="button-hero-video"
                   >
                     <div className="bg-white/20 backdrop-blur-sm rounded-full p-4">
                       <Play className="w-12 h-12 text-white" />
@@ -334,11 +456,13 @@ export default function V2ReimagiedMockup() {
             </p>
           </div>
 
-          <Link href="/quiz">
-            <Button className="bg-gradient-to-r from-emerald-500 to-purple-600 hover:from-emerald-600 hover:to-purple-700 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300">
-              BREAK FREE FROM THIS CYCLE
-            </Button>
-          </Link>
+          <Button 
+            onClick={startQuiz}
+            className="bg-gradient-to-r from-emerald-500 to-purple-600 hover:from-emerald-600 hover:to-purple-700 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300"
+            data-testid="button-break-free"
+          >
+            BREAK FREE FROM THIS CYCLE
+          </Button>
         </div>
       </section>
 
@@ -485,11 +609,13 @@ export default function V2ReimagiedMockup() {
           </div>
 
           <div className="text-center mt-12">
-            <Link href="/quiz">
-              <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-bold px-12 py-6 rounded-full text-xl transition-all duration-300 mystique-glow">
-                START YOUR RECLAMATION
-              </Button>
-            </Link>
+            <Button 
+              onClick={startQuiz}
+              className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-bold px-12 py-6 rounded-full text-xl transition-all duration-300 mystique-glow"
+              data-testid="button-start-reclamation"
+            >
+              START YOUR RECLAMATION
+            </Button>
           </div>
         </div>
       </section>
@@ -530,11 +656,21 @@ export default function V2ReimagiedMockup() {
                 </p>
               </div>
 
-              <Link href="/workshop/holy-mess">
-                <Button className="bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-600 hover:to-purple-700 text-white font-bold px-8 py-4 rounded-full text-lg w-full transition-all duration-300">
-                  SECURE YOUR SPOT - $45
-                </Button>
-              </Link>
+              <Button 
+                onClick={handleWorkshopRegister}
+                disabled={workshopMutation.isPending}
+                className="bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-600 hover:to-purple-700 text-white font-bold px-8 py-4 rounded-full text-lg w-full transition-all duration-300 disabled:opacity-70"
+                data-testid="button-workshop-register"
+              >
+                {workshopMutation.isPending ? (
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                    Processing...
+                  </>
+                ) : (
+                  "SECURE YOUR SPOT - $45"
+                )}
+              </Button>
             </div>
 
             <div className="relative">
@@ -593,11 +729,42 @@ export default function V2ReimagiedMockup() {
             </div>
           </div>
 
-          <Link href="/quiz">
-            <Button className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold px-12 py-6 rounded-full text-2xl transition-all duration-300 mystique-glow shadow-2xl w-full max-w-md mx-auto animate-pulse">
-              CLAIM YOUR BREAKTHROUGH
+          <form onSubmit={handleBreakthroughClaim} className="max-w-md mx-auto space-y-4">
+            <div className="grid grid-cols-1 gap-4">
+              <input
+                type="text"
+                placeholder="Your first name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="px-4 py-3 rounded-lg bg-gray-800 border border-purple-400/30 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 transition-colors"
+                data-testid="input-breakthrough-name"
+              />
+              <input
+                type="email"
+                placeholder="Your email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="px-4 py-3 rounded-lg bg-gray-800 border border-purple-400/30 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 transition-colors"
+                data-testid="input-breakthrough-email"
+              />
+            </div>
+            <Button 
+              type="submit"
+              disabled={emailCaptureMutation.isPending}
+              className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold px-12 py-6 rounded-full text-2xl transition-all duration-300 mystique-glow shadow-2xl w-full animate-pulse disabled:opacity-70"
+              data-testid="button-claim-breakthrough"
+            >
+              {emailCaptureMutation.isPending ? (
+                <>
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white mr-3"></div>
+                  CLAIMING...
+                </>
+              ) : (
+                "CLAIM YOUR BREAKTHROUGH"
+              )}
             </Button>
-          </Link>
+          </form>
           
           <p className="text-gray-400 text-sm mt-4">
             Join 10,000+ women who've reclaimed their erotic truth
@@ -645,12 +812,102 @@ export default function V2ReimagiedMockup() {
 
       {/* Floating CTA Button */}
       <div className="fixed bottom-6 right-6 z-50">
-        <Link href="/quiz">
-          <Button className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold px-6 py-3 rounded-full shadow-2xl animate-pulse">
-            START QUIZ
-          </Button>
-        </Link>
+        <Button 
+          onClick={startQuiz}
+          className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold px-6 py-3 rounded-full shadow-2xl animate-pulse"
+          data-testid="button-floating-quiz"
+        >
+          START QUIZ
+        </Button>
       </div>
+
+      {/* Video Modal */}
+      {isVideoPlaying && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+          <div className="bg-gray-900 rounded-xl p-6 max-w-2xl w-full border border-purple-400/30">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-2xl font-bold text-white">Saint's Transformation Story</h3>
+              <Button
+                onClick={() => setIsVideoPlaying(false)}
+                className="bg-transparent hover:bg-gray-700 p-2"
+                data-testid="button-close-video"
+              >
+                <X className="w-6 h-6 text-white" />
+              </Button>
+            </div>
+            
+            <div className="aspect-video bg-gray-800 rounded-lg mb-4 flex items-center justify-center">
+              <div className="text-center text-gray-300">
+                <Play className="w-16 h-16 mx-auto mb-4 text-purple-400" />
+                <p className="text-lg mb-2">From Good Girl to Sovereign Woman</p>
+                <p className="text-sm">Saint shares her powerful journey of reclaiming her erotic truth</p>
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              <p className="text-gray-300">
+                In this intimate 2-minute story, Saint reveals how she broke free from decades of 
+                people-pleasing and disconnection to become the embodied, sovereign woman she is today.
+              </p>
+              
+              <div className="flex gap-4">
+                <Button 
+                  onClick={startQuiz}
+                  className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-bold px-6 py-3 rounded-full flex-1"
+                  data-testid="button-video-to-quiz"
+                >
+                  Discover Your Archetype
+                </Button>
+                <Button 
+                  onClick={() => setIsVideoPlaying(false)}
+                  className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-full"
+                  data-testid="button-video-close"
+                >
+                  Close
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Quiz Start Modal */}
+      {showQuizModal && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+          <div className="bg-gray-900 rounded-xl p-6 max-w-md w-full border border-purple-400/30">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Sparkles className="w-8 h-8 text-white" />
+              </div>
+              
+              <h3 className="text-2xl font-bold text-white mb-4">Ready to Discover Your Good Girl Archetype?</h3>
+              
+              <p className="text-gray-300 mb-6">
+                This 3-minute quiz will reveal which of the 4 Good Girl types is running your life 
+                and give you a custom breakthrough plan.
+              </p>
+              
+              <div className="space-y-4">
+                <Button 
+                  onClick={handleQuizStart}
+                  className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-bold px-8 py-4 rounded-full w-full text-lg"
+                  data-testid="button-modal-start-quiz"
+                >
+                  Yes, Start My Quiz!
+                </Button>
+                
+                <Button 
+                  onClick={() => setShowQuizModal(false)}
+                  className="bg-transparent hover:bg-gray-700 text-gray-300 px-6 py-3 rounded-full w-full"
+                  data-testid="button-modal-close"
+                >
+                  Maybe Later
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
