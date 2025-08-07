@@ -140,8 +140,8 @@ export default function V2ReimagiedMockup() {
     // Play audio narration with user interaction
     setTimeout(() => {
       if (!isVideoMuted) {
-        // Test simple audio first
-        testSimpleAudio();
+        // Start ElevenLabs narration directly
+        playNarrationAudio();
       }
     }, 1000);
     
@@ -154,49 +154,27 @@ export default function V2ReimagiedMockup() {
     }
   };
 
-  // Test simple audio first
-  const testSimpleAudio = () => {
-    if (isVideoMuted) return;
-    
-    // Try browser speech synthesis first
-    if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance("Welcome to Saint's transformation story");
-      utterance.volume = 1;
-      utterance.rate = 0.9;
-      speechSynthesis.speak(utterance);
-      
-      // After 3 seconds, start the full narration
-      setTimeout(() => {
-        playNarrationAudio();
-      }, 3000);
-    } else {
-      // Direct ElevenLabs if no speech synthesis
-      playNarrationAudio();
-    }
-  };
-
   // Enhanced audio system with ElevenLabs professional voice
   const playNarrationAudio = async () => {
     if (isVideoMuted) return;
     
-    const narrationTexts = [
-      "For over thirty years, I lived as the perfect good girl.",
-      "Always pleasing others, never honoring my own desires.", 
-      "But something deep inside was calling for freedom.",
-      "Through somatic practices, I discovered my authentic self.",
-      "I reclaimed my erotic truth and sovereign power.",
-      "Now I guide other women on this sacred journey home."
-    ];
+    const fullNarrationScript = `Welcome to Saint's transformation story. 
+
+For over thirty years, I lived as the perfect good girl. Always pleasing others, never honoring my own desires. I was trapped in patterns that kept me small, afraid to take up space, afraid to speak my truth.
+
+But something deep inside was calling for freedom. My body held the wisdom I needed, even when my mind couldn't understand it yet.
+
+Through somatic practices and sacred healing work, I discovered my authentic self. I learned to listen to the intelligence of my body, to honor my desires, and to reclaim my power.
+
+I broke free from the good girl contract that was suffocating my soul. I reclaimed my erotic truth and stepped into my full sovereignty.
+
+Now I guide other women on this sacred journey home to themselves. Because every woman deserves to live fully alive, fully expressed, and completely free.
+
+This is your invitation to step into your own transformation.`;
     
     try {
-      // Use ElevenLabs professional voice with timed playback
-      for (let i = 0; i < narrationTexts.length; i++) {
-        setTimeout(async () => {
-          if (isVideoPlaying && !isVideoMuted) {
-            await playElevenLabsAudio(narrationTexts[i]);
-          }
-        }, i * 7000); // 7 seconds between each segment
-      }
+      // Use ElevenLabs professional voice for the complete script
+      await playElevenLabsAudio(fullNarrationScript);
     } catch (error) {
       console.log("ElevenLabs unavailable, using text-to-speech fallback");
       playTextToSpeech();
@@ -207,6 +185,8 @@ export default function V2ReimagiedMockup() {
   const playElevenLabsAudio = async (text: string): Promise<void> => {
     return new Promise(async (resolve, reject) => {
       try {
+        console.log("Generating ElevenLabs audio for:", text.substring(0, 50) + "...");
+        
         const response = await fetch('/api/generate-voice', {
           method: 'POST',
           headers: {
@@ -223,9 +203,12 @@ export default function V2ReimagiedMockup() {
           const audioBlob = await response.blob();
           const audioUrl = URL.createObjectURL(audioBlob);
           const audio = new Audio(audioUrl);
-          audio.volume = 0.9;
+          audio.volume = 1.0;
+          
+          console.log("Playing ElevenLabs audio...");
           
           audio.onended = () => {
+            console.log("Audio playback completed");
             URL.revokeObjectURL(audioUrl);
             resolve();
           };
@@ -242,6 +225,7 @@ export default function V2ReimagiedMockup() {
             reject(error);
           });
         } else {
+          console.log("Voice generation response not ok:", response.status);
           reject(new Error('Voice generation failed'));
         }
       } catch (error) {
