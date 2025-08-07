@@ -138,17 +138,10 @@ export default function V2ReimagiedMockup() {
     }, 1000);
     
     // Play audio narration with user interaction
-    setTimeout(async () => {
+    setTimeout(() => {
       if (!isVideoMuted) {
-        // Start with ElevenLabs welcome message and continue immediately
-        try {
-          await playElevenLabsAudio("Welcome to Saint's transformation story.");
-          // Continue with full narration immediately after welcome
-          playNarrationAudio();
-        } catch (error) {
-          // Fallback to direct narration
-          playNarrationAudio();
-        }
+        // Start with welcome and then begin narration sequence
+        playNarrationAudio();
       }
     }, 1000);
     
@@ -166,7 +159,7 @@ export default function V2ReimagiedMockup() {
     if (isVideoMuted) return;
     
     const narrationTexts = [
-      "For over thirty years, I lived as the perfect good girl.",
+      "Welcome to Saint's transformation story. For over thirty years, I lived as the perfect good girl.",
       "Always pleasing others, never honoring my own desires.", 
       "But something deep inside was calling for freedom.",
       "Through somatic practices, I discovered my authentic self.",
@@ -175,14 +168,19 @@ export default function V2ReimagiedMockup() {
     ];
     
     try {
-      // Use ElevenLabs professional voice
-      for (let i = 0; i < narrationTexts.length; i++) {
-        setTimeout(async () => {
-          if (isVideoPlaying && !isVideoMuted) {
-            await playElevenLabsAudio(narrationTexts[i]);
-          }
-        }, i * 7000);
-      }
+      // Use ElevenLabs professional voice with sequential playback
+      const playSequentially = async (index = 0) => {
+        if (index >= narrationTexts.length || !isVideoPlaying || isVideoMuted) return;
+        
+        await playElevenLabsAudio(narrationTexts[index]);
+        
+        // Wait 2 seconds then play next
+        setTimeout(() => {
+          playSequentially(index + 1);
+        }, 2000);
+      };
+      
+      playSequentially(0);
     } catch (error) {
       console.log("ElevenLabs unavailable, using text-to-speech fallback");
       playTextToSpeech();
@@ -989,8 +987,8 @@ export default function V2ReimagiedMockup() {
 
       {/* Video Modal */}
       {isVideoPlaying && (
-        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-[100] flex items-center justify-center p-2 sm:p-4">
-          <div className="bg-gray-900 rounded-xl p-3 sm:p-4 max-w-4xl w-full border border-purple-400/30 max-h-[90vh] overflow-hidden flex flex-col">
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-[100] flex items-start justify-center pt-4 pb-4 px-2 sm:px-4">
+          <div className="bg-gray-900 rounded-xl p-3 sm:p-4 max-w-4xl w-full border border-purple-400/30 max-h-[calc(100vh-2rem)] overflow-hidden flex flex-col mt-4">
             <div className="flex justify-between items-center mb-4 flex-shrink-0">
               <h3 className="text-xl font-bold text-white">Saint's Transformation Story</h3>
               <Button
