@@ -832,17 +832,83 @@ export default function V2ReimagiedMockup() {
               </Button>
             </div>
             
-            <div className="aspect-video bg-gray-800 rounded-lg mb-4 overflow-hidden">
-              <iframe
-                width="100%"
-                height="100%" 
-                src="https://www.youtube.com/embed/7lEYoULiBYQ?autoplay=1&rel=0&modestbranding=1&start=30"
-                title="Saint's Transformation Story - From Good Girl to Sovereign Woman"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="rounded-lg"
-              ></iframe>
+            <div className="aspect-video bg-gradient-to-br from-purple-900 via-pink-900 to-indigo-900 rounded-lg mb-4 overflow-hidden relative">
+              {/* Animated Background */}
+              <div className="absolute inset-0 opacity-30">
+                <div className="absolute top-0 left-0 w-full h-full">
+                  {/* Floating particles */}
+                  {[...Array(12)].map((_, i) => (
+                    <div
+                      key={i}
+                      className={`absolute w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full animate-float-${i % 3}`}
+                      style={{
+                        left: `${Math.random() * 100}%`,
+                        top: `${Math.random() * 100}%`,
+                        animationDelay: `${i * 0.5}s`,
+                        animationDuration: `${3 + Math.random() * 4}s`
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Main Animation Content */}
+              <div className="relative z-10 h-full flex flex-col justify-center items-center p-8 text-center">
+                {/* Animated Avatar */}
+                <div className="relative mb-6">
+                  <div className="w-24 h-24 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center mb-4 animate-pulse">
+                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-300 to-pink-400 flex items-center justify-center">
+                      <svg className="w-12 h-12 text-white" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 7.5V8.5C15 9.9 13.9 11 12.5 11S10 9.9 10 8.5V7.5L4 7V9C4 10.1 4.9 11 6 11V21C6 21.6 6.4 22 7 22H17C17.6 22 18 21.6 18 21V11C19.1 11 20 10.1 20 9V7.5Z"/>
+                      </svg>
+                    </div>
+                  </div>
+                  {/* Transformation rings */}
+                  <div className="absolute inset-0 animate-spin-slow">
+                    <div className="w-32 h-32 border-2 border-purple-400/30 rounded-full"></div>
+                  </div>
+                  <div className="absolute inset-0 animate-spin-slow-reverse">
+                    <div className="w-40 h-40 border border-pink-400/20 rounded-full"></div>
+                  </div>
+                </div>
+
+                {/* Animated Text Sequence */}
+                <div className="space-y-4 max-w-md">
+                  <div className="opacity-0 animate-fade-in-up" style={{ animationDelay: '1s', animationFillMode: 'forwards' }}>
+                    <h3 className="text-2xl font-bold text-white mb-2">From Good Girl...</h3>
+                    <p className="text-purple-200 text-sm">30+ years of people-pleasing</p>
+                  </div>
+                  
+                  <div className="opacity-0 animate-fade-in-up" style={{ animationDelay: '3s', animationFillMode: 'forwards' }}>
+                    <div className="w-16 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 mx-auto my-4"></div>
+                  </div>
+                  
+                  <div className="opacity-0 animate-fade-in-up" style={{ animationDelay: '4s', animationFillMode: 'forwards' }}>
+                    <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent mb-2">...To Sovereign Woman</h3>
+                    <p className="text-pink-200 text-sm">Reclaimed authentic desires</p>
+                  </div>
+
+                  <div className="opacity-0 animate-fade-in-up" style={{ animationDelay: '6s', animationFillMode: 'forwards' }}>
+                    <div className="mt-6 flex items-center justify-center space-x-2">
+                      <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-pink-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                      <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                    </div>
+                    <p className="text-gray-300 text-xs mt-2">Saint's Transformation Story</p>
+                  </div>
+                </div>
+
+                {/* Sacred Geometry Background */}
+                <svg className="absolute inset-0 w-full h-full opacity-10" viewBox="0 0 400 300">
+                  <defs>
+                    <pattern id="sacred-geometry" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse">
+                      <circle cx="25" cy="25" r="20" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-purple-400" />
+                      <circle cx="25" cy="25" r="10" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-pink-400" />
+                    </pattern>
+                  </defs>
+                  <rect width="100%" height="100%" fill="url(#sacred-geometry)" />
+                </svg>
+              </div>
             </div>
             
             <div className="space-y-4">
