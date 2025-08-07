@@ -138,18 +138,17 @@ export default function V2ReimagiedMockup() {
     }, 1000);
     
     // Play audio narration with user interaction
-    setTimeout(() => {
+    setTimeout(async () => {
       if (!isVideoMuted) {
-        // Request audio permission first
-        if ('speechSynthesis' in window) {
-          const welcomeMsg = new SpeechSynthesisUtterance("Welcome to Saint's transformation story");
-          welcomeMsg.volume = 0.8;
-          speechSynthesis.speak(welcomeMsg);
+        // Start with ElevenLabs welcome message
+        try {
+          await playElevenLabsAudio("Welcome to Saint's transformation story.");
           
           setTimeout(() => {
             playNarrationAudio();
-          }, 2000);
-        } else {
+          }, 3000);
+        } catch (error) {
+          // Fallback to direct narration
           playNarrationAudio();
         }
       }
@@ -164,22 +163,66 @@ export default function V2ReimagiedMockup() {
     }
   };
 
-  // Enhanced audio system with multiple fallbacks
-  const playNarrationAudio = () => {
+  // Enhanced audio system with ElevenLabs professional voice
+  const playNarrationAudio = async () => {
     if (isVideoMuted) return;
     
-    // Primary: Use existing meditation audio file
+    const narrationTexts = [
+      "For over thirty years, I lived as the perfect good girl.",
+      "Always pleasing others, never honoring my own desires.", 
+      "But something deep inside was calling for freedom.",
+      "Through somatic practices, I discovered my authentic self.",
+      "I reclaimed my erotic truth and sovereign power.",
+      "Now I guide other women on this sacred journey home."
+    ];
+    
     try {
-      const audio = new Audio('/attached_assets/Grounding Into The Body - Guided Meditation_1753289930696.mp3');
-      audio.volume = 0.3;
-      audio.currentTime = 0;
-      audio.play().catch(() => {
-        // Fallback: Use Web Speech API with better voice
-        playTextToSpeech();
-      });
+      // Use ElevenLabs professional voice
+      for (let i = 0; i < narrationTexts.length; i++) {
+        setTimeout(async () => {
+          if (isVideoPlaying && !isVideoMuted) {
+            await playElevenLabsAudio(narrationTexts[i]);
+          }
+        }, i * 7000);
+      }
     } catch (error) {
-      // Fallback: Use Web Speech API
+      console.log("ElevenLabs unavailable, using text-to-speech fallback");
       playTextToSpeech();
+    }
+  };
+
+  // ElevenLabs audio generation
+  const playElevenLabsAudio = async (text: string) => {
+    try {
+      const response = await fetch('/api/generate-voice', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text,
+          voice_id: "21m00Tcm4TlvDq8ikWAM", // Rachel - natural, warm female voice
+          model_id: "eleven_multilingual_v2"
+        }),
+      });
+
+      if (response.ok) {
+        const audioBlob = await response.blob();
+        const audioUrl = URL.createObjectURL(audioBlob);
+        const audio = new Audio(audioUrl);
+        audio.volume = 0.8;
+        
+        audio.play().catch(error => {
+          console.log("Audio playback failed:", error);
+        });
+        
+        // Clean up URL after playing
+        audio.addEventListener('ended', () => {
+          URL.revokeObjectURL(audioUrl);
+        });
+      }
+    } catch (error) {
+      console.log("ElevenLabs generation failed:", error);
     }
   };
 
@@ -1096,16 +1139,21 @@ export default function V2ReimagiedMockup() {
                   </button>
 
                   <button
-                    onClick={() => {
-                      // Test audio immediately
-                      if ('speechSynthesis' in window) {
-                        const test = new SpeechSynthesisUtterance("Audio test - can you hear me?");
-                        test.volume = 1.0;
-                        speechSynthesis.speak(test);
+                    onClick={async () => {
+                      // Test ElevenLabs audio immediately
+                      try {
+                        await playElevenLabsAudio("Welcome! This is Saint speaking with ElevenLabs professional voice technology.");
+                      } catch (error) {
+                        // Fallback to browser speech
+                        if ('speechSynthesis' in window) {
+                          const test = new SpeechSynthesisUtterance("Audio test - can you hear me?");
+                          test.volume = 1.0;
+                          speechSynthesis.speak(test);
+                        }
                       }
                     }}
                     className="text-white text-xs bg-green-600 hover:bg-green-700 px-2 py-1 rounded-full transition-colors"
-                    title="Test audio"
+                    title="Test ElevenLabs voice"
                   >
                     🔊 TEST
                   </button>
