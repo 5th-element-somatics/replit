@@ -140,13 +140,11 @@ export default function V2ReimagiedMockup() {
     // Play audio narration with user interaction
     setTimeout(async () => {
       if (!isVideoMuted) {
-        // Start with ElevenLabs welcome message
+        // Start with ElevenLabs welcome message and continue immediately
         try {
           await playElevenLabsAudio("Welcome to Saint's transformation story.");
-          
-          setTimeout(() => {
-            playNarrationAudio();
-          }, 3000);
+          // Continue with full narration immediately after welcome
+          playNarrationAudio();
         } catch (error) {
           // Fallback to direct narration
           playNarrationAudio();
@@ -991,8 +989,8 @@ export default function V2ReimagiedMockup() {
 
       {/* Video Modal */}
       {isVideoPlaying && (
-        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-          <div className="bg-gray-900 rounded-xl p-4 max-w-4xl w-full border border-purple-400/30 max-h-[85vh] overflow-hidden flex flex-col">
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-[100] flex items-center justify-center p-2 sm:p-4">
+          <div className="bg-gray-900 rounded-xl p-3 sm:p-4 max-w-4xl w-full border border-purple-400/30 max-h-[90vh] overflow-hidden flex flex-col">
             <div className="flex justify-between items-center mb-4 flex-shrink-0">
               <h3 className="text-xl font-bold text-white">Saint's Transformation Story</h3>
               <Button
@@ -1138,25 +1136,7 @@ export default function V2ReimagiedMockup() {
                     )}
                   </button>
 
-                  <button
-                    onClick={async () => {
-                      // Test ElevenLabs audio immediately
-                      try {
-                        await playElevenLabsAudio("Welcome! This is Saint speaking with ElevenLabs professional voice technology.");
-                      } catch (error) {
-                        // Fallback to browser speech
-                        if ('speechSynthesis' in window) {
-                          const test = new SpeechSynthesisUtterance("Audio test - can you hear me?");
-                          test.volume = 1.0;
-                          speechSynthesis.speak(test);
-                        }
-                      }
-                    }}
-                    className="text-white text-xs bg-green-600 hover:bg-green-700 px-2 py-1 rounded-full transition-colors"
-                    title="Test ElevenLabs voice"
-                  >
-                    🔊 TEST
-                  </button>
+
 
                   <div className="text-white text-xs bg-red-600 px-2 py-1 rounded-full animate-pulse">
                     LIVE
