@@ -7,6 +7,7 @@ import { useMutation } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { loadStripe } from '@stripe/stripe-js';
+import { Link } from 'wouter';
 import tigerImageUrl from '@assets/tiger_no_bg.png';
 import saintPhotoUrl from '@assets/saint_photo_1753245778552.png';
 import underwaterDancerUrl from '@assets/holy-mess-dancer.png';
@@ -66,6 +67,23 @@ export default function HolyMessWorkshopVarC() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-blue-900 to-black text-white relative overflow-hidden">
+      
+      {/* Navigation Header */}
+      <nav className="absolute top-0 left-0 right-0 z-50 p-6">
+        <div className="flex items-center justify-between">
+          <Link href="/" className="flex items-center space-x-3 hover:opacity-90 transition-opacity">
+            <img 
+              src={tigerImageUrl} 
+              alt="Fifth Element Somatics" 
+              className="h-12 w-auto cursor-pointer"
+            />
+            <span className="text-lg font-serif font-semibold text-white">FIFTH ELEMENT SOMATICS</span>
+          </Link>
+          <Link href="/" className="text-white/80 hover:text-white transition-colors text-sm">
+            ← Back to Home
+          </Link>
+        </div>
+      </nav>
       {/* Refined Professional Underwater Background */}
       <div className="fixed inset-0 z-0">
         {/* Elegant gradient foundation */}
@@ -149,25 +167,7 @@ export default function HolyMessWorkshopVarC() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-blue-900/20"></div>
       </div>
 
-      {/* Professional Header */}
-      <header className="relative z-50 bg-black/15 backdrop-blur-md border-b border-cyan-400/20">
-        <div className="container mx-auto px-6 py-5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="relative">
-                <img src={tigerImageUrl} alt="Fifth Element Somatics" className="h-11 w-11 drop-shadow-lg" />
-              </div>
-              <span className="text-xl font-semibold text-cyan-100">Fifth Element Somatics</span>
-            </div>
-            <nav className="hidden md:flex space-x-8">
-              <a href="/" className="text-cyan-200 hover:text-white transition-colors duration-300 text-lg">Home</a>
-              <a href="/about" className="text-cyan-200 hover:text-white transition-colors duration-300 text-lg">About</a>
-              <a href="/work-with-me" className="text-cyan-200 hover:text-white transition-colors duration-300 text-lg">Work With Me</a>
-              <a href="/masterclass" className="text-cyan-200 hover:text-white transition-colors duration-300 text-lg">Masterclass</a>
-            </nav>
-          </div>
-        </div>
-      </header>
+
 
       {/* Professional Hero Section */}
       <section className="relative overflow-hidden min-h-screen z-10">
