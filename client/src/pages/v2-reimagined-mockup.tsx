@@ -17,6 +17,10 @@ export default function V2ReimagiedMockup() {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [scrollY, setScrollY] = useState(0);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [videoProgress, setVideoProgress] = useState(0);
+  const [isVideoMuted, setIsVideoMuted] = useState(false);
+  const [videoCurrentTime, setVideoCurrentTime] = useState(0);
+  const videoDuration = 45; // 45 seconds total
   const [liveMembersCount, setLiveMembersCount] = useState(2847);
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -99,19 +103,80 @@ export default function V2ReimagiedMockup() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Video play functionality
+  // Video play functionality with sound and progress tracking
   const handlePlayVideo = () => {
     setIsVideoPlaying(true);
+    setVideoCurrentTime(0);
+    setVideoProgress(0);
+    
     toast({
       title: "Video Loading",
       description: "Opening Saint's transformation story...",
     });
     
+    // Start video progress simulation
+    const progressInterval = setInterval(() => {
+      setVideoCurrentTime(prev => {
+        const newTime = prev + 1;
+        setVideoProgress((newTime / videoDuration) * 100);
+        
+        // Auto-close when video ends
+        if (newTime >= videoDuration) {
+          clearInterval(progressInterval);
+          setTimeout(() => {
+            setIsVideoPlaying(false);
+            setVideoCurrentTime(0);
+            setVideoProgress(0);
+          }, 2000);
+        }
+        return newTime;
+      });
+    }, 1000);
+    
+    // Play audio narration
+    if (!isVideoMuted) {
+      playNarrationAudio();
+    }
+    
     // Track video engagement
-    window.gtag?.('event', 'video_play', {
-      event_category: 'engagement',
-      event_label: 'saints_story_v2_homepage'
-    });
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', 'video_play', {
+        event_category: 'engagement',
+        event_label: 'saints_story_v2_homepage'
+      });
+    }
+  };
+
+  // Audio narration using Web Speech API
+  const playNarrationAudio = () => {
+    if ('speechSynthesis' in window) {
+      const narrationTexts = [
+        "For over thirty years, I lived as the perfect good girl.",
+        "Always pleasing others, never honoring my own desires.",
+        "But something deep inside was calling for freedom.",
+        "Through somatic practices, I discovered my authentic self.",
+        "I reclaimed my erotic truth and sovereign power.",
+        "Now I guide other women on this sacred journey home."
+      ];
+      
+      narrationTexts.forEach((text, index) => {
+        setTimeout(() => {
+          if (isVideoPlaying && !isVideoMuted) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.9;
+            utterance.pitch = 1.1;
+            utterance.volume = 0.8;
+            speechSynthesis.speak(utterance);
+          }
+        }, index * 7000); // Space out narration
+      });
+    }
+  };
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   // Quiz functionality
@@ -872,23 +937,38 @@ export default function V2ReimagiedMockup() {
                   </div>
                 </div>
 
-                {/* Animated Text Sequence */}
+                {/* Extended Animated Text Sequence */}
                 <div className="space-y-4 max-w-md">
-                  <div className="opacity-0 animate-fade-in-up" style={{ animationDelay: '1s', animationFillMode: 'forwards' }}>
-                    <h3 className="text-2xl font-bold text-white mb-2">From Good Girl...</h3>
-                    <p className="text-purple-200 text-sm">30+ years of people-pleasing</p>
+                  <div className="opacity-0 animate-fade-in-up" style={{ animationDelay: '2s', animationFillMode: 'forwards' }}>
+                    <h3 className="text-xl font-bold text-white mb-2">For 30+ years...</h3>
+                    <p className="text-purple-200 text-sm">I was the perfect good girl</p>
                   </div>
                   
-                  <div className="opacity-0 animate-fade-in-up" style={{ animationDelay: '3s', animationFillMode: 'forwards' }}>
-                    <div className="w-16 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 mx-auto my-4"></div>
-                  </div>
-                  
-                  <div className="opacity-0 animate-fade-in-up" style={{ animationDelay: '4s', animationFillMode: 'forwards' }}>
-                    <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent mb-2">...To Sovereign Woman</h3>
-                    <p className="text-pink-200 text-sm">Reclaimed authentic desires</p>
+                  <div className="opacity-0 animate-fade-in-up" style={{ animationDelay: '7s', animationFillMode: 'forwards' }}>
+                    <h3 className="text-xl font-bold text-white mb-2">Always pleasing others...</h3>
+                    <p className="text-purple-200 text-sm">Never honoring my desires</p>
                   </div>
 
-                  <div className="opacity-0 animate-fade-in-up" style={{ animationDelay: '6s', animationFillMode: 'forwards' }}>
+                  <div className="opacity-0 animate-fade-in-up" style={{ animationDelay: '14s', animationFillMode: 'forwards' }}>
+                    <div className="w-24 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 mx-auto my-4"></div>
+                  </div>
+                  
+                  <div className="opacity-0 animate-fade-in-up" style={{ animationDelay: '21s', animationFillMode: 'forwards' }}>
+                    <h3 className="text-xl font-bold bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent mb-2">Through somatic healing...</h3>
+                    <p className="text-pink-200 text-sm">I discovered my authentic self</p>
+                  </div>
+
+                  <div className="opacity-0 animate-fade-in-up" style={{ animationDelay: '28s', animationFillMode: 'forwards' }}>
+                    <h3 className="text-xl font-bold bg-gradient-to-r from-pink-300 to-purple-300 bg-clip-text text-transparent mb-2">Now I'm sovereign...</h3>
+                    <p className="text-pink-200 text-sm">Living my erotic truth</p>
+                  </div>
+
+                  <div className="opacity-0 animate-fade-in-up" style={{ animationDelay: '35s', animationFillMode: 'forwards' }}>
+                    <h3 className="text-xl font-bold text-white mb-2">And I guide others...</h3>
+                    <p className="text-purple-200 text-sm">On this sacred journey home</p>
+                  </div>
+
+                  <div className="opacity-0 animate-fade-in-up" style={{ animationDelay: '42s', animationFillMode: 'forwards' }}>
                     <div className="mt-6 flex items-center justify-center space-x-2">
                       <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"></div>
                       <div className="w-2 h-2 bg-pink-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
@@ -908,6 +988,42 @@ export default function V2ReimagiedMockup() {
                   </defs>
                   <rect width="100%" height="100%" fill="url(#sacred-geometry)" />
                 </svg>
+
+              {/* Video Controls Bar */}
+              <div className="absolute bottom-0 left-0 right-0 bg-black/80 backdrop-blur-sm p-4 rounded-b-lg">
+                <div className="flex items-center space-x-4">
+                  <div className="text-white text-sm font-mono">
+                    {formatTime(videoCurrentTime)} / {formatTime(videoDuration)}
+                  </div>
+                  
+                  <div className="flex-1 bg-gray-600 rounded-full h-1 relative">
+                    <div 
+                      className="bg-gradient-to-r from-purple-400 to-pink-400 h-1 rounded-full transition-all duration-1000"
+                      style={{ width: `${videoProgress}%` }}
+                    ></div>
+                  </div>
+
+                  <button
+                    onClick={() => setIsVideoMuted(!isVideoMuted)}
+                    className="text-white hover:text-purple-300 transition-colors"
+                    data-testid="button-video-mute"
+                  >
+                    {isVideoMuted ? (
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.818L4.236 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.236l4.147-3.818zM12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L13.586 10l-1.293-1.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                    ) : (
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.818L4.236 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.236l4.147-3.818zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </button>
+
+                  <div className="text-white text-xs bg-red-600 px-2 py-1 rounded-full animate-pulse">
+                    LIVE
+                  </div>
+                </div>
+              </div>
               </div>
             </div>
             
