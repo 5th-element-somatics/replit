@@ -140,8 +140,8 @@ export default function V2ReimagiedMockup() {
     // Play audio narration with user interaction
     setTimeout(() => {
       if (!isVideoMuted) {
-        // Start with welcome and then begin narration sequence
-        playNarrationAudio();
+        // Test simple audio first
+        testSimpleAudio();
       }
     }, 1000);
     
@@ -154,12 +154,33 @@ export default function V2ReimagiedMockup() {
     }
   };
 
+  // Test simple audio first
+  const testSimpleAudio = () => {
+    if (isVideoMuted) return;
+    
+    // Try browser speech synthesis first
+    if ('speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance("Welcome to Saint's transformation story");
+      utterance.volume = 1;
+      utterance.rate = 0.9;
+      speechSynthesis.speak(utterance);
+      
+      // After 3 seconds, start the full narration
+      setTimeout(() => {
+        playNarrationAudio();
+      }, 3000);
+    } else {
+      // Direct ElevenLabs if no speech synthesis
+      playNarrationAudio();
+    }
+  };
+
   // Enhanced audio system with ElevenLabs professional voice
   const playNarrationAudio = async () => {
     if (isVideoMuted) return;
     
     const narrationTexts = [
-      "Welcome to Saint's transformation story. For over thirty years, I lived as the perfect good girl.",
+      "For over thirty years, I lived as the perfect good girl.",
       "Always pleasing others, never honoring my own desires.", 
       "But something deep inside was calling for freedom.",
       "Through somatic practices, I discovered my authentic self.",
@@ -168,58 +189,66 @@ export default function V2ReimagiedMockup() {
     ];
     
     try {
-      // Use ElevenLabs professional voice with sequential playback
-      const playSequentially = async (index = 0) => {
-        if (index >= narrationTexts.length || !isVideoPlaying || isVideoMuted) return;
-        
-        await playElevenLabsAudio(narrationTexts[index]);
-        
-        // Wait 2 seconds then play next
-        setTimeout(() => {
-          playSequentially(index + 1);
-        }, 2000);
-      };
-      
-      playSequentially(0);
+      // Use ElevenLabs professional voice with timed playback
+      for (let i = 0; i < narrationTexts.length; i++) {
+        setTimeout(async () => {
+          if (isVideoPlaying && !isVideoMuted) {
+            await playElevenLabsAudio(narrationTexts[i]);
+          }
+        }, i * 7000); // 7 seconds between each segment
+      }
     } catch (error) {
       console.log("ElevenLabs unavailable, using text-to-speech fallback");
       playTextToSpeech();
     }
   };
 
-  // ElevenLabs audio generation
-  const playElevenLabsAudio = async (text: string) => {
-    try {
-      const response = await fetch('/api/generate-voice', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          text,
-          voice_id: "21m00Tcm4TlvDq8ikWAM", // Rachel - natural, warm female voice
-          model_id: "eleven_multilingual_v2"
-        }),
-      });
+  // ElevenLabs audio generation with promise resolution
+  const playElevenLabsAudio = async (text: string): Promise<void> => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await fetch('/api/generate-voice', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            text,
+            voice_id: "21m00Tcm4TlvDq8ikWAM", // Rachel - natural, warm female voice
+            model_id: "eleven_multilingual_v2"
+          }),
+        });
 
-      if (response.ok) {
-        const audioBlob = await response.blob();
-        const audioUrl = URL.createObjectURL(audioBlob);
-        const audio = new Audio(audioUrl);
-        audio.volume = 0.8;
-        
-        audio.play().catch(error => {
-          console.log("Audio playback failed:", error);
-        });
-        
-        // Clean up URL after playing
-        audio.addEventListener('ended', () => {
-          URL.revokeObjectURL(audioUrl);
-        });
+        if (response.ok) {
+          const audioBlob = await response.blob();
+          const audioUrl = URL.createObjectURL(audioBlob);
+          const audio = new Audio(audioUrl);
+          audio.volume = 0.9;
+          
+          audio.onended = () => {
+            URL.revokeObjectURL(audioUrl);
+            resolve();
+          };
+          
+          audio.onerror = (error) => {
+            console.log("Audio playback failed:", error);
+            URL.revokeObjectURL(audioUrl);
+            reject(error);
+          };
+          
+          audio.play().catch(error => {
+            console.log("Audio play failed:", error);
+            URL.revokeObjectURL(audioUrl);
+            reject(error);
+          });
+        } else {
+          reject(new Error('Voice generation failed'));
+        }
+      } catch (error) {
+        console.log("ElevenLabs generation failed:", error);
+        reject(error);
       }
-    } catch (error) {
-      console.log("ElevenLabs generation failed:", error);
-    }
+    });
   };
 
   const playTextToSpeech = () => {
@@ -987,10 +1016,10 @@ export default function V2ReimagiedMockup() {
 
       {/* Video Modal */}
       {isVideoPlaying && (
-        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-[100] flex items-start justify-center pt-4 pb-4 px-2 sm:px-4">
-          <div className="bg-gray-900 rounded-xl p-3 sm:p-4 max-w-4xl w-full border border-purple-400/30 max-h-[calc(100vh-2rem)] overflow-hidden flex flex-col mt-4">
-            <div className="flex justify-between items-center mb-4 flex-shrink-0">
-              <h3 className="text-xl font-bold text-white">Saint's Transformation Story</h3>
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-[100] flex items-center justify-center p-6">
+          <div className="bg-gray-900 rounded-xl p-4 max-w-4xl w-full border border-purple-400/30 max-h-[80vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-bold text-white">Saint's Transformation Story</h3>
               <Button
                 onClick={() => setIsVideoPlaying(false)}
                 className="bg-transparent hover:bg-gray-700 p-2"
@@ -1000,7 +1029,7 @@ export default function V2ReimagiedMockup() {
               </Button>
             </div>
             
-            <div className="aspect-video bg-gradient-to-br from-purple-900 via-pink-900 to-indigo-900 rounded-lg overflow-hidden relative flex-grow min-h-0">
+            <div className="aspect-video bg-gradient-to-br from-purple-900 via-pink-900 to-indigo-900 rounded-lg mb-4 overflow-hidden relative">
               {/* Animated Background */}
               <div className="absolute inset-0 opacity-30">
                 <div className="absolute top-0 left-0 w-full h-full">
@@ -1021,7 +1050,7 @@ export default function V2ReimagiedMockup() {
               </div>
 
               {/* Main Animation Content */}
-              <div className="relative z-10 h-full flex flex-col justify-center items-center p-8 text-center">
+              <div className="relative z-10 h-full flex flex-col justify-center items-center p-4 text-center overflow-y-auto">
                 {/* Animated Avatar */}
                 <div className="relative mb-6">
                   <div className="w-24 h-24 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center mb-4 animate-pulse">
@@ -1041,14 +1070,14 @@ export default function V2ReimagiedMockup() {
                 </div>
 
                 {/* Extended Animated Text Sequence */}
-                <div className="space-y-4 max-w-md">
+                <div className="space-y-3 max-w-md">
                   <div className="opacity-0 animate-fade-in-up" style={{ animationDelay: '2s', animationFillMode: 'forwards' }}>
-                    <h3 className="text-xl font-bold text-white mb-2">For 30+ years...</h3>
+                    <h3 className="text-lg font-bold text-white mb-1">For 30+ years...</h3>
                     <p className="text-purple-200 text-sm">I was the perfect good girl</p>
                   </div>
                   
                   <div className="opacity-0 animate-fade-in-up" style={{ animationDelay: '7s', animationFillMode: 'forwards' }}>
-                    <h3 className="text-xl font-bold text-white mb-2">Always pleasing others...</h3>
+                    <h3 className="text-lg font-bold text-white mb-1">Always pleasing others...</h3>
                     <p className="text-purple-200 text-sm">Never honoring my desires</p>
                   </div>
 
