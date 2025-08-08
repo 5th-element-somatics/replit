@@ -11,17 +11,11 @@ import Checkout from "@/pages/checkout";
 import Watch from "@/pages/watch";
 import Course from "@/pages/course";
 import Apply from "@/pages/apply";
-import AdminUnified from "@/pages/admin-unified-new";
-import AdminLogin from "@/pages/admin-login";
-import AdminVerify from "@/pages/admin-verify";
+import AdminCenter from "@/pages/admin-center";
 import Quiz from "@/pages/quiz";
 import FreeMeditation from "@/pages/free-meditation";
 import Waitlist from "@/pages/waitlist";
-import AIEmailAdmin from "@/pages/ai-email-admin";
-import SmartAdmin from "@/pages/smart-admin";
 import EmailHeaderTest from "@/pages/email-header-test";
-import EmailDashboard from "@/pages/email-dashboard";
-import WorkshopBuilder from "@/pages/workshop-builder";
 import HolyMessWorkshop from "@/pages/workshop-holy-mess";
 import HolyMessWorkshopVarB from "@/pages/workshop-holy-mess-var-b";
 import HolyMessWorkshopVarC from "@/pages/workshop-holy-mess-var-c";
@@ -39,13 +33,10 @@ function Router() {
       <Route path="/watch" component={Watch} />
       <Route path="/course/:moduleId?" component={Course} />
       <Route path="/apply" component={Apply} />
-      <Route path="/admin" component={AdminUnified} />
-      <Route path="/admin-login" component={AdminLogin} />
-      <Route path="/admin-verify" component={AdminVerify} />
-      <Route path="/admin/ai-email" component={AIEmailAdmin} />
-      <Route path="/admin/email-dashboard" component={EmailDashboard} />
-      <Route path="/admin/workshop-builder" component={WorkshopBuilder} />
-      <Route path="/smart-admin" component={SmartAdmin} />
+      <Route path="/admin" component={AdminCenter} />
+      <Route path="/admin-center" component={AdminCenter} />
+      <Route path="/smart-admin" component={AdminCenter} />
+      <Route path="/admin-unified" component={AdminCenter} />
       <Route path="/free-meditation" component={FreeMeditation} />
       <Route path="/waitlist" component={Waitlist} />
       <Route path="/quiz" component={Quiz} />

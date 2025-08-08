@@ -348,7 +348,7 @@ export default function SmartAdmin() {
         </div>
         
         <div className="flex items-center space-x-4">
-          <Link href="/admin-unified">
+          <Link href="/admin">
             <Button variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-700">
               <Settings className="w-4 h-4 mr-2" />
               Admin Dashboard
