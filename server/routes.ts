@@ -1042,18 +1042,43 @@ Questions? Reply to this email - I read every single one.`,
       // Send magic link email - use the origin header if available, fallback to constructed URL
       let baseUrl;
       
-      if (req.headers.origin) {
-        // Use the origin header which contains the correct protocol and host
+      // First priority: Check for Replit production environment
+      if (process.env.REPLIT_DEPLOYMENT === 'production' && process.env.REPLIT_DOMAINS) {
+        // Use the first Replit domain for production
+        const primaryDomain = process.env.REPLIT_DOMAINS.split(',')[0];
+        baseUrl = `https://${primaryDomain}`;
+        console.log('Using Replit production domain:', primaryDomain);
+      } else if (req.headers.origin && !req.headers.origin.includes('localhost')) {
+        // Use the origin header if it's not localhost
         baseUrl = req.headers.origin;
-      } else if (req.headers.referer) {
-        // Fallback to referer and extract base URL
+        console.log('Using origin header:', req.headers.origin);
+      } else if (req.headers.referer && !req.headers.referer.includes('localhost')) {
+        // Fallback to referer if it's not localhost
         const refererUrl = new URL(req.headers.referer);
         baseUrl = `${refererUrl.protocol}//${refererUrl.host}`;
-      } else {
-        // Last resort - construct from headers
-        const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'https';
-        const host = req.headers['x-forwarded-host'] || req.headers.host;
+        console.log('Using referer header:', baseUrl);
+      } else if (req.headers['x-forwarded-host']) {
+        // Use forwarded host headers (for Replit proxy)
+        const protocol = req.headers['x-forwarded-proto'] || 'https';
+        const host = req.headers['x-forwarded-host'];
         baseUrl = `${protocol}://${host}`;
+        console.log('Using forwarded headers:', baseUrl);
+      } else {
+        // Final fallback - detect if we're in development or production
+        const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+        const host = req.headers.host || 'localhost:5000';
+        
+        // If host contains replit.dev or replit.app, use it as-is
+        if (host.includes('replit.dev') || host.includes('replit.app')) {
+          baseUrl = `${protocol}://${host}`;
+        } else if (process.env.NODE_ENV === 'production') {
+          // Production fallback to main domain
+          baseUrl = 'https://fifthelementsomatics.com';
+        } else {
+          // Development fallback
+          baseUrl = `${protocol}://${host}`;
+        }
+        console.log('Using final fallback:', baseUrl);
       }
       
       console.log('Using baseUrl for magic link:', baseUrl);
