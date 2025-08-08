@@ -55,6 +55,7 @@ export default function AdminCenter() {
   // Authentication state
   const [isAuthenticating, setIsAuthenticating] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [adminEmail, setAdminEmail] = useState("raj@raj.net"); // Default to raj@raj.net
   
   // AI Assistant state
   const [prompt, setPrompt] = useState("");
@@ -98,10 +99,19 @@ export default function AdminCenter() {
 
   // Request magic link if not authenticated
   const requestMagicLink = async () => {
+    if (!adminEmail || !adminEmail.includes('@')) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     try {
       setIsAuthenticating(true);
       const response = await apiRequest("POST", "/api/admin/request-magic-link", {
-        email: "hello@fifthelementsomatics.com" // Default admin email
+        email: adminEmail
       });
       
       if (response.ok) {
@@ -378,10 +388,25 @@ export default function AdminCenter() {
             <CardContent className="p-8">
               <h2 className="text-2xl font-serif font-bold text-white mb-4">Get Magic Link</h2>
               <p className="text-gray-300 mb-6">
-                Click below to receive a secure authentication link via email.
+                Enter your email to receive a secure authentication link.
               </p>
               
-              <Button 
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="admin-email" className="text-gray-300 mb-2 block">Admin Email Address</Label>
+                  <Input
+                    id="admin-email"
+                    type="email"
+                    value={adminEmail}
+                    onChange={(e) => setAdminEmail(e.target.value)}
+                    className="bg-gray-900 border-gray-600 text-white"
+                    placeholder="Enter your email address"
+                    disabled={isAuthenticating}
+                    data-testid="input-admin-email"
+                  />
+                </div>
+                
+                <Button 
                 onClick={requestMagicLink}
                 disabled={isAuthenticating}
                 className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg"
@@ -394,10 +419,11 @@ export default function AdminCenter() {
                 )}
                 Send Magic Link
               </Button>
-              
-              <p className="text-sm text-gray-400 mt-4">
-                The link will be sent to the admin email address.
-              </p>
+                
+                <p className="text-sm text-gray-400 mt-4">
+                  The link will be sent to {adminEmail || 'your email address'}.
+                </p>
+              </div>
             </CardContent>
           </Card>
         </div>
