@@ -1127,12 +1127,13 @@ Questions? Reply to this email - I read every single one.`,
         expiresAt: sessionExpiresAt,
       });
 
-      // Set session cookie
+      // Set session cookie with environment-appropriate settings
+      const isProduction = process.env.NODE_ENV === 'production';
       res.cookie('admin_session', sessionToken, {
         httpOnly: true,
-        secure: true, // Always use secure cookies since we're on HTTPS
+        secure: isProduction, // Only secure in production (HTTPS)
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
-        sameSite: 'none' // Required for cross-origin cookies
+        sameSite: isProduction ? 'none' : 'lax' // Cross-origin for production, lax for development
       });
       
       console.log('Admin session created for:', magicLink.email, 'with token:', sessionToken.substring(0, 8) + '...');
