@@ -76,10 +76,55 @@ export default function AdminCenter() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Check authentication status on page load
+  // Check authentication status on page load and handle magic link tokens
   useEffect(() => {
     const checkAuth = async () => {
       try {
+        // First check if there's a token in the URL (magic link)
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        
+        if (token) {
+          toast({
+            title: "Verifying Magic Link... 🔐",
+            description: "Authenticating your access...",
+          });
+          
+          try {
+            // Call the verification endpoint which will set the session cookie
+            const verifyResponse = await fetch(`/api/admin/verify-magic-link?token=${token}`, {
+              method: 'GET',
+              credentials: 'include'
+            });
+            
+            if (verifyResponse.ok || verifyResponse.redirected) {
+              // Remove token from URL after successful verification
+              window.history.replaceState({}, document.title, window.location.pathname);
+              
+              toast({
+                title: "✅ Authentication Successful!",
+                description: "Welcome to the Admin Center",
+              });
+              
+              setIsAuthenticated(true);
+              setIsAuthenticating(false);
+              return;
+            } else {
+              throw new Error('Magic link verification failed');
+            }
+          } catch (tokenError) {
+            console.log("Magic link verification failed:", tokenError);
+            toast({
+              title: "Magic Link Invalid",
+              description: "The link may have expired. Please request a new one.",
+              variant: "destructive",
+            });
+            // Remove invalid token from URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+          }
+        }
+        
+        // Regular authentication check
         const response = await apiRequest("GET", "/api/admin/verify-auth");
         if (response.ok) {
           setIsAuthenticated(true);
@@ -95,7 +140,7 @@ export default function AdminCenter() {
     };
 
     checkAuth();
-  }, []);
+  }, [toast]);
 
   // Request magic link if not authenticated
   const requestMagicLink = async () => {

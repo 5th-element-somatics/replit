@@ -654,7 +654,7 @@ Questions? Reply to this email or contact hello@fifthelementsomatics.com
   app.get("/api/applications", requireAdminAuth, async (req, res) => {
     try {
       const applications = await storage.getAllApplications();
-      console.log(`📋 Admin ${req.adminUser.email} requested applications. Returning ${applications.length} total applications`);
+      console.log(`📋 Admin ${req.adminUser?.email} requested applications. Returning ${applications.length} total applications`);
       
       // Add cache control headers to prevent caching issues
       res.set({
@@ -912,7 +912,7 @@ Questions? Reply to this email - I read every single one.`,
   app.get("/api/admin/applications", requireAdminAuth, async (req, res) => {
     try {
       const applications = await storage.getAllApplications();
-      console.log(`📋 Admin ${req.adminUser.email} requested applications. Returning ${applications.length} total applications`);
+      console.log(`📋 Admin ${req.adminUser?.email} requested applications. Returning ${applications.length} total applications`);
       
       // Add cache control headers to prevent caching issues
       res.set({
@@ -931,7 +931,7 @@ Questions? Reply to this email - I read every single one.`,
   app.get("/api/admin/leads", requireAdminAuth, async (req, res) => {
     try {
       const leads = await storage.getAllLeads();
-      console.log(`📊 Admin ${req.adminUser.email} requested leads. Returning ${leads.length} total leads`);
+      console.log(`📊 Admin ${req.adminUser?.email} requested leads. Returning ${leads.length} total leads`);
       
       // Add cache control headers to prevent caching issues
       res.set({
@@ -1057,7 +1057,7 @@ Questions? Reply to this email - I read every single one.`,
       
       console.log('Using baseUrl for magic link:', baseUrl);
       
-      const magicLink = `${baseUrl}/admin-verify?token=${token}`;
+      const magicLink = `${baseUrl}/admin?token=${token}`;
 
       // Send email with detailed logging
       if (process.env.SENDGRID_API_KEY) {
@@ -1169,8 +1169,8 @@ Questions? Reply to this email - I read every single one.`,
       
       console.log('Admin session created for:', magicLink.email, 'with token:', sessionToken.substring(0, 8) + '...');
 
-      // Redirect to smart admin instead of returning JSON for better UX
-      res.redirect('/smart-admin');
+      // Redirect to admin instead of returning JSON for better UX
+      res.redirect('/admin');
     } catch (error: any) {
       console.error("Magic link verification error:", error);
       res.status(500).json({ message: "Error verifying magic link: " + error.message });
@@ -1539,7 +1539,7 @@ Questions? Reply to this email - I read every single one.`,
   app.post("/api/admin/ai-command", requireAdminAuth, async (req, res) => {
     try {
       const { command } = req.body;
-      console.log(`🤖 AI Command from ${req.adminUser.email}: ${command}`);
+      console.log(`🤖 AI Command from ${req.adminUser?.email}: ${command}`);
 
       // Process AI command using Anthropic
       if (!process.env.ANTHROPIC_API_KEY) {
@@ -1695,7 +1695,7 @@ Questions? Reply to this email - I read every single one.`,
         })
         .returning();
       
-      console.log(`📧 Admin ${req.adminUser.email} created email campaign: ${newCampaign.name}`);
+      console.log(`📧 Admin ${req.adminUser?.email} created email campaign: ${newCampaign.name}`);
       res.json(newCampaign);
     } catch (error: any) {
       console.error('Error creating campaign:', error);
@@ -1737,7 +1737,7 @@ Questions? Reply to this email - I read every single one.`,
       const id = parseInt(req.params.id);
       const updates = req.body;
       const application = await storage.updateApplication(id, updates);
-      console.log(`📝 Admin ${req.adminUser.email} updated application ${id}`);
+      console.log(`📝 Admin ${req.adminUser?.email} updated application ${id}`);
       res.json(application);
     } catch (error: any) {
       res.status(500).json({ message: "Error updating application: " + error.message });
@@ -1748,7 +1748,7 @@ Questions? Reply to this email - I read every single one.`,
     try {
       const id = parseInt(req.params.id);
       await storage.deleteApplication(id);
-      console.log(`🗑️ Admin ${req.adminUser.email} deleted application ${id}`);
+      console.log(`🗑️ Admin ${req.adminUser?.email} deleted application ${id}`);
       res.json({ success: true, message: "Application deleted successfully" });
     } catch (error: any) {
       res.status(500).json({ message: "Error deleting application: " + error.message });
@@ -1761,7 +1761,7 @@ Questions? Reply to this email - I read every single one.`,
       const id = parseInt(req.params.id);
       const updates = req.body;
       const lead = await storage.updateLead(id, updates);
-      console.log(`📝 Admin ${req.adminUser.email} updated lead ${id}`);
+      console.log(`📝 Admin ${req.adminUser?.email} updated lead ${id}`);
       res.json(lead);
     } catch (error: any) {
       res.status(500).json({ message: "Error updating lead: " + error.message });
@@ -1772,7 +1772,7 @@ Questions? Reply to this email - I read every single one.`,
     try {
       const id = parseInt(req.params.id);
       await storage.deleteLead(id);
-      console.log(`🗑️ Admin ${req.adminUser.email} deleted lead ${id}`);
+      console.log(`🗑️ Admin ${req.adminUser?.email} deleted lead ${id}`);
       res.json({ success: true, message: "Lead deleted successfully" });
     } catch (error: any) {
       res.status(500).json({ message: "Error deleting lead: " + error.message });
@@ -1793,7 +1793,7 @@ Questions? Reply to this email - I read every single one.`,
     try {
       const updates = req.body;
       const settings = await storage.updateSystemSettings(updates);
-      console.log(`⚙️ Admin ${req.adminUser.email} updated system settings`);
+      console.log(`⚙️ Admin ${req.adminUser?.email} updated system settings`);
       res.json(settings);
     } catch (error: any) {
       res.status(500).json({ message: "Error updating settings: " + error.message });
@@ -1825,7 +1825,7 @@ Questions? Reply to this email - I read every single one.`,
         'Content-Disposition': `attachment; filename="${filename}"`
       });
       
-      console.log(`📊 Admin ${req.adminUser.email} exported ${type} data (${data.length} records)`);
+      console.log(`📊 Admin ${req.adminUser?.email} exported ${type} data (${data.length} records)`);
       res.json(data);
     } catch (error: any) {
       res.status(500).json({ message: "Error exporting data: " + error.message });
@@ -2065,7 +2065,7 @@ Questions? Reply to this email - I read every single one.`,
     try {
       const { id } = req.params;
       const updates = req.body;
-      console.log(`📧 Admin ${req.adminUser.email} updated subscriber ${id}`);
+      console.log(`📧 Admin ${req.adminUser?.email} updated subscriber ${id}`);
       res.json({ success: true });
     } catch (error: any) {
       res.status(500).json({ message: "Error updating subscriber: " + error.message });
@@ -2154,7 +2154,7 @@ Questions? Reply to this email - I read every single one.`,
       
       const [createdWorkshop] = await db.insert(workshops).values(newWorkshop).returning();
       
-      console.log(`🎪 Admin ${req.adminUser.email} created workshop: ${createdWorkshop.title}`);
+      console.log(`🎪 Admin ${req.adminUser?.email} created workshop: ${createdWorkshop.title}`);
       res.json(createdWorkshop);
     } catch (error: any) {
       console.error('Error creating workshop:', error);
@@ -2183,7 +2183,7 @@ Questions? Reply to this email - I read every single one.`,
         return res.status(404).json({ message: "Workshop not found" });
       }
       
-      console.log(`🎪 Admin ${req.adminUser.email} updated workshop ${id}`);
+      console.log(`🎪 Admin ${req.adminUser?.email} updated workshop ${id}`);
       res.json(updatedWorkshop);
     } catch (error: any) {
       console.error('Error updating workshop:', error);
@@ -2204,7 +2204,7 @@ Questions? Reply to this email - I read every single one.`,
         return res.status(404).json({ message: "Workshop not found" });
       }
       
-      console.log(`🎪 Admin ${req.adminUser.email} deleted workshop: ${deletedWorkshop.title}`);
+      console.log(`🎪 Admin ${req.adminUser?.email} deleted workshop: ${deletedWorkshop.title}`);
       res.json({ success: true, deletedWorkshop });
     } catch (error: any) {
       console.error('Error deleting workshop:', error);
