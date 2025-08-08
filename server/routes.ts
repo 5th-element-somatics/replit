@@ -1002,7 +1002,8 @@ Questions? Reply to this email - I read every single one.`,
   const authorizedEmails = [
     'hello@fifthelementsomatics.com',
     'saint@fifthelementsomatics.com',
-    'raj@raj.net' // Development access
+    'raj@raj.net', // Development access
+    'peacemvmtinfo@gmail.com' // Peace Movement admin access
   ];
 
   // Request magic link for admin login
