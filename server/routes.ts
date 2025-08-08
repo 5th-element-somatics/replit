@@ -1090,7 +1090,63 @@ Questions? Reply to this email - I read every single one.`,
     }
   });
 
-  // Verify magic link and create admin session
+  // Verify magic link and create admin session (GET version for email links)
+  app.get("/api/admin/verify-magic-link", async (req, res) => {
+    try {
+      const { token } = req.query;
+      
+      if (!token) {
+        return res.status(400).json({ message: "Token is required" });
+      }
+
+      // Find and validate magic link
+      const magicLink = await storage.getMagicLink(token as string);
+      
+      if (!magicLink) {
+        return res.status(400).json({ message: "Invalid magic link" });
+      }
+
+      if (magicLink.used) {
+        return res.status(400).json({ message: "Magic link has already been used" });
+      }
+
+      if (new Date() > magicLink.expiresAt) {
+        return res.status(400).json({ message: "Magic link has expired" });
+      }
+
+      // Mark magic link as used
+      await storage.useMagicLink(token as string);
+
+      // Create admin session
+      const sessionToken = crypto.randomBytes(32).toString('hex');
+      const sessionExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
+      await storage.createAdminSession({
+        email: magicLink.email,
+        sessionToken,
+        expiresAt: sessionExpiresAt,
+      });
+
+      // Set session cookie with environment-appropriate settings
+      const isProduction = process.env.NODE_ENV === 'production';
+      res.cookie('admin_session', sessionToken, {
+        httpOnly: true,
+        secure: isProduction, // Only secure in production (HTTPS)
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        sameSite: isProduction ? 'none' : 'lax' // Cross-origin for production, lax for development
+      });
+      
+      console.log('Admin session created for:', magicLink.email, 'with token:', sessionToken.substring(0, 8) + '...');
+
+      // Redirect to smart admin instead of returning JSON for better UX
+      res.redirect('/smart-admin');
+    } catch (error: any) {
+      console.error("Magic link verification error:", error);
+      res.status(500).json({ message: "Error verifying magic link: " + error.message });
+    }
+  });
+
+  // Verify magic link and create admin session (POST version for API calls)
   app.post("/api/admin/verify-magic-link", async (req, res) => {
     try {
       const { token } = req.body;
@@ -1143,6 +1199,12 @@ Questions? Reply to this email - I read every single one.`,
       console.error("Magic link verification error:", error);
       res.status(500).json({ message: "Error verifying magic link: " + error.message });
     }
+  });
+
+  // Admin authentication verification endpoint
+  app.get('/api/admin/verify-auth', requireAdminAuth, async (req, res) => {
+    // If we get here, requireAdminAuth middleware passed, so user is authenticated
+    res.json({ authenticated: true, email: req.adminUser?.email });
   });
 
 

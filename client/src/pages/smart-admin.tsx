@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Bot, Brain, Zap, MessageSquare, Users, TrendingUp, Send, Mic, MicOff, ArrowLeft, Settings } from "lucide-react";
+import { Bot, Brain, Zap, MessageSquare, Users, TrendingUp, Send, Mic, MicOff, ArrowLeft, Settings, Lock } from "lucide-react";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
 
 export default function SmartAdmin() {
@@ -21,6 +21,8 @@ export default function SmartAdmin() {
   const [aiResponse, setAiResponse] = useState<any>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState("");
+  const [isAuthenticating, setIsAuthenticating] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
 
@@ -28,10 +30,64 @@ export default function SmartAdmin() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Fetch dashboard insights
+  // Check authentication status on page load
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        // Try to access a protected endpoint to verify authentication
+        const response = await apiRequest("GET", "/api/admin/verify-auth");
+        if (response.ok) {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        console.log("Authentication check failed:", error);
+        setIsAuthenticated(false);
+      } finally {
+        setIsAuthenticating(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
+
+  // Request magic link if not authenticated
+  const requestMagicLink = async () => {
+    try {
+      setIsAuthenticating(true);
+      const response = await apiRequest("POST", "/api/admin/request-magic-link", {
+        email: "admin@fifthelementsomatics.com" // Default admin email
+      });
+      
+      if (response.ok) {
+        toast({
+          title: "Magic Link Sent! 📧",
+          description: "Check your email for the authentication link. It will open this admin center.",
+        });
+      } else {
+        toast({
+          title: "Request Failed",
+          description: "Unable to send magic link. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Request Failed",
+        description: "Unable to send magic link. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsAuthenticating(false);
+    }
+  };
+
+  // Fetch dashboard insights (only when authenticated)
   const { data: insights = {}, isLoading: insightsLoading } = useQuery({
     queryKey: ['/api/admin/ai-insights'],
     retry: false,
+    enabled: isAuthenticated, // Only run query when authenticated
   });
 
   // AI command processor
@@ -197,6 +253,82 @@ export default function SmartAdmin() {
       icon: <Zap className="w-4 h-4" />
     }
   ];
+
+  // Show authentication required screen if not authenticated
+  if (isAuthenticating) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin w-8 h-8 border-4 border-purple-400 border-t-transparent rounded-full mx-auto mb-4" />
+          <p className="text-gray-300">Checking authentication...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
+        {/* Navigation */}
+        <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8 border-b border-gray-800">
+          <div className="flex items-center space-x-3">
+            <Link href="/" onClick={handleNavClick}>
+              <img 
+                src={tiger_no_bg} 
+                alt="Fifth Element Somatics" 
+                className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
+              />
+            </Link>
+            <Link href="/" onClick={handleNavClick}>
+              <span className="text-lg font-serif font-semibold text-white">FIFTH ELEMENT SOMATICS</span>
+            </Link>
+          </div>
+          
+          <Badge variant="outline" className="border-red-400 text-red-400">
+            <Lock className="w-4 h-4 mr-2" />
+            Authentication Required
+          </Badge>
+        </nav>
+
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+          <div className="mb-8">
+            <Lock className="w-16 h-16 text-purple-400 mx-auto mb-6" />
+            <h1 className="text-4xl font-serif font-bold text-white mb-4">Admin Authentication Required</h1>
+            <p className="text-xl text-gray-300 mb-8">
+              You need to authenticate to access the Smart Admin Center.
+            </p>
+          </div>
+
+          <Card className="bg-gray-800 border-purple-400 border-opacity-30">
+            <CardContent className="p-8">
+              <h2 className="text-2xl font-serif font-bold text-white mb-4">Get Magic Link</h2>
+              <p className="text-gray-300 mb-6">
+                Click below to receive a secure authentication link via email.
+              </p>
+              
+              <Button 
+                onClick={requestMagicLink}
+                disabled={isAuthenticating}
+                className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg"
+                data-testid="button-request-magic-link"
+              >
+                {isAuthenticating ? (
+                  <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full mr-3" />
+                ) : (
+                  <MessageSquare className="w-5 h-5 mr-3" />
+                )}
+                Send Magic Link
+              </Button>
+              
+              <p className="text-sm text-gray-400 mt-4">
+                The link will be sent to the admin email address.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
