@@ -2039,10 +2039,18 @@ Questions? Reply to this email - I read every single one.`,
       const slug = workshopData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
       
       const newWorkshop = {
-        ...workshopData,
+        title: workshopData.title,
+        description: workshopData.description || '',
+        date: new Date(workshopData.date), // Fix: Convert string to Date object
+        time: workshopData.time,
+        location: workshopData.location,
+        price: workshopData.price.toString(), // Ensure price is string
+        maxParticipants: parseInt(workshopData.maxParticipants) || 20, // Ensure integer
+        currentRegistrations: 0,
         slug,
         landingPageUrl: `${req.protocol}://${req.hostname}/workshop/${slug}`,
-        currentRegistrations: 0
+        isActive: true
+        // Remove createdAt and updatedAt - let database handle these
       };
       
       const [createdWorkshop] = await db.insert(workshops).values(newWorkshop).returning();
