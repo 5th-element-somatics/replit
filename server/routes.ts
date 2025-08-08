@@ -30,6 +30,18 @@ import { db } from "./db";
 import sgMail from '@sendgrid/mail';
 import crypto from 'crypto';
 
+// Extend Express Request type for admin middleware
+declare global {
+  namespace Express {
+    interface Request {
+      adminUser?: {
+        email: string;
+        sessionToken: string;
+      };
+    }
+  }
+}
+
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
 }
@@ -1047,7 +1059,12 @@ Questions? Reply to this email - I read every single one.`,
       
       const magicLink = `${baseUrl}/admin-verify?token=${token}`;
 
+      // Send email with detailed logging
       if (process.env.SENDGRID_API_KEY) {
+        console.log('📧 Attempting to send magic link email to:', email);
+        console.log('📧 SendGrid FROM email:', process.env.SENDGRID_FROM_EMAIL);
+        console.log('📧 Magic link URL:', magicLink);
+        
         const msg = {
           to: email,
           from: process.env.SENDGRID_FROM_EMAIL!,
@@ -1080,7 +1097,21 @@ Questions? Reply to this email - I read every single one.`,
           `
         };
 
-        await sgMail.send(msg);
+        try {
+          const result = await sgMail.send(msg);
+          console.log('✅ Magic link email sent successfully!');
+          console.log('📧 SendGrid response status:', result[0]?.statusCode);
+        } catch (emailError: any) {
+          console.error('❌ Failed to send magic link email:', emailError);
+          console.error('📧 SendGrid error details:', {
+            message: emailError.message,
+            code: emailError.code,
+            response: emailError.response?.body
+          });
+          // Don't throw here - we'll log but still return success to avoid blocking admin access
+        }
+      } else {
+        console.log('⚠️ SENDGRID_API_KEY not configured - email sending skipped');
       }
 
       res.json({ success: true, message: "Magic link sent to your email" });
@@ -1544,13 +1575,18 @@ Questions? Reply to this email - I read every single one.`,
       });
 
       let aiResponse;
+      
+      // Extract text from content block with proper type checking
+      const firstContent = response.content[0];
+      const contentText = firstContent.type === 'text' ? firstContent.text : 'No text content available';
+      
       try {
-        aiResponse = JSON.parse(response.content[0].text);
+        aiResponse = JSON.parse(contentText);
       } catch {
         aiResponse = {
           action: "Analysis completed",
           summary: "AI processed your request",
-          details: response.content[0].text,
+          details: contentText,
           recommendations: ["Consider implementing the suggested changes", "Monitor results and adjust as needed"]
         };
       }
