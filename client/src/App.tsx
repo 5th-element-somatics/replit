@@ -41,10 +41,6 @@ function Router() {
       <Route path="/free-meditation" component={FreeMeditation} />
       <Route path="/waitlist" component={Waitlist} />
       <Route path="/quiz" component={Quiz} />
-      <Route path="/workshop/holy-mess" component={HolyMessWorkshopVarC} />
-      <Route path="/holy-mess-original" component={HolyMessWorkshop} />
-      <Route path="/holy-mess-var-b" component={HolyMessWorkshopVarB} />
-      <Route path="/holy-mess-var-c" component={HolyMessWorkshopVarC} />
       <Route path="/v2-reimagined-mockup" component={V2ReimagiedMockup} />
       <Route path="/email-header-test" component={EmailHeaderTest} />
       <Route component={NotFound} />

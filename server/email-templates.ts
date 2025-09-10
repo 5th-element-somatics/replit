@@ -328,7 +328,7 @@ export const createBrandedEmailTemplate = (content: string) => {
             </div>
             
             <div class="social-links">
-                <a href="https://instagram.com/fifthelementsomatics" title="Instagram">📷</a>
+                <a href="https://www.instagram.com/saintxsavant" title="Instagram">📷</a>
                 <a href="mailto:hello@fifthelementsomatics.com" title="Email">✉️</a>
             </div>
             
