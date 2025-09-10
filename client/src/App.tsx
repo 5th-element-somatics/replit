@@ -34,6 +34,7 @@ function Router() {
       <Route path="/course/:moduleId?" component={Course} />
       <Route path="/apply" component={Apply} />
       <Route path="/admin" component={AdminCenter} />
+      <Route path="/admin-login" component={AdminCenter} />
       <Route path="/admin-center" component={AdminCenter} />
       <Route path="/smart-admin" component={AdminCenter} />
       <Route path="/admin-unified" component={AdminCenter} />
