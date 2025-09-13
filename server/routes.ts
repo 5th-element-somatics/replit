@@ -9,6 +9,12 @@ import {
   insertLeadSchema,
   insertContactMessageSchema,
   insertWaitlistEntrySchema,
+  insertCourseSchema,
+  insertSectionSchema,
+  insertLessonSchema,
+  insertOfferSchema,
+  insertMembershipSchema,
+  insertCourseOrderSchema,
   aiEmailCampaigns,
   aiEmailTemplates,
   aiEmailQueue,
@@ -23,7 +29,14 @@ import {
   workshops,
   insertWorkshopSchema,
   workshopRegistrations,
-  insertWorkshopRegistrationSchema
+  insertWorkshopRegistrationSchema,
+  courses,
+  sections,
+  lessons,
+  offers,
+  memberships,
+  courseOrders,
+  lessonProgress
 } from "@shared/schema";
 import { sql, count, sum, eq, desc, and, gte, lt } from 'drizzle-orm';
 import { db } from "./db";
@@ -382,19 +395,120 @@ Questions? Reply to this email or contact hello@fifthelementsomatics.com
       const paymentIntent = event.data.object as Stripe.PaymentIntent;
       
       try {
-        await storage.createPurchase({
-          email: paymentIntent.metadata.email,
-          stripePaymentIntentId: paymentIntent.id,
-          amount: paymentIntent.amount,
-          hasReturnToBodyAddon: paymentIntent.metadata.hasReturnToBodyAddon === 'true'
-        });
+        // Check if this is a course order or legacy masterclass purchase
+        if (paymentIntent.metadata.courseOrderId) {
+          // Handle course order payment
+          const courseOrderId = parseInt(paymentIntent.metadata.courseOrderId);
+          const courseOrder = await storage.getCourseOrder(courseOrderId);
+          
+          if (courseOrder) {
+            // Mark course order as paid
+            await storage.updateCourseOrder(courseOrderId, {
+              status: 'paid',
+              stripePaymentIntentId: paymentIntent.id
+            });
 
-        // Send access email with video links
-        console.log('🎥 Sending masterclass access email to:', paymentIntent.metadata.email);
-        // Email will contain direct Google Drive links for video access
+            // Get offer details for membership creation
+            const offer = await storage.getOffer(courseOrder.offerId);
+            const course = await storage.getCourse(courseOrder.courseId);
+
+            if (offer && course) {
+              // Calculate access dates based on offer type
+              let accessStartsAt = new Date();
+              let accessEndsAt: Date | null = null;
+
+              if (offer.priceType === 'subscription' && offer.interval) {
+                // For subscriptions, set end date based on interval
+                accessEndsAt = new Date();
+                if (offer.interval === 'month') {
+                  accessEndsAt.setMonth(accessEndsAt.getMonth() + 1);
+                } else if (offer.interval === 'year') {
+                  accessEndsAt.setFullYear(accessEndsAt.getFullYear() + 1);
+                }
+              }
+              // For one-time payments, accessEndsAt stays null (lifetime access)
+
+              // Create membership
+              await storage.createMembership({
+                customerEmail: courseOrder.customerEmail,
+                customerName: courseOrder.customerName || '',
+                courseId: courseOrder.courseId,
+                offerId: courseOrder.offerId,
+                stripeCustomerId: paymentIntent.customer as string || '',
+                stripeSubscriptionId: paymentIntent.metadata.subscriptionId || null,
+                status: 'active',
+                accessStartsAt,
+                accessEndsAt
+              });
+
+              console.log(`✅ Course membership created for ${courseOrder.customerEmail} in course: ${course.title}`);
+
+              // Send course access email
+              if (process.env.SENDGRID_API_KEY) {
+                const msg = {
+                  to: courseOrder.customerEmail,
+                  from: process.env.SENDGRID_FROM_EMAIL!,
+                  subject: `Welcome to ${course.title} - Your Access is Ready! 🎉`,
+                  html: `
+                    <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 100%); color: #ffffff; padding: 40px;">
+                      <div style="text-align: center; margin-bottom: 40px;">
+                        <h1 style="color: #C77DFF; font-size: 28px; margin-bottom: 10px;">Welcome to ${course.title}!</h1>
+                        <p style="color: #E879F9; font-size: 18px; margin: 0;">Your transformation journey begins now</p>
+                      </div>
+                      
+                      <div style="background: rgba(199, 125, 255, 0.1); border: 1px solid #C77DFF; border-radius: 12px; padding: 30px; margin-bottom: 30px;">
+                        <h3 style="color: #F3E8FF; font-size: 20px; margin-bottom: 15px;">Hello ${courseOrder.customerName || 'Beautiful Soul'} 💜</h3>
+                        <p style="color: #E5E7EB; line-height: 1.6; font-size: 16px; margin-bottom: 20px;">
+                          Your payment has been successfully processed and your course access is now active! 
+                        </p>
+                      </div>
+
+                      <div style="text-align: center; margin: 30px 0;">
+                        <a href="${process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : 'https://fifthelementsomatics.com'}/api/member/request-access" 
+                           style="display: inline-block; background: linear-gradient(135deg, #C77DFF 0%, #E879F9 100%); color: #000000; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
+                          🚀 Access Your Course
+                        </a>
+                      </div>
+                      
+                      <div style="margin-bottom: 30px;">
+                        <h3 style="color: #C77DFF; font-size: 18px; margin-bottom: 15px;">What's Next?</h3>
+                        <ol style="color: #E5E7EB; line-height: 1.6; font-size: 16px; padding-left: 20px;">
+                          <li style="margin-bottom: 8px;">Click the button above to request secure access to your course</li>
+                          <li style="margin-bottom: 8px;">Check your email for the secure access link</li>
+                          <li style="margin-bottom: 8px;">Begin your first lesson and start your transformation</li>
+                        </ol>
+                      </div>
+
+                      <div style="text-align: center; color: #9CA3AF; font-size: 14px;">
+                        <p>With love and excitement for your journey,<br><strong style="color: #C77DFF;">Saint</strong><br>Fifth Element Somatics</p>
+                      </div>
+                    </div>
+                  `
+                };
+
+                await sgMail.send(msg);
+                console.log(`📧 Course access email sent to: ${courseOrder.customerEmail}`);
+              }
+            }
+          } else {
+            console.error('Course order not found for payment intent:', paymentIntent.id);
+          }
+        } else {
+          // Handle legacy masterclass purchase
+          await storage.createPurchase({
+            email: paymentIntent.metadata.email,
+            stripePaymentIntentId: paymentIntent.id,
+            amount: paymentIntent.amount,
+            hasReturnToBodyAddon: paymentIntent.metadata.hasReturnToBodyAddon === 'true'
+          });
+
+          // Send access email with video links
+          console.log('🎥 Sending masterclass access email to:', paymentIntent.metadata.email);
+          // Email will contain direct Google Drive links for video access
+        }
         
       } catch (error) {
-        console.error('Error storing purchase:', error);
+        console.error('Error processing payment webhook:', error);
       }
     }
 
@@ -649,6 +763,160 @@ Questions? Reply to this email or contact hello@fifthelementsomatics.com
       res.status(500).json({ message: "Authentication error" });
     }
   };
+
+  // Member session validation middleware
+  const requireMemberAuth = async (req: any, res: any, next: any) => {
+    try {
+      const sessionToken = req.cookies?.member_session;
+      
+      if (!sessionToken) {
+        return res.status(401).json({ message: "Member authentication required" });
+      }
+
+      const session = await storage.getMemberSession(sessionToken);
+      
+      if (!session) {
+        return res.status(401).json({ message: "Invalid member session" });
+      }
+
+      if (new Date() > session.expiresAt) {
+        await storage.deleteMemberSession(sessionToken);
+        return res.status(401).json({ message: "Member session expired" });
+      }
+
+      req.memberUser = { email: session.email, sessionToken: session.sessionToken };
+      next();
+    } catch (error) {
+      console.error("Member auth middleware error:", error);
+      res.status(500).json({ message: "Member authentication error" });
+    }
+  };
+
+  // Request member access link (magic link for course access)
+  app.post("/api/member/request-access", async (req, res) => {
+    try {
+      const { email } = req.body;
+      
+      if (!email) {
+        return res.status(400).json({ message: "Email is required" });
+      }
+
+      // Check if user has valid memberships
+      const memberships = await storage.getMembershipsByEmail(email.toLowerCase());
+      const hasActiveMembership = memberships.some(membership => 
+        membership.status === 'active' &&
+        (!membership.accessEndsAt || new Date(membership.accessEndsAt) > new Date())
+      );
+
+      if (!hasActiveMembership) {
+        return res.status(403).json({ message: "No active membership found" });
+      }
+
+      // Generate secure token
+      const token = crypto.randomBytes(32).toString('hex');
+      const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+
+      // Store magic link in database
+      await storage.createMagicLink({
+        email: email.toLowerCase(),
+        token,
+        expiresAt,
+      });
+
+      // Send magic link email
+      let baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : 'https://fifthelementsomatics.com';
+      const magicLinkUrl = `${baseUrl}/api/member/verify-access?token=${token}`;
+
+      if (process.env.SENDGRID_API_KEY) {
+        const msg = {
+          to: email,
+          from: process.env.SENDGRID_FROM_EMAIL!,
+          subject: 'Your Course Access Link - Fifth Element Somatics',
+          html: `
+            <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 100%); color: #ffffff; padding: 40px;">
+              <div style="text-align: center; margin-bottom: 40px;">
+                <h1 style="color: #C77DFF; font-size: 28px; margin-bottom: 10px;">Access Your Course</h1>
+              </div>
+              
+              <p style="color: #E5E7EB; line-height: 1.6; font-size: 16px; margin-bottom: 30px;">
+                Click the link below to securely access your course materials:
+              </p>
+              
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="${magicLinkUrl}" 
+                   style="display: inline-block; background: linear-gradient(135deg, #C77DFF 0%, #E879F9 100%); color: #000000; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
+                  🔐 Access My Course
+                </a>
+              </div>
+              
+              <p style="color: #9CA3AF; font-size: 14px; margin-top: 30px;">
+                This link expires in 15 minutes for security. If you need a new link, simply request access again.
+              </p>
+            </div>
+          `
+        };
+
+        await sgMail.send(msg);
+      }
+
+      res.json({ success: true, message: "Access link sent to your email" });
+    } catch (error: any) {
+      console.error("Member access request error:", error);
+      res.status(500).json({ message: "Error sending access link: " + error.message });
+    }
+  });
+
+  // Verify member access magic link
+  app.get("/api/member/verify-access", async (req, res) => {
+    try {
+      const { token } = req.query;
+      
+      if (!token) {
+        return res.status(400).json({ message: "Token is required" });
+      }
+
+      const magicLink = await storage.getMagicLink(token as string);
+      
+      if (!magicLink) {
+        return res.status(404).json({ message: "Invalid or expired access link" });
+      }
+
+      if (magicLink.used) {
+        return res.status(400).json({ message: "Access link already used" });
+      }
+
+      if (new Date() > magicLink.expiresAt) {
+        return res.status(400).json({ message: "Access link expired" });
+      }
+
+      // Mark magic link as used
+      await storage.useMagicLink(token as string);
+
+      // Create member session
+      const sessionToken = crypto.randomBytes(32).toString('hex');
+      const sessionExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
+      await storage.createMemberSession({
+        email: magicLink.email,
+        sessionToken,
+        expiresAt: sessionExpiresAt,
+      });
+
+      // Set session cookie
+      res.cookie('member_session', sessionToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      });
+
+      // Redirect to course or lesson
+      res.redirect('/course');
+    } catch (error: any) {
+      console.error("Member access verification error:", error);
+      res.status(500).json({ message: "Error verifying access link: " + error.message });
+    }
+  });
 
   // Get all applications (admin endpoint - protected)
   app.get("/api/applications", requireAdminAuth, async (req, res) => {
@@ -2235,6 +2503,628 @@ Questions? Reply to this email - I read every single one.`,
     } catch (error: any) {
       console.error('Error deleting workshop:', error);
       res.status(500).json({ message: "Error deleting workshop: " + error.message });
+    }
+  });
+
+  // =============================================================================
+  // COMPREHENSIVE COURSE MANAGEMENT API ROUTES
+  // =============================================================================
+
+  // *** COURSE MANAGEMENT ROUTES (Admin) ***
+
+  // Get all courses
+  app.get("/api/admin/courses", requireAdminAuth, async (req, res) => {
+    try {
+      const courses = await storage.getCourses();
+      res.json(courses);
+    } catch (error: any) {
+      console.error("Error fetching courses:", error);
+      res.status(500).json({ message: "Error fetching courses: " + error.message });
+    }
+  });
+
+  // Get course by ID
+  app.get("/api/admin/courses/:id", requireAdminAuth, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const course = await storage.getCourse(parseInt(id));
+      
+      if (!course) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+      
+      res.json(course);
+    } catch (error: any) {
+      console.error("Error fetching course:", error);
+      res.status(500).json({ message: "Error fetching course: " + error.message });
+    }
+  });
+
+  // Create new course
+  app.post("/api/admin/courses", requireAdminAuth, async (req: any, res) => {
+    try {
+      const validatedData = insertCourseSchema.parse(req.body);
+      const course = await storage.createCourse(validatedData);
+      
+      console.log(`📚 Admin ${req.adminUser?.email} created course: ${course.title}`);
+      res.json(course);
+    } catch (error: any) {
+      console.error("Error creating course:", error);
+      res.status(500).json({ message: "Error creating course: " + error.message });
+    }
+  });
+
+  // Update course
+  app.put("/api/admin/courses/:id", requireAdminAuth, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const updates = req.body;
+      
+      const course = await storage.updateCourse(parseInt(id), updates);
+      
+      if (!course) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+      
+      console.log(`📚 Admin ${req.adminUser?.email} updated course ${id}: ${course.title}`);
+      res.json(course);
+    } catch (error: any) {
+      console.error("Error updating course:", error);
+      res.status(500).json({ message: "Error updating course: " + error.message });
+    }
+  });
+
+  // Delete course
+  app.delete("/api/admin/courses/:id", requireAdminAuth, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      
+      await storage.deleteCourse(parseInt(id));
+      
+      console.log(`📚 Admin ${req.adminUser?.email} deleted course ${id}`);
+      res.json({ success: true, message: "Course deleted successfully" });
+    } catch (error: any) {
+      console.error("Error deleting course:", error);
+      res.status(500).json({ message: "Error deleting course: " + error.message });
+    }
+  });
+
+  // *** SECTION MANAGEMENT ROUTES ***
+
+  // Get sections by course
+  app.get("/api/admin/courses/:courseId/sections", requireAdminAuth, async (req, res) => {
+    try {
+      const { courseId } = req.params;
+      const sections = await storage.getSectionsByCourse(parseInt(courseId));
+      res.json(sections);
+    } catch (error: any) {
+      console.error("Error fetching sections:", error);
+      res.status(500).json({ message: "Error fetching sections: " + error.message });
+    }
+  });
+
+  // Create section
+  app.post("/api/admin/courses/:courseId/sections", requireAdminAuth, async (req: any, res) => {
+    try {
+      const { courseId } = req.params;
+      const sectionData = {
+        ...req.body,
+        courseId: parseInt(courseId)
+      };
+      
+      const validatedData = insertSectionSchema.parse(sectionData);
+      const section = await storage.createSection(validatedData);
+      
+      console.log(`📖 Admin ${req.adminUser?.email} created section: ${section.title}`);
+      res.json(section);
+    } catch (error: any) {
+      console.error("Error creating section:", error);
+      res.status(500).json({ message: "Error creating section: " + error.message });
+    }
+  });
+
+  // Update section
+  app.put("/api/admin/sections/:id", requireAdminAuth, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const updates = req.body;
+      
+      const section = await storage.updateSection(parseInt(id), updates);
+      
+      if (!section) {
+        return res.status(404).json({ message: "Section not found" });
+      }
+      
+      console.log(`📖 Admin ${req.adminUser?.email} updated section ${id}: ${section.title}`);
+      res.json(section);
+    } catch (error: any) {
+      console.error("Error updating section:", error);
+      res.status(500).json({ message: "Error updating section: " + error.message });
+    }
+  });
+
+  // Delete section
+  app.delete("/api/admin/sections/:id", requireAdminAuth, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      
+      await storage.deleteSection(parseInt(id));
+      
+      console.log(`📖 Admin ${req.adminUser?.email} deleted section ${id}`);
+      res.json({ success: true, message: "Section deleted successfully" });
+    } catch (error: any) {
+      console.error("Error deleting section:", error);
+      res.status(500).json({ message: "Error deleting section: " + error.message });
+    }
+  });
+
+  // *** LESSON MANAGEMENT ROUTES ***
+
+  // Get lessons by section
+  app.get("/api/admin/sections/:sectionId/lessons", requireAdminAuth, async (req, res) => {
+    try {
+      const { sectionId } = req.params;
+      const lessons = await storage.getLessonsBySection(parseInt(sectionId));
+      res.json(lessons);
+    } catch (error: any) {
+      console.error("Error fetching lessons:", error);
+      res.status(500).json({ message: "Error fetching lessons: " + error.message });
+    }
+  });
+
+  // Get lesson by ID
+  app.get("/api/admin/lessons/:id", requireAdminAuth, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const lesson = await storage.getLesson(parseInt(id));
+      
+      if (!lesson) {
+        return res.status(404).json({ message: "Lesson not found" });
+      }
+      
+      res.json(lesson);
+    } catch (error: any) {
+      console.error("Error fetching lesson:", error);
+      res.status(500).json({ message: "Error fetching lesson: " + error.message });
+    }
+  });
+
+  // Create lesson
+  app.post("/api/admin/sections/:sectionId/lessons", requireAdminAuth, async (req: any, res) => {
+    try {
+      const { sectionId } = req.params;
+      const lessonData = {
+        ...req.body,
+        sectionId: parseInt(sectionId)
+      };
+      
+      const validatedData = insertLessonSchema.parse(lessonData);
+      const lesson = await storage.createLesson(validatedData);
+      
+      console.log(`📝 Admin ${req.adminUser?.email} created lesson: ${lesson.title}`);
+      res.json(lesson);
+    } catch (error: any) {
+      console.error("Error creating lesson:", error);
+      res.status(500).json({ message: "Error creating lesson: " + error.message });
+    }
+  });
+
+  // Update lesson
+  app.put("/api/admin/lessons/:id", requireAdminAuth, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const updates = req.body;
+      
+      const lesson = await storage.updateLesson(parseInt(id), updates);
+      
+      if (!lesson) {
+        return res.status(404).json({ message: "Lesson not found" });
+      }
+      
+      console.log(`📝 Admin ${req.adminUser?.email} updated lesson ${id}: ${lesson.title}`);
+      res.json(lesson);
+    } catch (error: any) {
+      console.error("Error updating lesson:", error);
+      res.status(500).json({ message: "Error updating lesson: " + error.message });
+    }
+  });
+
+  // Delete lesson
+  app.delete("/api/admin/lessons/:id", requireAdminAuth, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      
+      await storage.deleteLesson(parseInt(id));
+      
+      console.log(`📝 Admin ${req.adminUser?.email} deleted lesson ${id}`);
+      res.json({ success: true, message: "Lesson deleted successfully" });
+    } catch (error: any) {
+      console.error("Error deleting lesson:", error);
+      res.status(500).json({ message: "Error deleting lesson: " + error.message });
+    }
+  });
+
+  // *** OFFER MANAGEMENT ROUTES ***
+
+  // Get offers by course
+  app.get("/api/admin/courses/:courseId/offers", requireAdminAuth, async (req, res) => {
+    try {
+      const { courseId } = req.params;
+      const offers = await storage.getOffersByCourse(parseInt(courseId));
+      res.json(offers);
+    } catch (error: any) {
+      console.error("Error fetching offers:", error);
+      res.status(500).json({ message: "Error fetching offers: " + error.message });
+    }
+  });
+
+  // Create offer
+  app.post("/api/admin/courses/:courseId/offers", requireAdminAuth, async (req: any, res) => {
+    try {
+      const { courseId } = req.params;
+      const offerData = {
+        ...req.body,
+        courseId: parseInt(courseId)
+      };
+      
+      const validatedData = insertOfferSchema.parse(offerData);
+      const offer = await storage.createOffer(validatedData);
+      
+      console.log(`💰 Admin ${req.adminUser?.email} created offer: ${offer.name}`);
+      res.json(offer);
+    } catch (error: any) {
+      console.error("Error creating offer:", error);
+      res.status(500).json({ message: "Error creating offer: " + error.message });
+    }
+  });
+
+  // Update offer
+  app.put("/api/admin/offers/:id", requireAdminAuth, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const updates = req.body;
+      
+      const offer = await storage.updateOffer(parseInt(id), updates);
+      
+      if (!offer) {
+        return res.status(404).json({ message: "Offer not found" });
+      }
+      
+      console.log(`💰 Admin ${req.adminUser?.email} updated offer ${id}: ${offer.name}`);
+      res.json(offer);
+    } catch (error: any) {
+      console.error("Error updating offer:", error);
+      res.status(500).json({ message: "Error updating offer: " + error.message });
+    }
+  });
+
+  // Delete offer
+  app.delete("/api/admin/offers/:id", requireAdminAuth, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      
+      await storage.deleteOffer(parseInt(id));
+      
+      console.log(`💰 Admin ${req.adminUser?.email} deleted offer ${id}`);
+      res.json({ success: true, message: "Offer deleted successfully" });
+    } catch (error: any) {
+      console.error("Error deleting offer:", error);
+      res.status(500).json({ message: "Error deleting offer: " + error.message });
+    }
+  });
+
+  // *** PUBLIC COURSE ROUTES ***
+
+  // Get all published courses (public)
+  app.get("/api/courses", async (req, res) => {
+    try {
+      const allCourses = await storage.getCourses();
+      const publishedCourses = allCourses.filter(course => course.isPublished);
+      res.json(publishedCourses);
+    } catch (error: any) {
+      console.error("Error fetching published courses:", error);
+      res.status(500).json({ message: "Error fetching courses: " + error.message });
+    }
+  });
+
+  // Get course by slug (public)
+  app.get("/api/courses/:slug", async (req, res) => {
+    try {
+      const { slug } = req.params;
+      const course = await storage.getCourseBySlug(slug);
+      
+      if (!course) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+      
+      if (!course.isPublished) {
+        return res.status(404).json({ message: "Course not available" });
+      }
+      
+      // Get sections and lessons for public view
+      const sections = await storage.getSectionsByCourse(course.id);
+      const sectionsWithLessons = await Promise.all(
+        sections.map(async (section) => {
+          const lessons = await storage.getLessonsBySection(section.id);
+          // Only return basic info for lessons (no content URLs unless user has access)
+          const publicLessons = lessons.map(lesson => ({
+            id: lesson.id,
+            title: lesson.title,
+            description: lesson.description,
+            contentType: lesson.contentType,
+            duration: lesson.duration,
+            order: lesson.order,
+            isFree: lesson.isFree
+          }));
+          return { ...section, lessons: publicLessons };
+        })
+      );
+      
+      // Get offers for this course
+      const offers = await storage.getOffersByCourse(course.id);
+      const activeOffers = offers.filter(offer => offer.isActive);
+      
+      res.json({
+        ...course,
+        sections: sectionsWithLessons,
+        offers: activeOffers
+      });
+    } catch (error: any) {
+      console.error("Error fetching course by slug:", error);
+      res.status(500).json({ message: "Error fetching course: " + error.message });
+    }
+  });
+
+  // *** MEMBERSHIP & ACCESS ROUTES ***
+
+  // Get user's memberships (requires secure authentication)
+  app.get("/api/memberships", requireMemberAuth, async (req, res) => {
+    try {
+      const memberships = await storage.getMembershipsByEmail(req.memberUser.email);
+      
+      // Sanitize membership data - exclude sensitive internal fields
+      const sanitizedMemberships = memberships.map(membership => ({
+        id: membership.id,
+        courseId: membership.courseId,
+        status: membership.status,
+        accessStartsAt: membership.accessStartsAt,
+        accessEndsAt: membership.accessEndsAt,
+        // Exclude stripeCustomerId, stripeSubscriptionId, and other sensitive data
+      }));
+      
+      res.json(sanitizedMemberships);
+    } catch (error: any) {
+      console.error("Error fetching memberships:", error);
+      res.status(500).json({ message: "Error fetching memberships: " + error.message });
+    }
+  });
+
+  // Create course order/checkout
+  app.post("/api/course-orders", async (req, res) => {
+    try {
+      const validatedData = insertCourseOrderSchema.parse(req.body);
+      const order = await storage.createCourseOrder(validatedData);
+      
+      console.log(`🛒 Course order created for ${order.customerEmail} - Course ID: ${order.courseId}`);
+      res.json(order);
+    } catch (error: any) {
+      console.error("Error creating course order:", error);
+      res.status(500).json({ message: "Error creating course order: " + error.message });
+    }
+  });
+
+  // Get course order by payment intent (for Stripe webhooks)
+  app.get("/api/course-orders/by-payment-intent/:paymentIntentId", async (req, res) => {
+    try {
+      const { paymentIntentId } = req.params;
+      const order = await storage.getCourseOrderByPaymentIntent(paymentIntentId);
+      
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+      
+      res.json(order);
+    } catch (error: any) {
+      console.error("Error fetching course order:", error);
+      res.status(500).json({ message: "Error fetching course order: " + error.message });
+    }
+  });
+
+  // Helper function to sanitize lesson data for client
+  const sanitizeLessonForClient = (lesson: any) => {
+    return {
+      id: lesson.id,
+      title: lesson.title,
+      description: lesson.description,
+      contentType: lesson.contentType,
+      contentUrl: lesson.contentUrl,
+      htmlContent: lesson.htmlContent,
+      duration: lesson.duration,
+      order: lesson.order,
+      isFree: lesson.isFree,
+      // Exclude internal fields like prerequisiteLessonId, dripDelay, etc.
+    };
+  };
+
+  // Check lesson access (with secure membership auth)
+  app.get("/api/lessons/:id/access", requireMemberAuth, async (req, res) => {
+    try {
+      const { id } = req.params;
+      
+      // Validate lesson ID parameter
+      const lessonId = parseInt(id);
+      if (isNaN(lessonId) || lessonId <= 0) {
+        return res.status(400).json({ message: "Invalid lesson ID" });
+      }
+      
+      const lesson = await storage.getLesson(lessonId);
+      if (!lesson) {
+        return res.status(404).json({ message: "Lesson not found" });
+      }
+      
+      // Add null checking for critical fields
+      if (!lesson.sectionId) {
+        console.error(`Lesson ${lesson.id} has no sectionId`);
+        return res.status(500).json({ message: "Lesson configuration error" });
+      }
+      
+      // Check if lesson is free
+      if (lesson.isFree) {
+        return res.json({ hasAccess: true, lesson: sanitizeLessonForClient(lesson) });
+      }
+      
+      // Check if user has membership for this course using authenticated email
+      const memberships = await storage.getMembershipsByEmail(req.memberUser.email);
+      
+      // Get the section to find the course ID
+      const section = await storage.getSection(lesson.sectionId!);
+      
+      if (!section) {
+        return res.status(404).json({ message: "Section not found" });
+      }
+      
+      const hasActiveMembership = memberships.some(membership => 
+        membership.courseId === section.courseId && 
+        membership.status === 'active' &&
+        (!membership.accessEndsAt || new Date(membership.accessEndsAt) > new Date())
+      );
+      
+      if (!hasActiveMembership) {
+        return res.json({ hasAccess: false, message: "Active membership required" });
+      }
+      
+      // Check drip delay and prerequisites
+      const membership = memberships.find(m => m.courseId === section.courseId);
+      if (!membership) {
+        return res.status(500).json({ message: "Membership not found" });
+      }
+      
+      // Add null checking for membership fields
+      if (!membership.accessStartsAt) {
+        console.error(`Membership ${membership.id} has no accessStartsAt`);
+        return res.status(500).json({ message: "Membership configuration error" });
+      }
+      
+      if (lesson.dripDelay && lesson.dripDelay > 0) {
+        const accessDate = new Date(membership.accessStartsAt);
+        accessDate.setDate(accessDate.getDate() + lesson.dripDelay);
+        
+        if (new Date() < accessDate) {
+          return res.json({ 
+            hasAccess: false, 
+            message: "Lesson not yet available",
+            availableAt: accessDate
+          });
+        }
+      }
+      
+      // Check prerequisites
+      if (lesson.prerequisiteLessonId) {
+        const progress = await storage.getLessonProgress(membership.id, lesson.prerequisiteLessonId);
+        if (!progress || !progress.completedAt) {
+          return res.json({ 
+            hasAccess: false, 
+            message: "Complete prerequisite lesson first" 
+          });
+        }
+      }
+      
+      res.json({ hasAccess: true, lesson: sanitizeLessonForClient(lesson) });
+    } catch (error: any) {
+      console.error("Error checking lesson access:", error);
+      res.status(500).json({ message: "Error checking lesson access: " + error.message });
+    }
+  });
+
+  // Update lesson progress
+  app.post("/api/lessons/:id/progress", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { email, progress, completed } = req.body;
+      
+      if (!email) {
+        return res.status(400).json({ message: "Email is required" });
+      }
+      
+      // Find user's membership for this lesson's course
+      const lesson = await storage.getLesson(parseInt(id));
+      if (!lesson) {
+        return res.status(404).json({ message: "Lesson not found" });
+      }
+      
+      const memberships = await storage.getMembershipsByEmail(email);
+      const sections = await storage.getSectionsByCourse(lesson.sectionId!);
+      const section = sections.find(s => s.id === lesson.sectionId);
+      
+      if (!section) {
+        return res.status(404).json({ message: "Section not found" });
+      }
+      
+      const membership = memberships.find(m => m.courseId === section.courseId);
+      if (!membership) {
+        return res.status(403).json({ message: "No active membership found" });
+      }
+      
+      const progressData = {
+        progressPercentage: progress || 0,
+        ...(completed && { completedAt: new Date() })
+      };
+      
+      const updatedProgress = await storage.updateLessonProgress(
+        membership.id, 
+        parseInt(id), 
+        progressData
+      );
+      
+      res.json(updatedProgress);
+    } catch (error: any) {
+      console.error("Error updating lesson progress:", error);
+      res.status(500).json({ message: "Error updating lesson progress: " + error.message });
+    }
+  });
+
+  // Get membership progress
+  app.get("/api/memberships/:membershipId/progress", async (req, res) => {
+    try {
+      const { membershipId } = req.params;
+      const progress = await storage.getMembershipProgress(parseInt(membershipId));
+      res.json(progress);
+    } catch (error: any) {
+      console.error("Error fetching membership progress:", error);
+      res.status(500).json({ message: "Error fetching progress: " + error.message });
+    }
+  });
+
+  // *** ADMIN COURSE ORDER MANAGEMENT ***
+
+  // Get all course orders (admin)
+  app.get("/api/admin/course-orders", requireAdminAuth, async (req, res) => {
+    try {
+      const orders = await storage.getCourseOrders();
+      res.json(orders);
+    } catch (error: any) {
+      console.error("Error fetching course orders:", error);
+      res.status(500).json({ message: "Error fetching course orders: " + error.message });
+    }
+  });
+
+  // Update course order status (admin)
+  app.put("/api/admin/course-orders/:id", requireAdminAuth, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const updates = req.body;
+      
+      const order = await storage.updateCourseOrder(parseInt(id), updates);
+      
+      if (!order) {
+        return res.status(404).json({ message: "Course order not found" });
+      }
+      
+      console.log(`📦 Admin ${req.adminUser?.email} updated course order ${id}`);
+      res.json(order);
+    } catch (error: any) {
+      console.error("Error updating course order:", error);
+      res.status(500).json({ message: "Error updating course order: " + error.message });
     }
   });
 

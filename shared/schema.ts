@@ -56,6 +56,14 @@ export const adminSessions = pgTable("admin_sessions", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const memberSessions = pgTable("member_sessions", {
+  id: serial("id").primaryKey(),
+  email: text("email").notNull(),
+  sessionToken: text("session_token").notNull().unique(),
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 // CMS Content Management
 export const contentPages = pgTable("content_pages", {
   id: serial("id").primaryKey(),
@@ -343,6 +351,12 @@ export const insertAdminSessionSchema = createInsertSchema(adminSessions).pick({
   expiresAt: true,
 });
 
+export const insertMemberSessionSchema = createInsertSchema(memberSessions).pick({
+  email: true,
+  sessionToken: true,
+  expiresAt: true,
+});
+
 export const insertContactMessageSchema = createInsertSchema(contactMessages).pick({
   name: true,
   email: true,
@@ -368,6 +382,8 @@ export type InsertMagicLink = z.infer<typeof insertMagicLinkSchema>;
 export type MagicLink = typeof magicLinks.$inferSelect;
 export type InsertAdminSession = z.infer<typeof insertAdminSessionSchema>;
 export type AdminSession = typeof adminSessions.$inferSelect;
+export type InsertMemberSession = z.infer<typeof insertMemberSessionSchema>;
+export type MemberSession = typeof memberSessions.$inferSelect;
 
 // New advanced types
 export type ContentPage = typeof contentPages.$inferSelect;
@@ -462,3 +478,189 @@ export type Workshop = typeof workshops.$inferSelect;
 export type InsertWorkshop = z.infer<typeof insertWorkshopSchema>;
 export type WorkshopRegistration = typeof workshopRegistrations.$inferSelect;
 export type InsertWorkshopRegistration = z.infer<typeof insertWorkshopRegistrationSchema>;
+
+// Course & Membership System (Kajabi-style)
+export const courses = pgTable("courses", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description"),
+  slug: varchar("slug", { length: 255 }).notNull().unique(),
+  thumbnail: text("thumbnail"), // URL to course image
+  isPublished: boolean("is_published").default(false),
+  price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+  compareAtPrice: decimal("compare_at_price", { precision: 10, scale: 2 }), // For showing discounts
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const sections = pgTable("sections", {
+  id: serial("id").primaryKey(),
+  courseId: integer("course_id").references(() => courses.id),
+  title: text("title").notNull(),
+  description: text("description"),
+  order: integer("order").notNull().default(0),
+  isPublished: boolean("is_published").default(true),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const lessons = pgTable("lessons", {
+  id: serial("id").primaryKey(),
+  sectionId: integer("section_id").references(() => sections.id),
+  title: text("title").notNull(),
+  description: text("description"),
+  contentType: text("content_type").notNull(), // 'video', 'audio', 'text', 'download'
+  contentUrl: text("content_url"), // URL to video/audio/download file
+  htmlContent: text("html_content"), // Rich text content for text lessons
+  duration: integer("duration"), // In seconds for video/audio
+  order: integer("order").notNull().default(0),
+  isPublished: boolean("is_published").default(true),
+  isFree: boolean("is_free").default(false), // Preview lessons
+  dripDelay: integer("drip_delay").default(0), // Days after purchase before available
+  prerequisiteLessonId: integer("prerequisite_lesson_id"), // Must complete this lesson first
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const offers = pgTable("offers", {
+  id: serial("id").primaryKey(),
+  courseId: integer("course_id").references(() => courses.id),
+  name: text("name").notNull(),
+  description: text("description"),
+  priceType: text("price_type").notNull(), // 'one_time', 'subscription', 'payment_plan'
+  price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+  compareAtPrice: decimal("compare_at_price", { precision: 10, scale: 2 }),
+  interval: text("interval"), // For subscriptions: 'monthly', 'yearly'
+  paymentPlanInstallments: integer("payment_plan_installments"), // For payment plans
+  paymentPlanInterval: text("payment_plan_interval"), // 'weekly', 'monthly'
+  stripePriceId: text("stripe_price_id"), // Stripe Price ID for this offer
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const memberships = pgTable("memberships", {
+  id: serial("id").primaryKey(),
+  customerEmail: text("customer_email").notNull(),
+  customerName: text("customer_name"),
+  courseId: integer("course_id").references(() => courses.id),
+  offerId: integer("offer_id").references(() => offers.id),
+  stripeCustomerId: text("stripe_customer_id"),
+  stripeSubscriptionId: text("stripe_subscription_id"), // For subscriptions
+  status: text("status").notNull().default("active"), // 'active', 'cancelled', 'expired', 'trial'
+  accessStartsAt: timestamp("access_starts_at").defaultNow().notNull(),
+  accessEndsAt: timestamp("access_ends_at"), // Null for lifetime access
+  lastAccessedAt: timestamp("last_accessed_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const lessonProgress = pgTable("lesson_progress", {
+  id: serial("id").primaryKey(),
+  membershipId: integer("membership_id").references(() => memberships.id),
+  lessonId: integer("lesson_id").references(() => lessons.id),
+  isCompleted: boolean("is_completed").default(false),
+  watchTime: integer("watch_time").default(0), // Seconds watched for videos
+  completedAt: timestamp("completed_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const courseOrders = pgTable("course_orders", {
+  id: serial("id").primaryKey(),
+  customerEmail: text("customer_email").notNull(),
+  customerName: text("customer_name"),
+  courseId: integer("course_id").references(() => courses.id),
+  offerId: integer("offer_id").references(() => offers.id),
+  stripePaymentIntentId: text("stripe_payment_intent_id").notNull().unique(),
+  stripeSessionId: text("stripe_session_id"),
+  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
+  status: text("status").notNull().default("pending"), // 'pending', 'completed', 'failed', 'refunded'
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Insert schemas for new tables
+export const insertCourseSchema = createInsertSchema(courses).pick({
+  title: true,
+  description: true,
+  slug: true,
+  thumbnail: true,
+  isPublished: true,
+  price: true,
+  compareAtPrice: true,
+});
+
+export const insertSectionSchema = createInsertSchema(sections).pick({
+  courseId: true,
+  title: true,
+  description: true,
+  order: true,
+  isPublished: true,
+});
+
+export const insertLessonSchema = createInsertSchema(lessons).pick({
+  sectionId: true,
+  title: true,
+  description: true,
+  contentType: true,
+  contentUrl: true,
+  htmlContent: true,
+  duration: true,
+  order: true,
+  isPublished: true,
+  isFree: true,
+  dripDelay: true,
+  prerequisiteLessonId: true,
+});
+
+export const insertOfferSchema = createInsertSchema(offers).pick({
+  courseId: true,
+  name: true,
+  description: true,
+  priceType: true,
+  price: true,
+  compareAtPrice: true,
+  interval: true,
+  paymentPlanInstallments: true,
+  paymentPlanInterval: true,
+  stripePriceId: true,
+  isActive: true,
+});
+
+export const insertMembershipSchema = createInsertSchema(memberships).pick({
+  customerEmail: true,
+  customerName: true,
+  courseId: true,
+  offerId: true,
+  stripeCustomerId: true,
+  stripeSubscriptionId: true,
+  status: true,
+  accessStartsAt: true,
+  accessEndsAt: true,
+});
+
+export const insertCourseOrderSchema = createInsertSchema(courseOrders).pick({
+  customerEmail: true,
+  customerName: true,
+  courseId: true,
+  offerId: true,
+  stripePaymentIntentId: true,
+  stripeSessionId: true,
+  amount: true,
+  status: true,
+});
+
+// Types
+export type Course = typeof courses.$inferSelect;
+export type InsertCourse = z.infer<typeof insertCourseSchema>;
+export type Section = typeof sections.$inferSelect;
+export type InsertSection = z.infer<typeof insertSectionSchema>;
+export type Lesson = typeof lessons.$inferSelect;
+export type InsertLesson = z.infer<typeof insertLessonSchema>;
+export type Offer = typeof offers.$inferSelect;
+export type InsertOffer = z.infer<typeof insertOfferSchema>;
+export type Membership = typeof memberships.$inferSelect;
+export type InsertMembership = z.infer<typeof insertMembershipSchema>;
+export type LessonProgress = typeof lessonProgress.$inferSelect;
+export type CourseOrder = typeof courseOrders.$inferSelect;
+export type InsertCourseOrder = z.infer<typeof insertCourseOrderSchema>;
