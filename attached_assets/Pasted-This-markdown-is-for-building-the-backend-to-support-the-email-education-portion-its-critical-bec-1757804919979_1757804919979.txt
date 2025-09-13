@@ -1,0 +1,105 @@
+This markdown is for building the backend to support the email & education portion; its critical because she can’t start selling without it:
+
+# Website Backend & Admin – Edit Summary
+
+## Admin Center (New)
+- [ ] Create an **Admin Dashboard** (owner-only) with:
+  - [ ] Overview: revenue (today/7/30d), active members, course progress, email KPIs
+  - [ ] Quick actions: send broadcast, create automation, add course/lesson, issue coupon
+
+## Email Marketing (Kit-style)
+- [ ] **Broadcasts**: write, preview, schedule, A/B subject, resend to non-openers
+- [ ] **Automations**: visual flow builder (triggers: form submit, purchase, tag added; actions: send email, wait, add/remove tag, branch by condition)
+- [ ] **Audience**:
+  - [ ] Contacts with **tags**, **segments**, and custom fields
+  - [ ] Import/export CSV, GDPR-compliant consent fields
+- [ ] **Forms**:
+  - [ ] Inline + modal forms; double opt-in toggle
+  - [ ] Embeddable HTML snippet for Replit pages
+- [ ] **Templates**:
+  - [ ] Brand-styled email templates (header/logo, typography, button styles)
+- [ ] **Analytics**:
+  - [ ] Broadcast/automation metrics: delivery, open, click, unsub, spam
+  - [ ] Link tracking with UTM; per-contact timeline
+- [ ] **Deliverability**:
+  - [ ] Connect SMTP/ESP (e.g., Postmark/SendGrid)
+  - [ ] DKIM/SPF/DMARC setup guide screen
+- [ ] **Compliance**:
+  - [ ] One-click unsubscribe, address footer, consent logging
+
+## Courses & Membership (Kajabi-style)
+- [ ] **Products**:
+  - [ ] Course builder (Sections → Lessons), drag/drop ordering
+  - [ ] Lesson content types: video, audio, text, downloads
+  - [ ] Drip scheduling & prerequisite gating
+  - [ ] Quizzes & completion tracking
+- [ ] **Offers**:
+  - [ ] One-time purchase, subscriptions, payment plans
+  - [ ] Coupons, trials, order bumps, post-purchase upsells
+- [ ] **Members Area**:
+  - [ ] Branded library page (cards for purchased courses)
+  - [ ] Progress bars, resume where you left off
+  - [ ] Certificates (optional)
+- [ ] **Community (optional MVP+)**:
+  - [ ] Topic threads per course; instructor pin/announce
+- [ ] **Pipelines (optional MVP+)**:
+  - [ ] Landing page → checkout → thank you → onboarding email sequence
+
+## Branding
+- [ ] Apply existing **brand system** to all admin + member UIs:
+  - [ ] Colors, fonts, logo, button/inputs, card styles
+  - [ ] Dark/moody, minimal aesthetic consistent with Fifth Element
+- [ ] Branded email templates & system notifications
+
+## Payments & Access
+- [ ] **Stripe** integration (Products, Prices, Webhooks)
+- [ ] Secure **access control** (only paid users see gated lessons)
+- [ ] Refund/cancel hooks update membership & automations
+
+## Infrastructure & Tech Notes
+- [ ] Stack suggestion for Replit:
+  - [ ] **Backend**: Node/Express (REST) or Python/Flask
+  - [ ] **DB**: PostgreSQL (users, orders, courses, lessons, memberships, emails)
+  - [ ] **Auth**: Email/password + magic link; roles (admin, member)
+  - [ ] **Uploads**: video via external host (Vimeo/Wistia/S3), images to S3-compatible
+  - [ ] **Jobs**: background worker for email sends, drip unlocks, webhooks
+- [ ] **Analytics events** table for: signups, purchases, email opens/clicks, lesson views
+
+## Data Model (MVP)
+- [ ] `User(id, name, email, role, created_at)`
+- [ ] `Tag(id, name)` / `UserTag(user_id, tag_id)`
+- [ ] `Segment(id, rule_json)`
+- [ ] `EmailTemplate(id, name, html)` / `EmailSend(id, to, subject, template_id, metrics...)`
+- [ ] `Automation(id, graph_json)` / `AutomationRun(id, user_id, state)`
+- [ ] `Course(id, title, slug, published)` / `Section(id, course_id, order)` / `Lesson(id, section_id, type, order, content_url)`
+- [ ] `Offer(id, course_id, price_type, price_cents, interval)` / `Order(id, user_id, offer_id, status)`
+- [ ] `Membership(id, user_id, course_id, access_starts_at, access_ends_at)`
+- [ ] `Event(id, user_id, type, metadata, occurred_at)`
+
+## Security & Compliance
+- [ ] Role-based access control for admin routes
+- [ ] Rate limiting, CSRF for forms, secure cookies/JWT
+- [ ] Privacy policy & terms pages; data export/delete endpoints (GDPR)
+
+---
+
+## Phased Build Plan
+
+### Phase 1 — MVP
+- [ ] Auth + Admin dashboard skeleton
+- [ ] Courses: create course/sections/lessons, gated access
+- [ ] Offers + Stripe checkout + webhooks
+- [ ] Members library + progress
+- [ ] Email broadcasts (basic), tags, forms, simple analytics
+- [ ] Brand-styled UI
+
+### Phase 2 — Automations & Drip
+- [ ] Visual automation builder
+- [ ] Drip schedules & prerequisite gating
+- [ ] Email templates, A/B, resend to non-openers
+- [ ] Deeper analytics & contact timelines
+
+### Phase 3 — Community & Pipelines
+- [ ] Course communities
+- [ ] Funnels/pipelines (landing → checkout → onboarding)
+- [ ] Certificates, quizzes scoring, advanced reporting

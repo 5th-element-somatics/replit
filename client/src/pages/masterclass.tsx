@@ -7,7 +7,7 @@ import { Link, useLocation } from "wouter";
 import { Menu, X, Volume2, VolumeX, Play, Pause, Loader2, ChevronDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import saintPhotoUrl from "@assets/saint_photo_1753245778552.png";
+import masterclassCoverUrl from "@assets/image_1757804836253.png";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
 import { ContactForm } from "@/components/ContactForm";
 
@@ -115,7 +115,7 @@ export default function Masterclass() {
             <div className="order-1 lg:order-2 relative">
               <div className="relative rounded-lg overflow-hidden mystique-glow">
                 <img 
-                  src={saintPhotoUrl} 
+                  src={masterclassCoverUrl} 
                   alt="Saint - The Good Girl Paradox Masterclass"
                   className="w-full h-auto aspect-video object-cover"
                 />
