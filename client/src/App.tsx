@@ -14,6 +14,7 @@ import Apply from "@/pages/apply";
 import AdminCenter from "@/pages/admin-center";
 import Quiz from "@/pages/quiz";
 import FreeMeditation from "@/pages/free-meditation";
+import MeditationAccess from "@/pages/meditation-access";
 import Waitlist from "@/pages/waitlist";
 import EmailHeaderTest from "@/pages/email-header-test";
 import HolyMessWorkshop from "@/pages/workshop-holy-mess";
@@ -39,6 +40,7 @@ function Router() {
       <Route path="/smart-admin" component={AdminCenter} />
       <Route path="/admin-unified" component={AdminCenter} />
       <Route path="/free-meditation" component={FreeMeditation} />
+      <Route path="/meditation-access" component={MeditationAccess} />
       <Route path="/waitlist" component={Waitlist} />
       <Route path="/quiz" component={Quiz} />
       <Route path="/v2-reimagined-mockup" component={V2ReimagiedMockup} />

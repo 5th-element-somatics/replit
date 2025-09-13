@@ -15,6 +15,7 @@ import { Play, Pause, Download, Volume2, Menu, X, Share2 } from "lucide-react";
 import meditationAudioUrl from "@assets/Grounding Into The Body - Guided Meditation_1753289930696.mp3";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
 import MeditationVisuals from "@/components/MeditationVisuals";
+import { ContactForm } from "@/components/ContactForm";
 
 const leadFormSchema = z.object({
   name: z.string().min(1, "Name is required").max(100, "Name is too long"),
@@ -27,9 +28,13 @@ const leadFormSchema = z.object({
 
 type LeadFormData = z.infer<typeof leadFormSchema>;
 
-export default function FreeMeditation() {
+interface FreeMeditationProps {
+  accessMode?: boolean;
+}
+
+export default function FreeMeditation({ accessMode = false }: FreeMeditationProps) {
   const { toast } = useToast();
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(accessMode);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const form = useForm<LeadFormData>({
@@ -78,7 +83,7 @@ export default function FreeMeditation() {
   };
 
   if (isSubmitted) {
-    return <MeditationAccess />;
+    return <MeditationPlayerView />;
   }
 
   return (
@@ -366,7 +371,7 @@ export default function FreeMeditation() {
   );
 }
 
-function MeditationAccess() {
+function MeditationPlayerView() {
   const { toast } = useToast();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);

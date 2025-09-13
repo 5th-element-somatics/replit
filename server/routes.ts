@@ -182,7 +182,7 @@ async function sendMeditationDownloadEmail(email: string, name: string) {
           </p>
           
           <div style="text-align: center; margin: 30px 0;">
-            <a href="${process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : 'https://fifthelementsomatics.com'}/free-meditation" 
+            <a href="${process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : 'https://fifthelementsomatics.com'}/meditation-access" 
                style="display: inline-block; background: linear-gradient(135deg, #C77DFF 0%, #E879F9 100%); color: #000000; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
               🎧 Listen & Download Your Meditation
             </a>
