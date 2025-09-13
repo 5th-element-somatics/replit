@@ -39,7 +39,7 @@ export default function Masterclass() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
       <SEOHead 
         title="The Good Girl Paradox Masterclass - Fifth Element Somatics"
-        description="Break free from people-pleasing and reclaim your authentic power. A transformative masterclass on somatic healing and embodied empowerment for women ready to stop performing and start living authentically. $64 + optional $25 Return to Body meditation."
+        description="Break the rules, reclaim your body, remember your power, let's unravel the shame-based conditioning that taught you to be pleasing, performative, and disconnected from your truth, especially in your erotic life. We explore the paradox, how so many of us were raised to be good girls, obedient, soft, silent, yet carry a deep desire to be praised, wanted, and free. This masterclass guides you back into the body as the source of truth, power, and pleasure. You'll be guided through somatic practices and reflections to reconnect with your erotic energy in a safe, sacred way, reclaim your desires, boundaries, and inner voice, release shame through nervous system-aware rituals, and awaken your central truth, not for anyone else, but simply for you."
         image="/masterclass-share.svg"
         url="https://fifthelementsomatics.com/masterclass"
         keywords="good girl syndrome, people pleasing, perfectionism, somatic healing, embodiment, women's empowerment, authentic self, nervous system healing, trauma recovery, feminine power"
@@ -103,7 +103,7 @@ export default function Masterclass() {
                 <span className="gradient-text">Paradox</span>
               </h1>
               <p className="text-lg sm:text-xl text-gray-300 mb-6">
-                A masterclass in erotic liberation for women who are done shrinking.
+                Break the rules, reclaim your body, remember your power. A transformative journey into embodied liberation.
               </p>
               <div className="space-y-3">
                 <p className="text-purple-400 font-semibold">✧ 90 minutes of transformational content</p>

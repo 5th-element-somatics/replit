@@ -816,25 +816,34 @@ export default function Quiz() {
 
           {/* Quiz Header */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl sm:text-5xl font-serif font-bold mb-6">
-              <span className="gradient-text">Good Girl Archetype Quiz</span>
-            </h1>
+            <div className="mb-4">
+              <div className="text-6xl mb-4">🔮</div>
+              <h1 className="text-4xl sm:text-5xl font-serif font-bold mb-6">
+                <span className="gradient-text">Divine Archetype Reading</span>
+              </h1>
+            </div>
             <p className="text-lg text-gray-300 mb-6">
-              Discover the pattern that's been running your life and the pathway to your liberation.
+              The cards will reveal the pattern that's been running your life and the pathway to your liberation.
             </p>
+            <div className="flex justify-center items-center gap-2 text-purple-400 text-sm">
+              <span>✧</span>
+              <span>Sacred Wisdom Awaits</span>
+              <span>✧</span>
+            </div>
           </div>
 
           {/* Voice Selection Header */}
           <div className="text-center mb-12">
+            <div className="text-4xl mb-4">🌙</div>
             <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-6">
-              <span className="gradient-text">Choose Your Guide</span>
+              <span className="gradient-text">Choose Your Spirit Guide</span>
             </h2>
             <p className="text-xl text-gray-300 mb-6">
-              Select the voice that will narrate your quiz journey and guide you to your archetype.
+              Select the sacred voice that will guide you through this mystical journey to your archetype.
             </p>
-            <div className="bg-gray-800 bg-opacity-50 rounded-lg p-6 max-w-2xl mx-auto">
+            <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 border border-purple-400/30 rounded-lg p-6 max-w-2xl mx-auto backdrop-blur-sm">
               <p className="text-gray-300">
-                <strong className="text-white">Each voice offers a unique energy.</strong> Choose the one that resonates most with your soul right now.
+                <strong className="text-white">Each voice channels a unique divine energy.</strong> Choose the one that calls to your soul in this sacred moment.
               </p>
             </div>
           </div>
@@ -987,15 +996,16 @@ export default function Quiz() {
         {/* Quiz Header */}
         {currentQuestion === 0 && (
           <div className="text-center mb-12">
+            <div className="text-6xl mb-4">🌟</div>
             <h1 className="text-4xl sm:text-5xl font-serif font-bold mb-6">
-              <span className="gradient-text">What's Your Good Girl Archetype?</span>
+              <span className="gradient-text">Sacred Archetype Revelation</span>
             </h1>
             <p className="text-xl text-gray-300 mb-6">
-              Discover the pattern that's been running your life and the pathway to your liberation.
+              The ancient wisdom cards will reveal the sacred pattern of your soul's journey.
             </p>
-            <div className="bg-gray-800 bg-opacity-50 rounded-lg p-6 max-w-2xl mx-auto">
+            <div className="bg-gradient-to-r from-purple-900/40 to-pink-900/40 border border-purple-400/30 rounded-lg p-6 max-w-2xl mx-auto backdrop-blur-sm">
               <p className="text-gray-300">
-                <strong className="text-white">This isn't about fixing you.</strong> It's about understanding the unconscious patterns that shaped your relationship with your power, your pleasure, and your voice. 
+                <strong className="text-white">This sacred reading illuminates your divine essence.</strong> Each card reveals the unconscious patterns that have shaped your relationship with your power, your pleasure, and your authentic voice. 
               </p>
             </div>
           </div>
@@ -1086,50 +1096,120 @@ export default function Quiz() {
           )}
         </div>
 
-        {/* Question */}
-        <Card className="bg-gray-800 border border-purple-400 border-opacity-20 mystique-glow">
-          <CardHeader>
-            <CardTitle className="text-2xl text-white text-center flex items-center justify-center gap-3">
-              {quizQuestions[currentQuestion].question}
-              {soundEnabled && isPlaying && (
-                <div className="flex gap-1">
-                  <div className="w-1 h-4 bg-emerald-400 rounded animate-pulse"></div>
-                  <div className="w-1 h-3 bg-emerald-400 rounded animate-pulse" style={{animationDelay: '0.1s'}}></div>
-                  <div className="w-1 h-5 bg-emerald-400 rounded animate-pulse" style={{animationDelay: '0.2s'}}></div>
-                </div>
-              )}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <RadioGroup 
-              value={answers[quizQuestions[currentQuestion].id] || ""}
-              onValueChange={(value) => handleAnswer(quizQuestions[currentQuestion].id, value)}
-              className="space-y-4"
-            >
-              {quizQuestions[currentQuestion].options.map((option) => (
-                <div key={option.value} className="flex items-start space-x-3 p-4 rounded-lg border border-gray-600 hover:border-purple-400 transition-colors cursor-pointer">
-                  <RadioGroupItem value={option.value} id={option.value} className="mt-1" />
-                  <Label 
-                    htmlFor={option.value} 
-                    className="text-gray-300 cursor-pointer leading-relaxed"
-                  >
-                    {option.text}
-                  </Label>
-                </div>
-              ))}
-            </RadioGroup>
-            
-            <div className="mt-8 text-center">
-              <Button 
-                onClick={nextQuestion}
-                disabled={!answers[quizQuestions[currentQuestion].id]}
-                className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-3 rounded-lg disabled:opacity-50"
+        {/* Mystical Question Card */}
+        <div className="relative mb-8">
+          {/* Mystical Background Effects */}
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-lg blur-xl"></div>
+          
+          <Card className="relative bg-gradient-to-br from-gray-900/90 to-gray-800/90 border-2 border-purple-400/30 mystique-glow backdrop-blur-sm">
+            <CardHeader className="text-center border-b border-purple-400/20 pb-6">
+              <div className="text-3xl mb-3">🌙</div>
+              <CardTitle className="text-2xl text-white font-serif flex items-center justify-center gap-3">
+                {quizQuestions[currentQuestion].question}
+                {soundEnabled && isPlaying && (
+                  <div className="flex gap-1">
+                    <div className="w-1 h-4 bg-emerald-400 rounded animate-pulse"></div>
+                    <div className="w-1 h-3 bg-emerald-400 rounded animate-pulse" style={{animationDelay: '0.1s'}}></div>
+                    <div className="w-1 h-5 bg-emerald-400 rounded animate-pulse" style={{animationDelay: '0.2s'}}></div>
+                  </div>
+                )}
+              </CardTitle>
+              <div className="flex items-center justify-center gap-2 text-purple-400 text-sm mt-3">
+                <span>✧</span>
+                <span>Choose the card that resonates with your soul</span>
+                <span>✧</span>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-8">
+              <RadioGroup 
+                value={answers[quizQuestions[currentQuestion].id] || ""}
+                onValueChange={(value) => handleAnswer(quizQuestions[currentQuestion].id, value)}
+                className="grid grid-cols-1 md:grid-cols-2 gap-6"
               >
-                {currentQuestion === quizQuestions.length - 1 ? "Reveal My Archetype" : "Next Question"}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+                {quizQuestions[currentQuestion].options.map((option, index) => (
+                  <div key={option.value} className="relative group">
+                    {/* Tarot Card Container */}
+                    <div className={`
+                      relative p-6 rounded-lg cursor-pointer transition-all duration-300
+                      bg-gradient-to-br from-gray-800/80 to-gray-900/80
+                      border-2 border-purple-400/20
+                      hover:border-purple-400/60 hover:shadow-lg hover:shadow-purple-500/20
+                      group-hover:transform group-hover:scale-105 group-hover:-translate-y-1
+                      ${answers[quizQuestions[currentQuestion].id] === option.value 
+                        ? 'border-purple-400 bg-gradient-to-br from-purple-900/30 to-pink-900/30 shadow-lg shadow-purple-500/30' 
+                        : ''
+                      }
+                    `}>
+                      {/* Tarot Card Ornate Border */}
+                      <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-purple-400/40"></div>
+                      <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-purple-400/40"></div>
+                      <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-purple-400/40"></div>
+                      <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-purple-400/40"></div>
+                      
+                      {/* Card Number */}
+                      <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-purple-500/20 border border-purple-400/30 flex items-center justify-center">
+                        <span className="text-purple-300 text-sm font-serif">{index + 1}</span>
+                      </div>
+                      
+                      {/* Mystical Symbol */}
+                      <div className="text-center mb-4">
+                        <div className="text-2xl text-purple-300">
+                          {index === 0 && "🌙"}
+                          {index === 1 && "⭐"}
+                          {index === 2 && "🔮"}
+                          {index === 3 && "🌟"}
+                        </div>
+                      </div>
+                      
+                      {/* Radio Button (Hidden but functional) */}
+                      <RadioGroupItem value={option.value} id={option.value} className="absolute opacity-0" />
+                      
+                      {/* Card Content */}
+                      <Label 
+                        htmlFor={option.value} 
+                        className="block text-gray-200 cursor-pointer leading-relaxed text-center font-serif"
+                      >
+                        {option.text}
+                      </Label>
+                      
+                      {/* Selection Indicator */}
+                      {answers[quizQuestions[currentQuestion].id] === option.value && (
+                        <div className="absolute top-3 left-3 w-6 h-6 rounded-full bg-purple-500 border-2 border-white flex items-center justify-center">
+                          <div className="w-2 h-2 bg-white rounded-full"></div>
+                        </div>
+                      )}
+                      
+                      {/* Mystical Glow Effect */}
+                      <div className={`
+                        absolute inset-0 rounded-lg pointer-events-none transition-opacity duration-300
+                        ${answers[quizQuestions[currentQuestion].id] === option.value 
+                          ? 'bg-gradient-to-r from-purple-500/10 to-pink-500/10 opacity-100' 
+                          : 'opacity-0 group-hover:opacity-60'
+                        }
+                      `}></div>
+                    </div>
+                  </div>
+                ))}
+              </RadioGroup>
+              
+              <div className="mt-12 text-center">
+                <Button 
+                  onClick={nextQuestion}
+                  disabled={!answers[quizQuestions[currentQuestion].id]}
+                  className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 mystique-glow disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {currentQuestion === quizQuestions.length - 1 ? "🌟 Reveal My Sacred Archetype 🌟" : "✨ Next Card ✨"}
+                </Button>
+                <p className="text-gray-400 text-sm mt-4">
+                  {currentQuestion === quizQuestions.length - 1 
+                    ? "The cards are ready to reveal your divine truth" 
+                    : "Trust your intuition as you choose"
+                  }
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );
