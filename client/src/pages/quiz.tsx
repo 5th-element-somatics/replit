@@ -764,9 +764,8 @@ export default function Quiz() {
           url="https://fifthelementsomatics.com/quiz"
           keywords="good girl syndrome quiz, archetype quiz, people pleaser quiz, perfectionist quiz, personality quiz, somatic healing, women's empowerment, self discovery quiz"
         />
-        <div className="max-w-3xl mx-auto">
-          {/* Navigation */}
-          <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
+        {/* Navigation */}
+        <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
             <div className="flex items-center space-x-3">
               <Link href="/" onClick={handleNavClick}>
                 <img 
@@ -812,8 +811,9 @@ export default function Quiz() {
                 </div>
               </div>
             )}
-          </nav>
+        </nav>
 
+        <div className="max-w-3xl mx-auto">
           {/* Quiz Header */}
           <div className="text-center mb-8">
             <div className="mb-4">
@@ -943,9 +943,8 @@ export default function Quiz() {
         url="https://fifthelementsomatics.com/quiz"
         keywords="good girl syndrome quiz, archetype quiz, people pleaser quiz, perfectionist quiz, personality quiz, somatic healing, women's empowerment, self discovery quiz"
       />
-      <div className="max-w-3xl mx-auto">
-        {/* Navigation */}
-        <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
+      {/* Navigation */}
+      <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
           <div className="flex items-center space-x-3">
             <Link href="/" onClick={handleNavClick}>
               <img 
@@ -991,8 +990,9 @@ export default function Quiz() {
               </div>
             </div>
           )}
-        </nav>
+      </nav>
 
+      <div className="max-w-3xl mx-auto">
         {/* Quiz Header */}
         {currentQuestion === 0 && (
           <div className="text-center mb-16">
