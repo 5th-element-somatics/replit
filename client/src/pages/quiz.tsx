@@ -249,12 +249,15 @@ export default function Quiz() {
   const { toast } = useToast();
 
   const handleNavClick = () => {
-    // Stop any playing audio when navigating away
+    // Aggressively stop all audio when navigating away
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
+      audioRef.current.src = ''; // Clear the audio source
+      audioRef.current = null; // Remove reference
     }
     setIsPlaying(false);
+    setIsLoadingAudio(false);
     setIsMenuOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
