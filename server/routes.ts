@@ -242,7 +242,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Voice generation endpoint using Eleven Labs
   app.post("/api/generate-voice", async (req, res) => {
     try {
-      const { text, voice_id = "21m00Tcm4TlvDq8ikWAM", model_id = "eleven_multilingual_v2" } = req.body;
+      const { text, voice_id = "BLGGT4QhGwlt0T3oikNc", model_id = "eleven_multilingual_v2" } = req.body;
       
       if (!process.env.ELEVEN_LABS_API_KEY) {
         return res.status(500).json({ error: "Voice generation service not configured" });
@@ -959,7 +959,7 @@ Questions? Reply to this email - I read every single one.`,
         return res.status(500).json({ message: "Eleven Labs API key not configured" });
       }
 
-      const finalVoiceId = voiceId || "21m00Tcm4TlvDq8ikWAM"; // Default to Soul Sister
+      const finalVoiceId = voiceId || "BLGGT4QhGwlt0T3oikNc"; // Default to Soul Sister
       const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${finalVoiceId}`, {
         method: "POST",
         headers: {

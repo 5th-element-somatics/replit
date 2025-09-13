@@ -212,7 +212,7 @@ export default function Quiz() {
         
         const response = await apiRequest("POST", "/api/text-to-speech", {
           text: sampleText,
-          voiceId: selectedVoiceOption?.elevenLabsId || "21m00Tcm4TlvDq8ikWAM"
+          voiceId: selectedVoiceOption?.elevenLabsId || "BLGGT4QhGwlt0T3oikNc"
         });
 
         if (response.ok) {
@@ -308,7 +308,7 @@ export default function Quiz() {
     {
       id: "soul_sister",
       name: "Soul Sister",
-      elevenLabsId: "21m00Tcm4TlvDq8ikWAM", // Current voice
+      elevenLabsId: "BLGGT4QhGwlt0T3oikNc", // Updated Soul Sister voice
       description: "Warm & nurturing"
     },
     {
@@ -363,7 +363,7 @@ export default function Quiz() {
       const selectedVoiceOption = voiceOptions.find(v => v.id === selectedVoice);
       const response = await apiRequest("POST", "/api/text-to-speech", {
         text: fullText,
-        voiceId: selectedVoiceOption?.elevenLabsId || "21m00Tcm4TlvDq8ikWAM"
+        voiceId: selectedVoiceOption?.elevenLabsId || "BLGGT4QhGwlt0T3oikNc"
       });
       
       if (response.ok) {

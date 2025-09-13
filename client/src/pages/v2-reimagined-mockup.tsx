@@ -210,7 +210,7 @@ This is your invitation to step into your own transformation.`;
           },
           body: JSON.stringify({
             text,
-            voice_id: "21m00Tcm4TlvDq8ikWAM", // Rachel - natural, warm female voice
+            voice_id: "BLGGT4QhGwlt0T3oikNc", // Updated natural, warm female voice
             model_id: "eleven_multilingual_v2"
           }),
         });

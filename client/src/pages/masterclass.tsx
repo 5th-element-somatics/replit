@@ -490,7 +490,7 @@ function InteractiveDemo({ onClose, onJoinCourse }: { onClose: () => void; onJoi
       setIsLoadingAudio(true);
       const response = await apiRequest("POST", "/api/generate-voice", {
         text,
-        voice_id: "21m00Tcm4TlvDq8ikWAM", // Professional female voice
+        voice_id: "BLGGT4QhGwlt0T3oikNc", // Professional female voice
         model_id: "eleven_multilingual_v2"
       });
       
