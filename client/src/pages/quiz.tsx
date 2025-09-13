@@ -204,8 +204,7 @@ export default function Quiz() {
         setIsLoadingAudio(true);
         const sampleTexts: Record<string, string> = {
           soul_sister: "Hello beautiful soul, I'm your Soul Sister guide ready to support you.",
-          daddy: "Hey there, this is Daddy speaking. I'm here to ground and guide you.",
-          divine_priestess: "Blessed one, I am your Divine Feminine Priestess, here to illuminate your sacred path."
+          daddy: "Hey there, this is Daddy speaking. I'm here to ground and guide you."
         };
         
         const sampleText = sampleTexts[selectedVoice] || sampleTexts.soul_sister;
@@ -319,13 +318,6 @@ export default function Quiz() {
       name: "Daddy",
       elevenLabsId: "pNInz6obpgDQGcFmaJgB", // Adam voice
       description: "Strong & grounding"
-    },
-    {
-      id: "divine_priestess",
-      name: "Divine Feminine Priestess",
-      elevenLabsId: "custom_saint_voice", // Will be Saint's custom voice
-      description: "Coming Soon",
-      disabled: true
     }
   ];
 
@@ -852,7 +844,7 @@ export default function Quiz() {
           </div>
 
           {/* Voice Options */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
             {voiceOptions.map((voice) => (
               <Card 
                 key={voice.id} 
