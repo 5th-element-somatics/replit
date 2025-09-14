@@ -201,6 +201,67 @@
     50% { opacity: 0.8; transform: scale(1.2); }
   }
 
+  /* Tarot Card Sliding Animations */
+  @keyframes slide-in-left {
+    0% {
+      opacity: 0;
+      transform: translateX(-100px) translateY(20px) scale(0.8);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0) translateY(0) scale(1);
+    }
+  }
+
+  @keyframes slide-in-right {
+    0% {
+      opacity: 0;
+      transform: translateX(100px) translateY(20px) scale(0.8);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0) translateY(0) scale(1);
+    }
+  }
+
+  @keyframes slide-in-bottom {
+    0% {
+      opacity: 0;
+      transform: translateY(80px) scale(0.8);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes slide-in-top {
+    0% {
+      opacity: 0;
+      transform: translateY(-80px) scale(0.8);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .tarot-card-slide-left {
+    animation: slide-in-left 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+  }
+
+  .tarot-card-slide-right {
+    animation: slide-in-right 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+  }
+
+  .tarot-card-slide-bottom {
+    animation: slide-in-bottom 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+  }
+
+  .tarot-card-slide-top {
+    animation: slide-in-top 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+  }
+
   @keyframes tarot-selection-glow {
     0% { 
       transform: scale(1) translateY(0px);

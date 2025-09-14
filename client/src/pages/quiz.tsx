@@ -1191,7 +1191,7 @@ export default function Quiz() {
               </div>
 
               {/* Mystical Tarot Card Answer Options */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12 max-w-5xl mx-auto">
                 {quizQuestions[currentQuestion].options.map((option, index) => {
                   const isSelected = answers[quizQuestions[currentQuestion].id] === option.value;
                   const tarotSymbols = ['⭐', '🌙', '✨', '🔮'];
@@ -1202,12 +1202,24 @@ export default function Quiz() {
                     'from-violet-900/90 via-pink-900/90 to-violet-800/90'
                   ];
                   
+                  // Animation classes for different slide directions
+                  const slideAnimations = [
+                    'tarot-card-slide-left',
+                    'tarot-card-slide-right', 
+                    'tarot-card-slide-bottom',
+                    'tarot-card-slide-top'
+                  ];
+                  
+                  // Staggered animation delays
+                  const animationDelay = `${index * 150}ms`;
+                  
                   return (
                     <div 
                       key={option.value} 
-                      className={`group relative cursor-pointer transition-all duration-700 transform hover:scale-110 hover:-translate-y-2 ${
-                        isSelected ? 'scale-110 -translate-y-2' : ''
-                      }`}
+                      className={`group relative cursor-pointer transition-all duration-700 transform hover:scale-105 hover:-translate-y-1 ${
+                        isSelected ? 'scale-105 -translate-y-1' : ''
+                      } ${slideAnimations[index]} opacity-0`}
+                      style={{ animationDelay }}
                       onClick={() => handleAnswer(quizQuestions[currentQuestion].id, option.value)}
                       data-testid={`option-${option.value}`}
                     >
@@ -1222,45 +1234,45 @@ export default function Quiz() {
                       
                       {/* Tarot Card Container */}
                       <div className={`
-                        relative bg-gradient-to-br ${cardGradients[index]} rounded-3xl transition-all duration-700
-                        border-4 backdrop-blur-sm overflow-hidden aspect-[2/3] min-h-[280px]
+                        relative bg-gradient-to-br ${cardGradients[index]} rounded-2xl transition-all duration-700
+                        border-2 backdrop-blur-sm overflow-hidden aspect-[3/4] h-48 md:h-56
                         ${isSelected 
-                          ? 'border-purple-300 shadow-2xl shadow-purple-500/40' 
-                          : 'border-purple-400/30 hover:border-purple-300/80 hover:shadow-xl hover:shadow-purple-500/20'
+                          ? 'border-purple-300 shadow-xl shadow-purple-500/40' 
+                          : 'border-purple-400/30 hover:border-purple-300/80 hover:shadow-lg hover:shadow-purple-500/20'
                         }
                       `}>
                         {/* Ornate Border Design */}
-                        <div className="absolute inset-3 border-2 border-purple-300/40 rounded-2xl">
-                          <div className="absolute inset-2 border border-purple-300/20 rounded-xl"></div>
+                        <div className="absolute inset-2 border border-purple-300/40 rounded-xl">
+                          <div className="absolute inset-1 border border-purple-300/20 rounded-lg"></div>
                         </div>
                         
                         {/* Corner Flourishes */}
-                        <div className="absolute top-4 left-4">
-                          <div className="text-purple-300 text-lg transform rotate-0">✧</div>
+                        <div className="absolute top-2 left-2">
+                          <div className="text-purple-300 text-sm transform rotate-0">✧</div>
                         </div>
-                        <div className="absolute top-4 right-4">
-                          <div className="text-pink-300 text-lg transform rotate-90">✧</div>
+                        <div className="absolute top-2 right-2">
+                          <div className="text-pink-300 text-sm transform rotate-90">✧</div>
                         </div>
-                        <div className="absolute bottom-4 left-4">
-                          <div className="text-pink-300 text-lg transform rotate-270">✧</div>
+                        <div className="absolute bottom-2 left-2">
+                          <div className="text-pink-300 text-sm transform rotate-270">✧</div>
                         </div>
-                        <div className="absolute bottom-4 right-4">
-                          <div className="text-purple-300 text-lg transform rotate-180">✧</div>
+                        <div className="absolute bottom-2 right-2">
+                          <div className="text-purple-300 text-sm transform rotate-180">✧</div>
                         </div>
                         
                         {/* Mystical Symbol at Top */}
-                        <div className="absolute top-6 left-1/2 transform -translate-x-1/2">
-                          <div className={`text-3xl transition-all duration-500 ${
-                            isSelected ? 'text-white scale-125' : 'text-purple-200 group-hover:text-white group-hover:scale-110'
+                        <div className="absolute top-3 left-1/2 transform -translate-x-1/2">
+                          <div className={`text-xl md:text-2xl transition-all duration-500 ${
+                            isSelected ? 'text-white scale-110' : 'text-purple-200 group-hover:text-white group-hover:scale-105'
                           }`}>
                             {tarotSymbols[index]}
                           </div>
                         </div>
                         
                         {/* Card Content */}
-                        <div className="flex flex-col justify-center h-full px-6 py-8 text-center">
+                        <div className="flex flex-col justify-center h-full px-3 py-4 text-center">
                           {/* Card Number */}
-                          <div className={`text-xs font-serif mb-3 transition-colors duration-300 ${
+                          <div className={`text-xs font-serif mb-2 transition-colors duration-300 ${
                             isSelected ? 'text-purple-200' : 'text-purple-300/80 group-hover:text-purple-200'
                           }`}>
                             CARD {String.fromCharCode(65 + index)}
@@ -1268,7 +1280,7 @@ export default function Quiz() {
                           
                           {/* Option Text */}
                           <div className={`
-                            text-base font-light leading-relaxed transition-all duration-300 mb-4
+                            text-xs md:text-sm font-light leading-tight transition-all duration-300 mb-2
                             ${isSelected ? 'text-white font-medium' : 'text-gray-100 group-hover:text-white'}
                           `}>
                             {option.text}
@@ -1283,9 +1295,9 @@ export default function Quiz() {
                         </div>
                         
                         {/* Mystical Symbol at Bottom */}
-                        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 rotate-180">
-                          <div className={`text-2xl transition-all duration-500 ${
-                            isSelected ? 'text-white scale-125' : 'text-purple-200 group-hover:text-white group-hover:scale-110'
+                        <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 rotate-180">
+                          <div className={`text-lg md:text-xl transition-all duration-500 ${
+                            isSelected ? 'text-white scale-110' : 'text-purple-200 group-hover:text-white group-hover:scale-105'
                           }`}>
                             {tarotSymbols[index]}
                           </div>
@@ -1293,7 +1305,7 @@ export default function Quiz() {
                         
                         {/* Selection Indicator */}
                         <div className={`
-                          absolute top-1/2 right-4 transform -translate-y-1/2 w-8 h-8 rounded-full border-3 transition-all duration-500
+                          absolute top-1/2 right-2 transform -translate-y-1/2 w-6 h-6 rounded-full border-2 transition-all duration-500
                           ${isSelected 
                             ? 'border-white bg-gradient-to-r from-purple-400 to-pink-400 shadow-lg scale-110' 
                             : 'border-purple-300/60 group-hover:border-white/80 group-hover:scale-105'
@@ -1301,7 +1313,7 @@ export default function Quiz() {
                         `}>
                           {isSelected && (
                             <div className="w-full h-full rounded-full flex items-center justify-center">
-                              <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+                              <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
                             </div>
                           )}
                         </div>
@@ -1311,9 +1323,9 @@ export default function Quiz() {
                           absolute inset-0 pointer-events-none transition-opacity duration-700
                           ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-60'}
                         `}>
-                          <div className="absolute top-1/4 left-1/4 w-1 h-1 bg-purple-300 rounded-full animate-pulse" style={{animationDelay: '0s'}}></div>
-                          <div className="absolute top-3/4 right-1/4 w-1 h-1 bg-pink-300 rounded-full animate-pulse" style={{animationDelay: '0.5s'}}></div>
-                          <div className="absolute top-1/2 left-3/4 w-1 h-1 bg-purple-300 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
+                          <div className="absolute top-1/4 left-1/4 w-0.5 h-0.5 bg-purple-300 rounded-full animate-pulse" style={{animationDelay: '0s'}}></div>
+                          <div className="absolute top-3/4 right-1/4 w-0.5 h-0.5 bg-pink-300 rounded-full animate-pulse" style={{animationDelay: '0.5s'}}></div>
+                          <div className="absolute top-1/2 left-3/4 w-0.5 h-0.5 bg-purple-300 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
                         </div>
                         
                         {/* Shimmer Effect on Hover/Selection */}
@@ -1327,9 +1339,9 @@ export default function Quiz() {
                         
                         {/* Cosmic Background Pattern */}
                         <div className="absolute inset-0 opacity-10 pointer-events-none">
-                          <div className="absolute top-8 left-8 w-16 h-16 border border-purple-300/30 rounded-full"></div>
-                          <div className="absolute bottom-8 right-8 w-12 h-12 border border-pink-300/30 rounded-full"></div>
-                          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 border border-purple-300/20 rounded-full"></div>
+                          <div className="absolute top-4 left-4 w-8 h-8 border border-purple-300/30 rounded-full"></div>
+                          <div className="absolute bottom-4 right-4 w-6 h-6 border border-pink-300/30 rounded-full"></div>
+                          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 border border-purple-300/20 rounded-full"></div>
                         </div>
                       </div>
                     </div>
