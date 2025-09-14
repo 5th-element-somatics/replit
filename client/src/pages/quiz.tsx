@@ -1190,62 +1190,147 @@ export default function Quiz() {
                 </p>
               </div>
 
-              {/* Mystical Answer Options */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+              {/* Mystical Tarot Card Answer Options */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                 {quizQuestions[currentQuestion].options.map((option, index) => {
                   const isSelected = answers[quizQuestions[currentQuestion].id] === option.value;
+                  const tarotSymbols = ['⭐', '🌙', '✨', '🔮'];
+                  const cardGradients = [
+                    'from-purple-900/90 via-indigo-900/90 to-purple-800/90',
+                    'from-pink-900/90 via-rose-900/90 to-pink-800/90',
+                    'from-indigo-900/90 via-purple-900/90 to-indigo-800/90',
+                    'from-violet-900/90 via-pink-900/90 to-violet-800/90'
+                  ];
+                  
                   return (
                     <div 
                       key={option.value} 
-                      className={`group relative cursor-pointer transition-all duration-500 transform hover:scale-105 ${
-                        isSelected ? 'scale-105' : ''
+                      className={`group relative cursor-pointer transition-all duration-700 transform hover:scale-110 hover:-translate-y-2 ${
+                        isSelected ? 'scale-110 -translate-y-2' : ''
                       }`}
                       onClick={() => handleAnswer(quizQuestions[currentQuestion].id, option.value)}
                       data-testid={`option-${option.value}`}
                     >
-                      {/* Card Container */}
+                      {/* Mystical Aura/Glow */}
                       <div className={`
-                        relative p-8 rounded-2xl transition-all duration-500
-                        bg-gradient-to-br from-gray-800/80 to-gray-900/80
-                        border-2 backdrop-blur-sm
+                        absolute inset-0 rounded-3xl transition-all duration-700
                         ${isSelected 
-                          ? 'border-purple-400 bg-gradient-to-br from-purple-900/40 to-pink-900/40 shadow-2xl shadow-purple-500/25' 
-                          : 'border-gray-600/50 hover:border-purple-400/60 hover:bg-gradient-to-br hover:from-purple-900/20 hover:to-pink-900/20'
+                          ? 'bg-gradient-to-r from-purple-500/30 via-pink-500/30 to-purple-500/30 blur-xl' 
+                          : 'bg-gradient-to-r from-purple-500/0 via-pink-500/0 to-purple-500/0 group-hover:from-purple-500/20 group-hover:via-pink-500/20 group-hover:to-purple-500/20 group-hover:blur-lg'
+                        }
+                      `}></div>
+                      
+                      {/* Tarot Card Container */}
+                      <div className={`
+                        relative bg-gradient-to-br ${cardGradients[index]} rounded-3xl transition-all duration-700
+                        border-4 backdrop-blur-sm overflow-hidden aspect-[2/3] min-h-[280px]
+                        ${isSelected 
+                          ? 'border-purple-300 shadow-2xl shadow-purple-500/40' 
+                          : 'border-purple-400/30 hover:border-purple-300/80 hover:shadow-xl hover:shadow-purple-500/20'
                         }
                       `}>
-                        {/* Mystical Corner Decorations */}
-                        <div className="absolute top-4 left-4 text-purple-400 text-xs">✧</div>
-                        <div className="absolute bottom-4 right-4 text-pink-400 text-xs transform rotate-180">✧</div>
+                        {/* Ornate Border Design */}
+                        <div className="absolute inset-3 border-2 border-purple-300/40 rounded-2xl">
+                          <div className="absolute inset-2 border border-purple-300/20 rounded-xl"></div>
+                        </div>
+                        
+                        {/* Corner Flourishes */}
+                        <div className="absolute top-4 left-4">
+                          <div className="text-purple-300 text-lg transform rotate-0">✧</div>
+                        </div>
+                        <div className="absolute top-4 right-4">
+                          <div className="text-pink-300 text-lg transform rotate-90">✧</div>
+                        </div>
+                        <div className="absolute bottom-4 left-4">
+                          <div className="text-pink-300 text-lg transform rotate-270">✧</div>
+                        </div>
+                        <div className="absolute bottom-4 right-4">
+                          <div className="text-purple-300 text-lg transform rotate-180">✧</div>
+                        </div>
+                        
+                        {/* Mystical Symbol at Top */}
+                        <div className="absolute top-6 left-1/2 transform -translate-x-1/2">
+                          <div className={`text-3xl transition-all duration-500 ${
+                            isSelected ? 'text-white scale-125' : 'text-purple-200 group-hover:text-white group-hover:scale-110'
+                          }`}>
+                            {tarotSymbols[index]}
+                          </div>
+                        </div>
+                        
+                        {/* Card Content */}
+                        <div className="flex flex-col justify-center h-full px-6 py-8 text-center">
+                          {/* Card Number */}
+                          <div className={`text-xs font-serif mb-3 transition-colors duration-300 ${
+                            isSelected ? 'text-purple-200' : 'text-purple-300/80 group-hover:text-purple-200'
+                          }`}>
+                            CARD {String.fromCharCode(65 + index)}
+                          </div>
+                          
+                          {/* Option Text */}
+                          <div className={`
+                            text-base font-light leading-relaxed transition-all duration-300 mb-4
+                            ${isSelected ? 'text-white font-medium' : 'text-gray-100 group-hover:text-white'}
+                          `}>
+                            {option.text}
+                          </div>
+                          
+                          {/* Card Title/Theme */}
+                          <div className={`text-xs font-serif italic transition-colors duration-300 ${
+                            isSelected ? 'text-purple-200' : 'text-purple-300/80 group-hover:text-purple-200'
+                          }`}>
+                            Divine Path
+                          </div>
+                        </div>
+                        
+                        {/* Mystical Symbol at Bottom */}
+                        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 rotate-180">
+                          <div className={`text-2xl transition-all duration-500 ${
+                            isSelected ? 'text-white scale-125' : 'text-purple-200 group-hover:text-white group-hover:scale-110'
+                          }`}>
+                            {tarotSymbols[index]}
+                          </div>
+                        </div>
                         
                         {/* Selection Indicator */}
                         <div className={`
-                          absolute top-6 right-6 w-6 h-6 rounded-full border-2 transition-all duration-300
+                          absolute top-1/2 right-4 transform -translate-y-1/2 w-8 h-8 rounded-full border-3 transition-all duration-500
                           ${isSelected 
-                            ? 'border-purple-400 bg-gradient-to-r from-purple-500 to-pink-500' 
-                            : 'border-gray-400/60 group-hover:border-purple-400/80'
+                            ? 'border-white bg-gradient-to-r from-purple-400 to-pink-400 shadow-lg scale-110' 
+                            : 'border-purple-300/60 group-hover:border-white/80 group-hover:scale-105'
                           }
                         `}>
                           {isSelected && (
-                            <div className="w-full h-full rounded-full bg-white scale-50 flex items-center justify-center">
-                              <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                            <div className="w-full h-full rounded-full flex items-center justify-center">
+                              <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
                             </div>
                           )}
                         </div>
                         
-                        {/* Option Text */}
-                        <div className="pr-8">
-                          <p className={`
-                            text-lg leading-relaxed transition-colors duration-300
-                            ${isSelected ? 'text-white font-medium' : 'text-gray-200 group-hover:text-white'}
-                          `}>
-                            {option.text}
-                          </p>
+                        {/* Floating Mystical Particles */}
+                        <div className={`
+                          absolute inset-0 pointer-events-none transition-opacity duration-700
+                          ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-60'}
+                        `}>
+                          <div className="absolute top-1/4 left-1/4 w-1 h-1 bg-purple-300 rounded-full animate-pulse" style={{animationDelay: '0s'}}></div>
+                          <div className="absolute top-3/4 right-1/4 w-1 h-1 bg-pink-300 rounded-full animate-pulse" style={{animationDelay: '0.5s'}}></div>
+                          <div className="absolute top-1/2 left-3/4 w-1 h-1 bg-purple-300 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
                         </div>
                         
-                        {/* Mystical Glow Effect */}
-                        {isSelected && (
-                          <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-purple-500/10 rounded-2xl animate-pulse pointer-events-none"></div>
-                        )}
+                        {/* Shimmer Effect on Hover/Selection */}
+                        <div className={`
+                          absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent 
+                          transform -skew-x-12 transition-all duration-1000 pointer-events-none
+                          ${isSelected || 'group-hover'}
+                            ? 'translate-x-full' 
+                            : '-translate-x-full'
+                        `}></div>
+                        
+                        {/* Cosmic Background Pattern */}
+                        <div className="absolute inset-0 opacity-10 pointer-events-none">
+                          <div className="absolute top-8 left-8 w-16 h-16 border border-purple-300/30 rounded-full"></div>
+                          <div className="absolute bottom-8 right-8 w-12 h-12 border border-pink-300/30 rounded-full"></div>
+                          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 border border-purple-300/20 rounded-full"></div>
+                        </div>
                       </div>
                     </div>
                   );
