@@ -146,8 +146,6 @@ export default function Quiz() {
   const [selectedVoice, setSelectedVoice] = useState("soul_sister");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [quizStarted, setQuizStarted] = useState(true);
-  const [backgroundMusicEnabled, setBackgroundMusicEnabled] = useState(true);
-  const [backgroundMusicPlaying, setBackgroundMusicPlaying] = useState(false);
   const [selectedCard, setSelectedCard] = useState<number | null>(null);
   const [cardsRevealed, setCardsRevealed] = useState<Set<number>>(new Set());
   const [showQuestion, setShowQuestion] = useState(false);
@@ -172,69 +170,9 @@ export default function Quiz() {
 
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const backgroundMusicRef = useRef<HTMLAudioElement | null>(null);
   const lastAudioRequestRef = useRef<number>(0);
   const { toast } = useToast();
 
-  // Background music functionality
-  const startBackgroundMusic = async () => {
-    if (!backgroundMusicEnabled || backgroundMusicRef.current) return;
-    
-    try {
-      // Create a simple ambient tone using Web Audio API
-      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const oscillator1 = audioContext.createOscillator();
-      const oscillator2 = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
-      
-      // Create mystical ambient frequencies
-      oscillator1.frequency.setValueAtTime(110, audioContext.currentTime); // Low A
-      oscillator2.frequency.setValueAtTime(165, audioContext.currentTime); // E
-      
-      oscillator1.type = 'sine';
-      oscillator2.type = 'triangle';
-      
-      // Very quiet ambient volume
-      gainNode.gain.setValueAtTime(0.03, audioContext.currentTime);
-      
-      oscillator1.connect(gainNode);
-      oscillator2.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-      
-      oscillator1.start();
-      oscillator2.start();
-      
-      // Store reference for cleanup
-      backgroundMusicRef.current = { audioContext, oscillator1, oscillator2, gainNode } as any;
-      setBackgroundMusicPlaying(true);
-      
-    } catch (error) {
-      console.log('Background music not available on this device');
-    }
-  };
-  
-  const stopBackgroundMusic = () => {
-    if (backgroundMusicRef.current) {
-      try {
-        const { audioContext, oscillator1, oscillator2 } = backgroundMusicRef.current as any;
-        oscillator1.stop();
-        oscillator2.stop();
-        audioContext.close();
-        backgroundMusicRef.current = null;
-        setBackgroundMusicPlaying(false);
-      } catch (error) {
-        console.log('Error stopping background music');
-      }
-    }
-  };
-  
-  const toggleBackgroundMusic = () => {
-    if (backgroundMusicPlaying) {
-      stopBackgroundMusic();
-    } else {
-      startBackgroundMusic();
-    }
-  };
 
   const handleNavClick = () => {
     // Aggressively stop all audio when navigating away
@@ -244,7 +182,6 @@ export default function Quiz() {
       audioRef.current.src = ''; // Clear the audio source
       audioRef.current = null; // Remove reference
     }
-    stopBackgroundMusic();
     setIsPlaying(false);
     setIsLoadingAudio(false);
     setIsMenuOpen(false);
@@ -258,7 +195,6 @@ export default function Quiz() {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
       }
-      stopBackgroundMusic();
       setIsPlaying(false);
     };
 
@@ -267,7 +203,6 @@ export default function Quiz() {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
       }
-      stopBackgroundMusic();
       setIsPlaying(false);
     };
 
@@ -275,11 +210,6 @@ export default function Quiz() {
       if (document.hidden && audioRef.current) {
         audioRef.current.pause(); 
         setIsPlaying(false);
-      }
-      if (document.hidden) {
-        stopBackgroundMusic();
-      } else if (backgroundMusicEnabled && !backgroundMusicPlaying) {
-        startBackgroundMusic();
       }
     };
 
@@ -294,7 +224,6 @@ export default function Quiz() {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
       }
-      stopBackgroundMusic();
       setIsPlaying(false);
       
       // Remove event listeners
@@ -439,27 +368,7 @@ export default function Quiz() {
     }
   };
 
-  // Auto-start background music when quiz loads
-  useEffect(() => {
-    if (backgroundMusicEnabled && quizStarted && !showResult) {
-      const timer = setTimeout(() => {
-        startBackgroundMusic();
-      }, 1000);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [quizStarted, backgroundMusicEnabled, showResult]);
-  
-  // Auto-play question with answers when it changes (only after quiz has started)
-  useEffect(() => {
-    if (soundEnabled && !showResult && quizStarted && quizQuestions[currentQuestion]) {
-      const timer = setTimeout(() => {
-        playQuestionAudio(quizQuestions[currentQuestion].question, true);
-      }, 800); // Slightly longer delay to avoid rate limits
-      
-      return () => clearTimeout(timer);
-    }
-  }, [currentQuestion, soundEnabled, showResult, quizStarted]);
+  // Note: Auto-play removed - voice only starts when user explicitly requests it
 
   const calculateResult = () => {
     const scores = { people_pleaser: 0, perfectionist: 0, rebel: 0 };
@@ -825,7 +734,7 @@ export default function Quiz() {
             <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 blur-3xl -z-10 animate-pulse"></div>
           </div>
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-serif font-bold mb-8">
-            <span className="gradient-text">Divine Archetype Reading</span>
+            <span className="gradient-text">Good Girl Archetype Reading</span>
           </h1>
           <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
             The cosmic cards reveal the pattern that's been guiding your soul's journey.
@@ -853,89 +762,6 @@ export default function Quiz() {
           </div>
         </div>
 
-        {/* Audio Controls */}
-        <div className="flex flex-col gap-4 mb-12">
-          <div className="flex justify-center items-center gap-4 flex-wrap">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setSoundEnabled(!soundEnabled)}
-              className="text-gray-300 hover:text-white flex items-center gap-2 bg-gray-800/50 border border-purple-400/20 rounded-full px-6 py-3"
-              data-testid="button-sound-toggle"
-            >
-              {soundEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
-              <span className="text-sm font-medium">{soundEnabled ? "Voice On" : "Voice Off"}</span>
-            </Button>
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleBackgroundMusic}
-              className={`flex items-center gap-2 rounded-full px-6 py-3 transition-all ${
-                backgroundMusicPlaying 
-                  ? "text-purple-300 bg-purple-900/30 border border-purple-400/40" 
-                  : "text-gray-400 bg-gray-800/50 border border-gray-600/20 hover:text-purple-300 hover:border-purple-400/30"
-              }`}
-              data-testid="button-music-toggle"
-            >
-              🎵
-              <span className="text-sm font-medium">
-                {backgroundMusicPlaying ? "Music On" : "Music Off"}
-              </span>
-            </Button>
-            
-            {soundEnabled && (
-              <div className="flex gap-3">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={toggleAudio}
-                  disabled={isLoadingAudio}
-                  className="text-emerald-400 hover:text-emerald-300 flex items-center gap-2 bg-emerald-900/20 border border-emerald-400/30 rounded-full px-6 py-3"
-                  data-testid="button-voice-play"
-                >
-                  {isLoadingAudio ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                  ) : isPlaying ? (
-                    <Pause className="w-5 h-5" />
-                  ) : (
-                    <Play className="w-5 h-5" />
-                  )}
-                  <span className="text-sm font-medium">
-                    {isLoadingAudio ? "Loading..." : isPlaying ? "Pause" : "Listen"}
-                  </span>
-                </Button>
-                
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={playAnswersOnly}
-                  disabled={isLoadingAudio}
-                  className="text-purple-400 hover:text-purple-300 flex items-center gap-2 bg-purple-900/20 border border-purple-400/30 rounded-full px-6 py-3"
-                  data-testid="button-repeat-choices"
-                >
-                  <Volume2 className="w-5 h-5" />
-                  <span className="text-sm font-medium">Repeat Choices</span>
-                </Button>
-              </div>
-            )}
-          </div>
-
-          {/* Soul Sister Guide Info */}
-          {soundEnabled && (
-            <div className="bg-gradient-to-r from-gray-800/80 to-gray-900/80 border border-purple-400/30 rounded-full p-4 max-w-md mx-auto backdrop-blur-sm">
-              <div className="flex items-center justify-center gap-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                  <Volume2 className="w-4 h-4 text-white" />
-                </div>
-                <div className="text-center">
-                  <p className="text-white text-sm font-medium">Your Spirit Guide: Soul Sister</p>
-                  <p className="text-purple-300 text-xs">Warm & nurturing guidance</p>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
 
         {/* Tarot Card Question Interface */}
         <div className="mb-16">
@@ -1208,7 +1034,7 @@ export default function Quiz() {
                   {currentQuestion === quizQuestions.length - 1 ? (
                     <span className="flex items-center gap-2">
                       <Star className="w-5 h-5" />
-                      Reveal My Divine Archetype
+                      Reveal My Good Girl Archetype
                       <Star className="w-5 h-5" />
                     </span>
                   ) : (
@@ -1224,6 +1050,73 @@ export default function Quiz() {
                     : `Card ${currentQuestion + 1} of ${quizQuestions.length} • ${quizQuestions.length - currentQuestion - 1} cards remaining`
                   }
                 </p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Audio Controls */}
+        <div className="flex flex-col gap-4 mb-12">
+          <div className="flex justify-center items-center gap-4 flex-wrap">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSoundEnabled(!soundEnabled)}
+              className="text-gray-300 hover:text-white flex items-center gap-2 bg-gray-800/50 border border-purple-400/20 rounded-full px-6 py-3"
+              data-testid="button-sound-toggle"
+            >
+              {soundEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+              <span className="text-sm font-medium">{soundEnabled ? "Voice On" : "Voice Off"}</span>
+            </Button>
+            
+            {soundEnabled && (
+              <div className="flex gap-3">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={toggleAudio}
+                  disabled={isLoadingAudio}
+                  className="text-emerald-400 hover:text-emerald-300 flex items-center gap-2 bg-emerald-900/20 border border-emerald-400/30 rounded-full px-6 py-3"
+                  data-testid="button-voice-play"
+                >
+                  {isLoadingAudio ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : isPlaying ? (
+                    <Pause className="w-5 h-5" />
+                  ) : (
+                    <Play className="w-5 h-5" />
+                  )}
+                  <span className="text-sm font-medium">
+                    {isLoadingAudio ? "Loading..." : isPlaying ? "Pause" : "Listen"}
+                  </span>
+                </Button>
+                
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={playAnswersOnly}
+                  disabled={isLoadingAudio}
+                  className="text-purple-400 hover:text-purple-300 flex items-center gap-2 bg-purple-900/20 border border-purple-400/30 rounded-full px-6 py-3"
+                  data-testid="button-repeat-choices"
+                >
+                  <Volume2 className="w-5 h-5" />
+                  <span className="text-sm font-medium">Repeat Choices</span>
+                </Button>
+              </div>
+            )}
+          </div>
+
+          {/* Soul Sister Guide Info */}
+          {soundEnabled && (
+            <div className="bg-gradient-to-r from-gray-800/80 to-gray-900/80 border border-purple-400/30 rounded-full p-4 max-w-md mx-auto backdrop-blur-sm">
+              <div className="flex items-center justify-center gap-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                  <Volume2 className="w-4 h-4 text-white" />
+                </div>
+                <div className="text-center">
+                  <p className="text-white text-sm font-medium">Your Spirit Guide: Soul Sister</p>
+                  <p className="text-purple-300 text-xs">Warm & nurturing guidance</p>
+                </div>
               </div>
             </div>
           )}
