@@ -837,7 +837,7 @@ export default function Quiz() {
               </div>
 
               {/* Mystical Tarot Card Answer Options */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-12 max-w-6xl mx-auto">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-[60px] mb-12 max-w-6xl mx-auto">
                 {quizQuestions[currentQuestion].options.map((option, index) => {
                   const isSelected = answers[quizQuestions[currentQuestion].id] === option.value;
                   const tarotSymbols = ['★', '☽', '◆', '✧'];
