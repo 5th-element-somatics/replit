@@ -846,7 +846,7 @@ export default function Quiz() {
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12 max-w-5xl mx-auto">
                 {quizQuestions[currentQuestion].options.map((option, index) => {
                   const isSelected = answers[quizQuestions[currentQuestion].id] === option.value;
-                  const tarotSymbols = ['⭐', '🌙', '✨', '🔮'];
+                  const tarotSymbols = ['★', '☽', '◆', '✧'];
                   const cardGradients = [
                     'from-purple-900/90 via-indigo-900/90 to-purple-800/90',
                     'from-pink-900/90 via-rose-900/90 to-pink-800/90',
@@ -887,7 +887,7 @@ export default function Quiz() {
                       {/* Tarot Card Container */}
                       <div className={`
                         relative bg-gradient-to-br ${cardGradients[index]} rounded-2xl transition-all duration-700
-                        border-2 backdrop-blur-sm overflow-hidden aspect-[3/4] h-48 md:h-56
+                        border-2 backdrop-blur-sm overflow-hidden aspect-[3/4] h-64 md:h-72 lg:h-80
                         ${isSelected 
                           ? 'border-purple-300 shadow-xl shadow-purple-500/40' 
                           : 'border-purple-400/30 hover:border-purple-300/80 hover:shadow-lg hover:shadow-purple-500/20'
@@ -955,20 +955,6 @@ export default function Quiz() {
                           </div>
                         </div>
                         
-                        {/* Selection Indicator */}
-                        <div className={`
-                          absolute top-1/2 right-2 transform -translate-y-1/2 w-6 h-6 rounded-full border-2 transition-all duration-500
-                          ${isSelected 
-                            ? 'border-white bg-gradient-to-r from-purple-400 to-pink-400 shadow-lg scale-110' 
-                            : 'border-purple-300/60 group-hover:border-white/80 group-hover:scale-105'
-                          }
-                        `}>
-                          {isSelected && (
-                            <div className="w-full h-full rounded-full flex items-center justify-center">
-                              <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                            </div>
-                          )}
-                        </div>
                         
                         {/* Floating Mystical Particles */}
                         <div className={`
