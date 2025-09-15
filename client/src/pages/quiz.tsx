@@ -837,7 +837,7 @@ export default function Quiz() {
               </div>
 
               {/* Mystical Tarot Card Answer Options */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12 max-w-5xl mx-auto">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-12 max-w-6xl mx-auto">
                 {quizQuestions[currentQuestion].options.map((option, index) => {
                   const isSelected = answers[quizQuestions[currentQuestion].id] === option.value;
                   const tarotSymbols = ['★', '☽', '◆', '✧'];
@@ -916,27 +916,13 @@ export default function Quiz() {
                         </div>
                         
                         {/* Card Content */}
-                        <div className="flex flex-col justify-center h-full px-3 py-4 text-center">
-                          {/* Card Number */}
-                          <div className={`text-xs font-serif mb-2 transition-colors duration-300 ${
-                            isSelected ? 'text-purple-200' : 'text-purple-300/80 group-hover:text-purple-200'
-                          }`}>
-                            CARD {String.fromCharCode(65 + index)}
-                          </div>
-                          
+                        <div className="flex flex-col justify-center h-full px-4 py-6 text-center">
                           {/* Option Text */}
                           <div className={`
-                            text-xs md:text-sm font-light leading-tight transition-all duration-300 mb-2
-                            ${isSelected ? 'text-white font-medium' : 'text-gray-100 group-hover:text-white'}
+                            text-sm md:text-base lg:text-lg font-serif font-medium leading-tight transition-all duration-300 uppercase tracking-wide
+                            ${isSelected ? 'text-white font-bold' : 'text-gray-100 group-hover:text-white'}
                           `}>
                             {option.text}
-                          </div>
-                          
-                          {/* Card Title/Theme */}
-                          <div className={`text-xs font-serif italic transition-colors duration-300 ${
-                            isSelected ? 'text-purple-200' : 'text-purple-300/80 group-hover:text-purple-200'
-                          }`}>
-                            Divine Path
                           </div>
                         </div>
                         
