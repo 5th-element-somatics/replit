@@ -95,7 +95,7 @@ const resultTypes = {
       "You're exhausted from carrying everyone else's emotions",
       "Deep down, you wonder if people would love you if you stopped giving"
     ],
-    transformation: "What if your worth wasn't tied to your usefulness? What if your 'no' was just as sacred as your 'yes'?",
+    transformation: "What if your worth wasn't tied to your usefulness? What if your 'no' was just as powerful as your 'yes'?",
     nextStep: "The Good Girl Paradox Masterclass will help you reclaim your voice and discover that boundaries are actually the gateway to deeper intimacy.",
     color: "from-pink-500 to-rose-600",
     icon: Heart
@@ -758,7 +758,7 @@ export default function Quiz() {
                   Draw Your Card
                 </h2>
                 <p className="text-lg text-gray-300 mb-8">
-                  The universe has prepared {quizQuestions.length} sacred cards for your reading.
+                  The universe has prepared {quizQuestions.length} mystical cards for your reading.
                   <br />Click the card that calls to your soul.
                 </p>
               </div>
@@ -788,7 +788,7 @@ export default function Quiz() {
                       <div className="flex flex-col items-center justify-center h-full">
                         <div className="text-6xl mb-4 text-purple-300">✧</div>
                         <div className="text-xl font-serif text-purple-200 mb-2">Divine</div>
-                        <div className="text-lg font-serif text-purple-300">Archetype</div>
+                        <div className="text-lg font-serif text-purple-300">Path</div>
                         <div className="text-6xl mt-4 text-purple-300 transform rotate-180">✧</div>
                       </div>
                     </div>
@@ -809,7 +809,7 @@ export default function Quiz() {
                   ✧ Click the card when you feel ready ✧
                 </p>
                 <p className="text-gray-400 text-sm">
-                  Trust your intuition - there are no wrong choices in this sacred reading
+                  Trust your intuition - there are no wrong choices in this mystical reading
                 </p>
               </div>
             </div>
