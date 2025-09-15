@@ -746,21 +746,6 @@ export default function Quiz() {
           </div>
         </div>
 
-        {/* Mystic Progress */}
-        <div className="mb-16">
-          <div className="flex justify-center items-center gap-4 text-sm text-purple-300 mb-6">
-            <Moon className="w-4 h-4" />
-            <span>Card {currentQuestion + 1} of {quizQuestions.length}</span>
-            <Sun className="w-4 h-4" />
-          </div>
-          <div className="w-full max-w-md mx-auto bg-gray-800 rounded-full h-2 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 to-pink-500/30 animate-pulse"></div>
-            <div 
-              className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-700 relative z-10"
-              style={{ width: `${((currentQuestion + 1) / quizQuestions.length) * 100}%` }}
-            ></div>
-          </div>
-        </div>
 
 
         {/* Tarot Card Question Interface */}
@@ -1044,12 +1029,21 @@ export default function Quiz() {
                     </span>
                   )}
                 </Button>
-                <p className="text-purple-300 text-sm mt-6">
-                  {currentQuestion === quizQuestions.length - 1 
-                    ? "The cosmic reading is complete - discover your sacred archetype" 
-                    : `Card ${currentQuestion + 1} of ${quizQuestions.length} • ${quizQuestions.length - currentQuestion - 1} cards remaining`
-                  }
-                </p>
+                {/* Mystic Progress */}
+                <div className="mt-6">
+                  <div className="flex justify-center items-center gap-4 text-sm text-purple-300 mb-4">
+                    <Moon className="w-4 h-4" />
+                    <span>Card {currentQuestion + 1} of {quizQuestions.length}</span>
+                    <Sun className="w-4 h-4" />
+                  </div>
+                  <div className="w-full max-w-md mx-auto bg-gray-800 rounded-full h-2 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 to-pink-500/30 animate-pulse"></div>
+                    <div 
+                      className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-700 relative z-10"
+                      style={{ width: `${((currentQuestion + 1) / quizQuestions.length) * 100}%` }}
+                    ></div>
+                  </div>
+                </div>
               </div>
             </div>
           )}
