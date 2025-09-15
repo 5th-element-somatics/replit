@@ -145,8 +145,9 @@ export default function Quiz() {
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
   const [selectedVoice, setSelectedVoice] = useState("soul_sister");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [showVoiceSelection, setShowVoiceSelection] = useState(true);
-  const [quizStarted, setQuizStarted] = useState(false);
+  const [quizStarted, setQuizStarted] = useState(true);
+  const [backgroundMusicEnabled, setBackgroundMusicEnabled] = useState(true);
+  const [backgroundMusicPlaying, setBackgroundMusicPlaying] = useState(false);
   const [selectedCard, setSelectedCard] = useState<number | null>(null);
   const [cardsRevealed, setCardsRevealed] = useState<Set<number>>(new Set());
   const [showQuestion, setShowQuestion] = useState(false);
@@ -160,7 +161,6 @@ export default function Quiz() {
     if (sharedResult && sharedResult in resultTypes) {
       setResult(sharedResult as keyof typeof resultTypes);
       setShowResult(true);
-      setShowVoiceSelection(false);
       setQuizStarted(true);
       
       // Clean URL without reloading page
@@ -170,86 +170,71 @@ export default function Quiz() {
     }
   }, []);
 
-  const handleVoiceChange = (voiceId: string) => {
-    // Check if voice exists
-    const selectedVoiceOption = voiceOptions.find(v => v.id === voiceId);
-    if (!selectedVoiceOption) {
-      toast({
-        title: "Voice Not Available",
-        description: "This voice is not available.",
-        variant: "default"
-      });
-      return;
-    }
 
-    // Stop current audio
-    if (audioRef.current) {
-      audioRef.current.pause();
-      setIsPlaying(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const backgroundMusicRef = useRef<HTMLAudioElement | null>(null);
+  const lastAudioRequestRef = useRef<number>(0);
+  const { toast } = useToast();
+
+  // Background music functionality
+  const startBackgroundMusic = async () => {
+    if (!backgroundMusicEnabled || backgroundMusicRef.current) return;
+    
+    try {
+      // Create a simple ambient tone using Web Audio API
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const oscillator1 = audioContext.createOscillator();
+      const oscillator2 = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      // Create mystical ambient frequencies
+      oscillator1.frequency.setValueAtTime(110, audioContext.currentTime); // Low A
+      oscillator2.frequency.setValueAtTime(165, audioContext.currentTime); // E
+      
+      oscillator1.type = 'sine';
+      oscillator2.type = 'triangle';
+      
+      // Very quiet ambient volume
+      gainNode.gain.setValueAtTime(0.03, audioContext.currentTime);
+      
+      oscillator1.connect(gainNode);
+      oscillator2.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator1.start();
+      oscillator2.start();
+      
+      // Store reference for cleanup
+      backgroundMusicRef.current = { audioContext, oscillator1, oscillator2, gainNode } as any;
+      setBackgroundMusicPlaying(true);
+      
+    } catch (error) {
+      console.log('Background music not available on this device');
     }
-    
-    setSelectedVoice(voiceId);
-    
-    // Give immediate feedback about voice change (no auto-play)
-    toast({
-      title: "Voice Selected",
-      description: `${selectedVoiceOption?.name} selected. Click preview to hear a sample.`,
-      variant: "default"
-    });
   };
-
-  const previewVoice = async () => {
-    const selectedVoiceOption = voiceOptions.find(v => v.id === selectedVoice);
-    if (!selectedVoiceOption) return;
-
-    // Play a quick sample with the selected voice
-    if (soundEnabled) {
+  
+  const stopBackgroundMusic = () => {
+    if (backgroundMusicRef.current) {
       try {
-        setIsLoadingAudio(true);
-        const sampleTexts: Record<string, string> = {
-          soul_sister: "Hello beautiful soul, I'm your Soul Sister guide ready to support you.",
-          daddy: "Hey there, this is Daddy speaking. I'm here to ground and guide you."
-        };
-        
-        const sampleText = sampleTexts[selectedVoice] || sampleTexts.soul_sister;
-        
-        const response = await apiRequest("POST", "/api/text-to-speech", {
-          text: sampleText,
-          voiceId: selectedVoiceOption?.elevenLabsId || "BLGGT4QhGwlt0T3oikNc"
-        });
-
-        if (response.ok) {
-          const audioBlob = await response.blob();
-          const audioUrl = URL.createObjectURL(audioBlob);
-          
-          audioRef.current = new Audio(audioUrl);
-          audioRef.current.onplay = () => setIsPlaying(true);
-          audioRef.current.onended = () => {
-            setIsPlaying(false);
-            URL.revokeObjectURL(audioUrl);
-          };
-          audioRef.current.onerror = () => {
-            setIsPlaying(false);
-            URL.revokeObjectURL(audioUrl);
-          };
-          
-          await audioRef.current.play();
-        }
+        const { audioContext, oscillator1, oscillator2 } = backgroundMusicRef.current as any;
+        oscillator1.stop();
+        oscillator2.stop();
+        audioContext.close();
+        backgroundMusicRef.current = null;
+        setBackgroundMusicPlaying(false);
       } catch (error) {
-        console.error("Voice preview error:", error);
-        toast({
-          title: "Audio Error",
-          description: "Unable to play voice sample. The voice will be used for future audio.",
-          variant: "default"
-        });
-      } finally {
-        setIsLoadingAudio(false);
+        console.log('Error stopping background music');
       }
     }
   };
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const lastAudioRequestRef = useRef<number>(0);
-  const { toast } = useToast();
+  
+  const toggleBackgroundMusic = () => {
+    if (backgroundMusicPlaying) {
+      stopBackgroundMusic();
+    } else {
+      startBackgroundMusic();
+    }
+  };
 
   const handleNavClick = () => {
     // Aggressively stop all audio when navigating away
@@ -259,6 +244,7 @@ export default function Quiz() {
       audioRef.current.src = ''; // Clear the audio source
       audioRef.current = null; // Remove reference
     }
+    stopBackgroundMusic();
     setIsPlaying(false);
     setIsLoadingAudio(false);
     setIsMenuOpen(false);
@@ -272,6 +258,7 @@ export default function Quiz() {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
       }
+      stopBackgroundMusic();
       setIsPlaying(false);
     };
 
@@ -280,6 +267,7 @@ export default function Quiz() {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
       }
+      stopBackgroundMusic();
       setIsPlaying(false);
     };
 
@@ -287,6 +275,11 @@ export default function Quiz() {
       if (document.hidden && audioRef.current) {
         audioRef.current.pause(); 
         setIsPlaying(false);
+      }
+      if (document.hidden) {
+        stopBackgroundMusic();
+      } else if (backgroundMusicEnabled && !backgroundMusicPlaying) {
+        startBackgroundMusic();
       }
     };
 
@@ -301,6 +294,7 @@ export default function Quiz() {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
       }
+      stopBackgroundMusic();
       setIsPlaying(false);
       
       // Remove event listeners
@@ -445,16 +439,27 @@ export default function Quiz() {
     }
   };
 
+  // Auto-start background music when quiz loads
+  useEffect(() => {
+    if (backgroundMusicEnabled && quizStarted && !showResult) {
+      const timer = setTimeout(() => {
+        startBackgroundMusic();
+      }, 1000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [quizStarted, backgroundMusicEnabled, showResult]);
+  
   // Auto-play question with answers when it changes (only after quiz has started)
   useEffect(() => {
-    if (soundEnabled && !showResult && quizStarted && quizQuestions[currentQuestion] && !showVoiceSelection) {
+    if (soundEnabled && !showResult && quizStarted && quizQuestions[currentQuestion]) {
       const timer = setTimeout(() => {
         playQuestionAudio(quizQuestions[currentQuestion].question, true);
       }, 800); // Slightly longer delay to avoid rate limits
       
       return () => clearTimeout(timer);
     }
-  }, [currentQuestion, soundEnabled, showResult, quizStarted, showVoiceSelection]);
+  }, [currentQuestion, soundEnabled, showResult, quizStarted]);
 
   const calculateResult = () => {
     const scores = { people_pleaser: 0, perfectionist: 0, rebel: 0 };
@@ -753,181 +758,6 @@ export default function Quiz() {
     );
   }
 
-  // Voice Selection Screen
-  if (showVoiceSelection) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
-        <SEOHead 
-          title="Good Girl Archetype Quiz - Discover Your Type | Fifth Element Somatics"
-          description="Are you a People-Pleaser, Perfectionist, or Awakened Rebel? Take this viral quiz with voice narration to discover your Good Girl archetype and get your personalized roadmap to authentic empowerment."
-          image="/quiz-share.svg"
-          url="https://fifthelementsomatics.com/quiz"
-          keywords="good girl syndrome quiz, archetype quiz, people pleaser quiz, perfectionist quiz, personality quiz, somatic healing, women's empowerment, self discovery quiz"
-        />
-        {/* Navigation */}
-        <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
-            <div className="flex items-center space-x-3">
-              <Link href="/" onClick={handleNavClick}>
-                <img 
-                  src={tiger_no_bg} 
-                  alt="Fifth Element Somatics" 
-                  className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
-                />
-              </Link>
-              <Link href="/" onClick={handleNavClick}>
-                <span className="text-lg font-serif font-semibold text-white">FIFTH ELEMENT SOMATICS</span>
-              </Link>
-            </div>
-            
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex space-x-8">
-              <Link href="/" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">HOME</Link>
-              <Link href="/free-meditation" onClick={handleNavClick} className="text-emerald-400 hover:text-emerald-300 transition-colors font-semibold">FREE MEDITATION</Link>
-              <Link href="/quiz" onClick={handleNavClick} className="text-white font-semibold">TAKE THE QUIZ</Link>
-              <Link href="/work-with-me" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">WORK WITH ME</Link>
-              <Link href="/masterclass" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">MASTERCLASS</Link>
-              <Link href="/about" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">ABOUT</Link>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <button 
-              className="md:hidden text-white p-2"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              aria-label="Toggle menu"
-            >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-
-            {/* Mobile Navigation */}
-            {isMenuOpen && (
-              <div className="absolute top-20 left-0 right-0 bg-gray-900 bg-opacity-95 backdrop-blur-sm md:hidden z-50">
-                <div className="flex flex-col p-4 space-y-4">
-                  <Link href="/" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">HOME</Link>
-                  <Link href="/free-meditation" onClick={handleNavClick} className="text-emerald-400 hover:text-emerald-300 transition-colors font-semibold text-lg">FREE MEDITATION</Link>
-                  <Link href="/quiz" onClick={handleNavClick} className="text-white font-semibold text-lg">TAKE THE QUIZ</Link>
-                  <Link href="/work-with-me" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">WORK WITH ME</Link>
-                  <Link href="/masterclass" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">MASTERCLASS</Link>
-                  <Link href="/about" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">ABOUT</Link>
-                </div>
-              </div>
-            )}
-        </nav>
-
-        <div className="max-w-3xl mx-auto">
-          {/* Quiz Header */}
-          <div className="text-center mb-8">
-            <div className="mb-4">
-              <div className="text-6xl mb-4">🔮</div>
-              <h1 className="text-4xl sm:text-5xl font-serif font-bold mb-6">
-                <span className="gradient-text">Divine Archetype Reading</span>
-              </h1>
-            </div>
-            <p className="text-lg text-gray-300 mb-6">
-              The cards will reveal the pattern that's been running your life and the pathway to your liberation.
-            </p>
-            <div className="flex justify-center items-center gap-2 text-purple-400 text-sm">
-              <span>✧</span>
-              <span>Sacred Wisdom Awaits</span>
-              <span>✧</span>
-            </div>
-          </div>
-
-          {/* Voice Selection Header */}
-          <div className="text-center mb-12">
-            <div className="text-4xl mb-4">🌙</div>
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-6">
-              <span className="gradient-text">Choose Your Spirit Guide</span>
-            </h2>
-            <p className="text-xl text-gray-300 mb-6">
-              Select the sacred voice that will guide you through this mystical journey to your archetype.
-            </p>
-            <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 border border-purple-400/30 rounded-lg p-6 max-w-2xl mx-auto backdrop-blur-sm">
-              <p className="text-gray-300">
-                <strong className="text-white">Each voice channels a unique divine energy.</strong> Choose the one that calls to your soul in this sacred moment.
-              </p>
-            </div>
-          </div>
-
-          {/* Voice Options */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-            {voiceOptions.map((voice) => (
-              <Card 
-                key={voice.id} 
-                className={`cursor-pointer transition-all duration-300 ${
-                  selectedVoice === voice.id 
-                    ? "bg-gradient-to-r from-purple-500/20 to-pink-600/20 border-purple-400 mystique-glow" 
-                    : "bg-gray-800 border-purple-400/20 hover:border-purple-400/60"
-                }`}
-                onClick={() => handleVoiceChange(voice.id)}
-              >
-                <CardContent className="p-6 text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Volume2 className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-xl font-serif font-bold text-white mb-2">{voice.name}</h3>
-                  <p className="text-gray-300 text-sm mb-4">{voice.description}</p>
-                  {selectedVoice === voice.id && (
-                    <div className="flex items-center justify-center gap-2 text-purple-400">
-                      <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
-                      <span className="text-sm">Selected</span>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          {/* Audio Controls */}
-          <div className="flex justify-center items-center gap-4 mb-8">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setSoundEnabled(!soundEnabled)}
-              className="text-gray-300 hover:text-white flex items-center gap-2"
-            >
-              {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-              <span className="text-sm">{soundEnabled ? "Sound On" : "Sound Off"}</span>
-            </Button>
-            
-            {soundEnabled && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={previewVoice}
-                disabled={isLoadingAudio}
-                className="text-emerald-400 hover:text-emerald-300 flex items-center gap-2"
-              >
-                {isLoadingAudio ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Play className="w-4 h-4" />
-                )}
-                <span className="text-sm">
-                  {isLoadingAudio ? "Loading..." : "Preview Voice"}
-                </span>
-              </Button>
-            )}
-          </div>
-
-          {/* Start Quiz Button */}
-          <div className="text-center">
-            <Button 
-              onClick={() => {
-                setShowVoiceSelection(false);
-                setQuizStarted(true);
-              }}
-              className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 mystique-glow"
-            >
-              Begin Quiz Journey
-            </Button>
-            <p className="text-gray-400 text-sm mt-4">
-              You can change your voice selection at any time during the quiz
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
@@ -1025,15 +855,33 @@ export default function Quiz() {
 
         {/* Audio Controls */}
         <div className="flex flex-col gap-4 mb-12">
-          <div className="flex justify-center items-center gap-6">
+          <div className="flex justify-center items-center gap-4 flex-wrap">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setSoundEnabled(!soundEnabled)}
               className="text-gray-300 hover:text-white flex items-center gap-2 bg-gray-800/50 border border-purple-400/20 rounded-full px-6 py-3"
+              data-testid="button-sound-toggle"
             >
               {soundEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
-              <span className="text-sm font-medium">{soundEnabled ? "Sound On" : "Sound Off"}</span>
+              <span className="text-sm font-medium">{soundEnabled ? "Voice On" : "Voice Off"}</span>
+            </Button>
+            
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleBackgroundMusic}
+              className={`flex items-center gap-2 rounded-full px-6 py-3 transition-all ${
+                backgroundMusicPlaying 
+                  ? "text-purple-300 bg-purple-900/30 border border-purple-400/40" 
+                  : "text-gray-400 bg-gray-800/50 border border-gray-600/20 hover:text-purple-300 hover:border-purple-400/30"
+              }`}
+              data-testid="button-music-toggle"
+            >
+              🎵
+              <span className="text-sm font-medium">
+                {backgroundMusicPlaying ? "Music On" : "Music Off"}
+              </span>
             </Button>
             
             {soundEnabled && (
@@ -1044,6 +892,7 @@ export default function Quiz() {
                   onClick={toggleAudio}
                   disabled={isLoadingAudio}
                   className="text-emerald-400 hover:text-emerald-300 flex items-center gap-2 bg-emerald-900/20 border border-emerald-400/30 rounded-full px-6 py-3"
+                  data-testid="button-voice-play"
                 >
                   {isLoadingAudio ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
@@ -1063,6 +912,7 @@ export default function Quiz() {
                   onClick={playAnswersOnly}
                   disabled={isLoadingAudio}
                   className="text-purple-400 hover:text-purple-300 flex items-center gap-2 bg-purple-900/20 border border-purple-400/30 rounded-full px-6 py-3"
+                  data-testid="button-repeat-choices"
                 >
                   <Volume2 className="w-5 h-5" />
                   <span className="text-sm font-medium">Repeat Choices</span>
@@ -1071,26 +921,17 @@ export default function Quiz() {
             )}
           </div>
 
-          {/* Voice Guide */}
+          {/* Soul Sister Guide Info */}
           {soundEnabled && (
             <div className="bg-gradient-to-r from-gray-800/80 to-gray-900/80 border border-purple-400/30 rounded-full p-4 max-w-md mx-auto backdrop-blur-sm">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                    <Volume2 className="w-4 h-4 text-white" />
-                  </div>
-                  <span className="text-white text-sm font-medium">
-                    Guide: {voiceOptions.find(v => v.id === selectedVoice)?.name}
-                  </span>
+              <div className="flex items-center justify-center gap-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                  <Volume2 className="w-4 h-4 text-white" />
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowVoiceSelection(true)}
-                  className="text-purple-400 hover:text-purple-300 text-xs bg-purple-900/30 rounded-full px-4 py-2"
-                >
-                  Change
-                </Button>
+                <div className="text-center">
+                  <p className="text-white text-sm font-medium">Your Spirit Guide: Soul Sister</p>
+                  <p className="text-purple-300 text-xs">Warm & nurturing guidance</p>
+                </div>
               </div>
             </div>
           )}
