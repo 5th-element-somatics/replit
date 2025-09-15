@@ -818,12 +818,6 @@ export default function Quiz() {
             <div className="max-w-4xl mx-auto">
               {/* Revealed Question */}
               <div className="text-center mb-12">
-                <div className="relative">
-                  <div className="text-4xl mb-4">🌟</div>
-                  <h2 className="text-3xl font-serif font-bold text-white mb-6">
-                    The Card Reveals:
-                  </h2>
-                </div>
                 <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 border border-purple-400/30 rounded-2xl p-8 mb-8 backdrop-blur-sm relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-400/5 to-transparent animate-pulse"></div>
                   <p className="text-2xl text-white font-light leading-relaxed relative z-10">
