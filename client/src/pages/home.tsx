@@ -8,6 +8,7 @@ import saintPhotoUrl from "@assets/saint_photo_1753245778552.png";
 import mysticalImage from "@assets/TanneryCreepB-008_1758058156207.jpg";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
 import purpleHeroImage from "@assets/PURPLEWEBSITEHERO_1758060370435.png";
+import purpleHeroTransparent from "@assets/PURPLEWEBSITEHERO_transparent_1758061475210.png";
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -131,7 +132,7 @@ export default function Home() {
             <div className="relative order-1 lg:order-2">
               <div className="relative max-w-sm mx-auto lg:max-w-md">
                 <img 
-                  src={purpleHeroImage} 
+                  src={purpleHeroTransparent} 
                   alt="Saint - Somatic Sexologist and Transformation Guide"
                   className="w-full h-auto rounded-lg shadow-2xl"
                 />
