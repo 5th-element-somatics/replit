@@ -217,6 +217,7 @@ export default function About() {
                 src={portalIllustration} 
                 alt="Portal illustration representing sacred space and transformation"
                 className="w-full max-w-md h-auto"
+                style={{filter: 'invert(1)'}}
               />
             </div>
           </div>
