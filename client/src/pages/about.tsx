@@ -229,28 +229,6 @@ export default function About() {
               </CardContent>
             </Card>
 
-            <Card className="bg-gray-800 border border-purple-400 border-opacity-20 text-center">
-              <CardContent className="p-6">
-                <div className="w-12 h-12 mx-auto mb-4 text-purple-400">
-                  <svg fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z"/>
-                  </svg>
-                </div>
-                <h3 className="text-lg font-semibold text-white mb-2">✧ Join Waitlist for Radiant Alchemy ✧</h3>
-                <p className="text-sm text-gray-400 mb-4">AN IMMERSIVE GROUP EXPERIENCE ROOTED IN SOMATICS, SENSUALITY AND SOUL-LED EMBODIMENT.</p>
-                <Button 
-                  onClick={() => {
-                    // Open email client with prefilled subject and body
-                    const subject = encodeURIComponent("Radiant Alchemy Waitlist - Sign Me Up!");
-                    const body = encodeURIComponent("Hi Saint,\n\nI'm interested in joining the waitlist for Radiant Alchemy - the immersive group experience in somatics, sensuality and soul-led embodiment.\n\nPlease add me to the waitlist and keep me updated on launch details.\n\nThank you!");
-                    window.location.href = `mailto:hello@fifthelementsomatics.com?subject=${subject}&body=${body}`;
-                  }}
-                  className="bg-gray-600 hover:bg-gray-700 text-white text-sm"
-                >
-                  Join The Waitlist
-                </Button>
-              </CardContent>
-            </Card>
 
             <Card className="bg-gray-800 border border-purple-400 border-opacity-20 text-center">
               <CardContent className="p-6">
