@@ -156,16 +156,9 @@ export default function About() {
       {/* Philosophy Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-900/20 to-pink-900/20">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="flex items-center justify-center mb-8">
-            <div className="w-8 h-8 mr-4 text-purple-400">
-              <svg fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C9.8 2 8 3.8 8 6C8 8.2 9.8 10 12 10C14.2 10 16 8.2 16 6C16 3.8 14.2 2 12 2ZM11 11V22H13V11H15V9H9V11H11Z"/>
-              </svg>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white">
-              I BELIEVE
-            </h2>
-          </div>
+          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-8">
+            I BELIEVE
+          </h2>
           
           <div className="space-y-3 text-xl text-gray-300 leading-relaxed">
             <div className="text-white font-semibold">Your body doesn't need to be fixed.</div>
