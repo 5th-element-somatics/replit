@@ -589,7 +589,7 @@ export default function Apply() {
           <Card className="bg-gray-800 border border-purple-400 border-opacity-30 mystique-glow">
             <CardHeader>
               <CardTitle className="text-white text-xl" data-testid={`title-step-${currentStep}`}>
-                {currentStepConfig.title}
+                {currentStepConfig.question || currentStepConfig.title}
               </CardTitle>
               {currentStepConfig.description && (
                 <p className="text-gray-300">{currentStepConfig.description}</p>
@@ -646,12 +646,6 @@ export default function Apply() {
                   {/* Question Steps */}
                   {!currentStepConfig.isInfoStep && currentStepConfig.fieldName && currentStepConfig.question && (
                     <div className="space-y-4">
-                      <div className="bg-gray-700 bg-opacity-30 p-4 rounded-lg border-l-4 border-purple-400">
-                        <h3 className="text-lg font-medium text-white mb-2" data-testid={`question-${currentStepConfig.fieldName}`}>
-                          {currentStepConfig.question}
-                        </h3>
-                      </div>
-
                       <FormField
                         key={currentStepConfig.fieldName}
                         control={form.control}
