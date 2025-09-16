@@ -847,7 +847,7 @@ export default function Quiz() {
               <div className="text-center mb-12">
                 <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 border border-purple-400/30 rounded-2xl p-8 mb-8 backdrop-blur-sm relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-400/5 to-transparent animate-pulse"></div>
-                  <p className="text-2xl text-white font-light leading-relaxed relative z-10">
+                  <p className="text-2xl text-white font-bold leading-relaxed relative z-10">
                     {quizQuestions[currentQuestion].question}
                     {soundEnabled && isPlaying && (
                       <div className="flex gap-1 ml-4 inline-flex">
