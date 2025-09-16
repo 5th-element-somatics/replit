@@ -670,11 +670,6 @@ export default function Apply() {
                         <h3 className="text-lg font-medium text-white mb-2" data-testid={`question-${currentStepConfig.fieldName}`}>
                           {currentStepConfig.question}
                         </h3>
-                        {currentStepConfig.subtext && (
-                          <p className="text-sm text-gray-400 italic leading-relaxed" data-testid={`subtext-${currentStepConfig.fieldName}`}>
-                            {currentStepConfig.subtext}
-                          </p>
-                        )}
                       </div>
 
                       <FormField
@@ -685,7 +680,7 @@ export default function Apply() {
                             <FormLabel className="text-gray-300">Your Response</FormLabel>
                             <FormControl>
                               <Textarea 
-                                placeholder="Share your thoughts here, or use the voice recording option below..."
+                                placeholder={currentStepConfig.subtext || "Share your thoughts here, or use the voice recording option below..."}
                                 className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-400 min-h-[120px]"
                                 data-testid={`textarea-${currentStepConfig.fieldName}`}
                                 {...field}
