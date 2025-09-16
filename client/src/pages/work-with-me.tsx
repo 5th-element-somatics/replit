@@ -227,8 +227,8 @@ export default function WorkWithMe() {
       {/* Application Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-gray-800 to-black">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-8">
-            Ready to be held in a space designed for all of you?
+          <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-8">
+            <span className="gradient-text">Ready to be held in<br />a space designed for all of you?</span>
           </h2>
           <p className="text-xl text-gray-300 mb-8">I invite you to apply below.</p>
           <Link href="/apply" onClick={handleNavClick}>
