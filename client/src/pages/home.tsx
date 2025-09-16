@@ -129,40 +129,12 @@ export default function Home() {
               </Link>
             </div>
             <div className="relative order-1 lg:order-2">
-              {/* Arch Doorway Frame */}
-              <div className="relative max-w-sm mx-auto lg:max-w-none">
-                <div 
-                  className="relative bg-gradient-to-b from-purple-900/40 via-purple-600/30 to-pink-900/40 p-2 shadow-2xl"
-                  style={{
-                    clipPath: 'polygon(5% 100%, 5% 30%, 15% 15%, 25% 8%, 50% 0%, 75% 8%, 85% 15%, 95% 30%, 95% 100%)',
-                    aspectRatio: '5/6'
-                  }}
-                >
-                  <div 
-                    className="w-full h-full overflow-hidden"
-                    style={{
-                      clipPath: 'polygon(3% 100%, 3% 32%, 13% 17%, 23% 10%, 50% 5%, 77% 10%, 87% 17%, 97% 32%, 97% 100%)'
-                    }}
-                  >
-                    <img 
-                      src={purpleHeroImage} 
-                      alt="Saint - Somatic Sexologist and Transformation Guide"
-                      className="w-full h-full object-cover"
-                      style={{
-                        objectPosition: 'center 25%'
-                      }}
-                    />
-                  </div>
-                </div>
-
-                {/* Subtle Mystical Glow */}
-                <div 
-                  className="absolute inset-0 pointer-events-none"
-                  style={{
-                    background: 'radial-gradient(ellipse at center, transparent 60%, rgba(139, 92, 246, 0.08) 100%)',
-                    clipPath: 'polygon(5% 100%, 5% 30%, 15% 15%, 25% 8%, 50% 0%, 75% 8%, 85% 15%, 95% 30%, 95% 100%)'
-                  }}
-                ></div>
+              <div className="relative max-w-sm mx-auto lg:max-w-md">
+                <img 
+                  src={purpleHeroImage} 
+                  alt="Saint - Somatic Sexologist and Transformation Guide"
+                  className="w-full h-auto rounded-lg shadow-2xl"
+                />
               </div>
             </div>
           </div>
