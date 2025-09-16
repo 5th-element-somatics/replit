@@ -5,7 +5,7 @@ import { Link } from "wouter";
 import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import saintPhotoUrl from "@assets/saint_photo_1753245778552.png";
-
+import mysticalImage from "@assets/TanneryCreepB-008_1758058156207.jpg";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
 
 export default function Home() {
@@ -320,27 +320,41 @@ export default function Home() {
       </section>
       {/* Origin Story */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white mb-6">
-            It began as a quiet ache I couldn't name.
-          </h2>
-          
-          <div className="space-y-4 text-lg text-gray-300">
-            <p><em>A subtle holding in my chest.</em></p>
-            <p>Breath that never fully dropped in.</p>
-            <p>The soft hum of something unmet beneath the surface.</p>
-            <p>Avoiding pain had become the baseline.</p>
-            <p><strong className="text-white">But my body never stopped speaking.</strong></p>
-            <p><strong className="text-white">And truth never stopped whispering.</strong></p>
-            <p>Now, I guide women back to what's already alive inside them. Not to fix but to feel.</p>
-          </div>
-          
-          <div className="mt-8">
-            <Link href="/work-with-me" onClick={handleNavClick}>
-              <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 mystique-glow">
-                APPLY FOR MENTORSHIP
-              </Button>
-            </Link>
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Column - Image */}
+            <div className="flex justify-center lg:justify-start">
+              <img 
+                src={mysticalImage} 
+                alt="Mystical portrait with candlelight representing inner wisdom and transformation"
+                className="w-full max-w-md h-auto rounded-lg shadow-2xl"
+              />
+            </div>
+            
+            {/* Right Column - Text */}
+            <div className="text-center lg:text-left">
+              <h2 className="text-2xl sm:text-3xl font-serif font-bold mb-6">
+                <span className="gradient-text">It began as a quiet ache I couldn't name.</span>
+              </h2>
+              
+              <div className="space-y-4 text-lg text-gray-300">
+                <p><em>A subtle holding in my chest.</em></p>
+                <p>Breath that never fully dropped in.</p>
+                <p>The soft hum of something unmet beneath the surface.</p>
+                <p>Avoiding pain had become the baseline.</p>
+                <p><strong className="text-white">But my body never stopped speaking.</strong></p>
+                <p><strong className="text-white">And truth never stopped whispering.</strong></p>
+                <p>Now, I guide women back to what's already alive inside them. Not to fix but to feel.</p>
+              </div>
+              
+              <div className="mt-8">
+                <Link href="/work-with-me" onClick={handleNavClick}>
+                  <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 mystique-glow">
+                    APPLY FOR MENTORSHIP
+                  </Button>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
