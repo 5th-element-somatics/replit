@@ -180,8 +180,8 @@ export default function FreeMeditation({ accessMode = false }: FreeMeditationPro
               </div>
             </div>
             <p className="text-emerald-400 font-semibold mb-2 tracking-wide">FREE GROUNDING MEDITATION</p>
-            <h1 className="text-3xl sm:text-5xl font-serif font-bold text-white mb-6 leading-tight">
-              FEEL SAFE IN YOUR SKIN AGAIN.
+            <h1 className="text-3xl sm:text-5xl font-serif font-bold mb-6 leading-tight">
+              <span className="gradient-text">FEEL SAFE IN YOUR SKIN AGAIN.</span>
             </h1>
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto whitespace-nowrap">DOWNLOAD THIS FREE GROUNDING MEDITATION & ROOT INTO YOUR BODY</p>
             
