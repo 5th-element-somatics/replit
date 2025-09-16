@@ -6,6 +6,7 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
 import finalWhisperImg from "@assets/creep0045ratio_1758062207610.jpg";
+import handOutlineImg from "@assets/outline-white-hand-5_1758062574580.png";
 import { ContactForm } from "@/components/ContactForm";
 
 export default function WorkWithMe() {
@@ -152,38 +153,52 @@ export default function WorkWithMe() {
       </section>
 
       {/* This Work Is For You Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-900/20 to-pink-900/20">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white text-center mb-12">
-            This Work Is For You If…
-          </h2>
-          
-          <div className="space-y-6 text-lg text-gray-300">
-            <div className="flex items-start space-x-4">
-              <div className="w-2 h-2 bg-purple-400 rounded-full mt-3 flex-shrink-0"></div>
-              <p>You crave deep intimacy that doesn't cost you your boundaries</p>
-            </div>
-            <div className="flex items-start space-x-4">
-              <div className="w-2 h-2 bg-purple-400 rounded-full mt-3 flex-shrink-0"></div>
-              <p>You're tired of shrinking to stay safe or be loved</p>
-            </div>
-            <div className="flex items-start space-x-4">
-              <div className="w-2 h-2 bg-purple-400 rounded-full mt-3 flex-shrink-0"></div>
-              <p>You long to reconnect with your sensual self without shame</p>
-            </div>
-            <div className="flex items-start space-x-4">
-              <div className="w-2 h-2 bg-purple-400 rounded-full mt-3 flex-shrink-0"></div>
-              <p>You've held so much for so long, and you're ready to let it move</p>
-            </div>
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-900/20 to-pink-900/20" data-testid="section-this-work-for-you">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+          {/* Image */}
+          <div className="mb-8 md:mb-0 flex justify-center">
+            <img 
+              src={handOutlineImg}
+              alt="Hand outline illustration representing openness and receptivity"
+              className="w-full max-w-sm opacity-60 hover:opacity-80 transition-opacity duration-300"
+              loading="lazy"
+              data-testid="img-hand-outline"
+            />
           </div>
           
-          <div className="text-center mt-12">
-            <h3 className="text-2xl font-serif font-bold text-white mb-4">
-              YOU DON'T NEED TO BE "READY."
-            </h3>
-            <p className="text-xl text-white">
-              YOU JUST NEED TO BE WILLING.
-            </p>
+          {/* Text Content */}
+          <div className="text-center md:text-left">
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-12">
+              This Work Is For You If…
+            </h2>
+            
+            <div className="space-y-6 text-lg text-gray-300">
+              <div className="flex items-start space-x-4">
+                <div className="w-2 h-2 bg-purple-400 rounded-full mt-3 flex-shrink-0"></div>
+                <p>You crave deep intimacy that doesn't cost you your boundaries</p>
+              </div>
+              <div className="flex items-start space-x-4">
+                <div className="w-2 h-2 bg-purple-400 rounded-full mt-3 flex-shrink-0"></div>
+                <p>You're tired of shrinking to stay safe or be loved</p>
+              </div>
+              <div className="flex items-start space-x-4">
+                <div className="w-2 h-2 bg-purple-400 rounded-full mt-3 flex-shrink-0"></div>
+                <p>You long to reconnect with your sensual self without shame</p>
+              </div>
+              <div className="flex items-start space-x-4">
+                <div className="w-2 h-2 bg-purple-400 rounded-full mt-3 flex-shrink-0"></div>
+                <p>You've held so much for so long, and you're ready to let it move</p>
+              </div>
+            </div>
+            
+            <div className="mt-12">
+              <h3 className="text-2xl font-serif font-bold text-white mb-4">
+                YOU DON'T NEED TO BE "READY."
+              </h3>
+              <p className="text-xl text-white">
+                YOU JUST NEED TO BE WILLING.
+              </p>
+            </div>
           </div>
         </div>
       </section>
