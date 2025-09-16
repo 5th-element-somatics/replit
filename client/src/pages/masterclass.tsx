@@ -98,9 +98,9 @@ export default function Masterclass() {
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div className="order-2 lg:order-1">
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold mb-4">
-                The <span className="gradient-text">Good Girl</span><br />
-                <span className="gradient-text">Paradox</span>
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold mb-4 gradient-text">
+                The Good Girl<br />
+                Paradox
               </h1>
               <p className="text-lg sm:text-xl text-gray-300 mb-6">
                 Break the rules, reclaim your body, remember your power. A transformative journey into embodied liberation.
@@ -172,8 +172,8 @@ export default function Masterclass() {
       {/* About Your Guide */}
       <section className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-900/20 to-pink-900/20">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white mb-6">
-            Your <span className="gradient-text">Reclamation Guide</span>
+          <h2 className="text-2xl sm:text-3xl font-serif font-bold mb-6 gradient-text">
+            Your Reclamation Guide
           </h2>
           <p className="text-lg text-gray-300 mb-6">
             Saint is a somatic sexologist who specializes in helping women break free from the "good girl" conditioning that keeps them disconnected from their bodies, their desires, and their power.
@@ -341,8 +341,8 @@ export default function Masterclass() {
       {/* Final CTA */}
       <section className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-gray-800 to-black">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white mb-4">
-            Are You Ready to <span className="gradient-text">Begin</span>?
+          <h2 className="text-2xl sm:text-3xl font-serif font-bold mb-4 gradient-text">
+            Are You Ready to Begin?
           </h2>
           <p className="text-lg text-gray-300 mb-6">
             Watch the class instantly • Lifetime access • $44 base, $64 with bonus
