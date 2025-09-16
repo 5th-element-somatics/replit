@@ -182,7 +182,7 @@ export default function Masterclass() {
               <img 
                 src={saintProfilePhoto}
                 alt="Saint - Your Reclamation Guide"
-                className="w-32 h-32 sm:w-28 sm:h-28 object-contain rounded-full border-2 border-purple-400/30 shadow-lg bg-purple-900/20"
+                className="w-32 h-32 sm:w-28 sm:h-28 object-cover object-top rounded-full border-2 border-purple-400/30 shadow-lg"
                 data-testid="img-saint-profile"
               />
             </div>
