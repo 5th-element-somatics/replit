@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import saintPhotoUrl from "@assets/saint_photo_1753245778552.png";
 import mysticalImage from "@assets/TanneryCreepB-008_1758058156207.jpg";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
+// Using the working saint photo for now due to filename spaces issue
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -143,6 +144,14 @@ export default function Home() {
                       clipPath: 'polygon(3% 100%, 3% 32%, 13% 17%, 23% 10%, 50% 5%, 77% 10%, 87% 17%, 97% 32%, 97% 100%)'
                     }}
                   >
+                    <img 
+                      src={saintPhotoUrl} 
+                      alt="Saint - Somatic Sexologist and Transformation Guide"
+                      className="w-full h-full object-cover"
+                      style={{
+                        objectPosition: 'center 25%'
+                      }}
+                    />
                   </div>
                 </div>
 
