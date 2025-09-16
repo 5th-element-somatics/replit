@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -142,6 +142,33 @@ export default function Apply() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const recordingTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const recordingStartTimeRef = useRef<number>(0);
+  const activeRecordingFieldRef = useRef<string | null>(null);
+
+  // Optimized recording timer with useEffect to prevent frequent re-renders
+  useEffect(() => {
+    if (!activeRecordingFieldRef.current) return;
+
+    const intervalId = setInterval(() => {
+      const activeField = activeRecordingFieldRef.current;
+      if (activeField && recordingStartTimeRef.current > 0) {
+        const currentDuration = Math.round((Date.now() - recordingStartTimeRef.current) / 1000);
+        
+        // Only update the specific field being recorded
+        setVoiceRecordings(prev => ({
+          ...prev,
+          [activeField]: {
+            ...prev[activeField],
+            duration: currentDuration
+          }
+        }));
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [activeRecordingFieldRef.current]); // Only re-run when active recording field changes
 
   const handleNavClick = () => {
     // Clean up any recordings when navigating away
@@ -228,16 +255,9 @@ export default function Apply() {
         [fieldName]: { ...prev[fieldName], isRecording: true, duration: 0 }
       }));
 
-      // Start timer
-      recordingTimerRef.current = setInterval(() => {
-        setVoiceRecordings(prev => ({
-          ...prev,
-          [fieldName]: { 
-            ...prev[fieldName], 
-            duration: Math.round((Date.now() - startTime) / 1000) 
-          }
-        }));
-      }, 1000);
+      // Set up timer state for useEffect
+      recordingStartTimeRef.current = startTime;
+      activeRecordingFieldRef.current = fieldName;
 
       toast({
         title: "Recording started",
@@ -261,6 +281,7 @@ export default function Apply() {
       clearInterval(recordingTimerRef.current);
       recordingTimerRef.current = null;
     }
+    activeRecordingFieldRef.current = null;
   };
 
   const playRecording = (fieldName: string) => {
@@ -433,37 +454,28 @@ export default function Apply() {
     }
   };
 
-  const canProceed = () => {
+  // Optimized canProceed using form.watch and useMemo for better performance
+  const watchedValues = form.watch();
+  const canProceed = useMemo(() => {
     const currentStepConfig = steps[currentStep];
     
     // For the basic info step
     if (currentStepConfig.isInfoStep) {
-      try {
-        const { name, email } = form.getValues();
-        return name && name.trim().length > 0 && email && email.trim().length > 0;
-      } catch (error) {
-        console.warn('Error checking basic info:', error);
-        return false;
-      }
+      const name = watchedValues.name;
+      const email = watchedValues.email;
+      return name && name.trim().length > 0 && email && email.trim().length > 0;
     }
 
     // For question steps - allow progression with either text OR voice recording
     if (currentStepConfig.fieldName) {
-      try {
-        const formValues = form.getValues();
-        const fieldValue = formValues[currentStepConfig.fieldName];
-        const hasValidText = fieldValue && typeof fieldValue === 'string' && fieldValue.trim().length >= 10;
-        const hasVoiceRecording = voiceRecordings[currentStepConfig.fieldName]?.audioBlob !== null;
-        return hasValidText || hasVoiceRecording;
-      } catch (error) {
-        console.warn('Error checking field value:', error);
-        // Fallback to checking voice recording only if form access fails
-        return voiceRecordings[currentStepConfig.fieldName]?.audioBlob !== null;
-      }
+      const fieldValue = watchedValues[currentStepConfig.fieldName];
+      const hasValidText = fieldValue && typeof fieldValue === 'string' && fieldValue.trim().length >= 10;
+      const hasVoiceRecording = voiceRecordings[currentStepConfig.fieldName]?.audioBlob !== null;
+      return hasValidText || hasVoiceRecording;
     }
 
     return true;
-  };
+  }, [currentStep, watchedValues, voiceRecordings]);
 
   const submitApplication = useMutation({
     mutationFn: async (data: InsertApplication) => {
@@ -653,7 +665,6 @@ export default function Apply() {
                                 className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-400"
                                 data-testid="input-phone"
                                 {...field}
-                                value={field.value || ""}
                               />
                             </FormControl>
                             <FormMessage />
@@ -684,19 +695,6 @@ export default function Apply() {
                                 className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-400 min-h-[120px]"
                                 data-testid={`textarea-${currentStepConfig.fieldName}`}
                                 {...field}
-                                value={field.value || ""}
-                                onChange={(e) => {
-                                  // Immediately update the field value
-                                  field.onChange(e.target.value);
-                                  // Force a gentle re-validation without blocking input
-                                  setTimeout(() => {
-                                    try {
-                                      form.trigger(currentStepConfig.fieldName!);
-                                    } catch (error) {
-                                      console.warn('Form validation error:', error);
-                                    }
-                                  }, 100);
-                                }}
                               />
                             </FormControl>
                             <FormMessage />
@@ -726,7 +724,7 @@ export default function Apply() {
                     {currentStep === steps.length - 1 ? (
                       <Button
                         type="submit"
-                        disabled={submitApplication.isPending || !canProceed()}
+                        disabled={submitApplication.isPending || !canProceed}
                         className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500"
                         data-testid="button-submit"
                       >
@@ -736,7 +734,7 @@ export default function Apply() {
                       <Button
                         type="button"
                         onClick={nextStep}
-                        disabled={!canProceed()}
+                        disabled={!canProceed}
                         className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 flex items-center gap-2"
                         data-testid="button-next"
                       >
