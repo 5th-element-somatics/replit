@@ -128,60 +128,38 @@ export default function Home() {
               </Link>
             </div>
             <div className="relative order-1 lg:order-2">
-              {/* Arch Frame Container */}
+              {/* Arch Doorway Frame */}
               <div className="relative max-w-sm mx-auto lg:max-w-none">
-                {/* Decorative Sun Element - Top Left */}
-                <div className="absolute -top-8 -left-8 w-16 h-16 z-10">
-                  <div className="relative w-full h-full">
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-yellow-200 to-yellow-400"></div>
-                    {/* Sun rays */}
-                    {Array.from({length: 12}).map((_, i) => (
-                      <div 
-                        key={i} 
-                        className="absolute w-1 h-6 bg-gradient-to-t from-yellow-300 to-yellow-100" 
-                        style={{
-                          left: '50%',
-                          top: '-12px',
-                          transformOrigin: '50% 20px',
-                          transform: `translateX(-50%) rotate(${i * 30}deg)`
-                        }}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                {/* Arch Frame */}
                 <div 
-                  className="relative overflow-hidden bg-gradient-to-b from-purple-900/30 via-purple-600/20 to-pink-900/30 p-1"
+                  className="relative bg-gradient-to-b from-purple-900/40 via-purple-600/30 to-pink-900/40 p-2 shadow-2xl"
                   style={{
-                    clipPath: 'ellipse(50% 60% at 50% 100%)',
-                    paddingBottom: '120%',
-                    borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%'
+                    clipPath: 'polygon(15% 100%, 15% 20%, 25% 10%, 35% 5%, 50% 0%, 65% 5%, 75% 10%, 85% 20%, 85% 100%)',
+                    aspectRatio: '3/4'
                   }}
                 >
                   <div 
-                    className="absolute inset-1 overflow-hidden"
+                    className="w-full h-full overflow-hidden"
                     style={{
-                      borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%'
+                      clipPath: 'polygon(13% 100%, 13% 22%, 22% 12%, 32% 7%, 50% 3%, 68% 7%, 78% 12%, 87% 22%, 87% 100%)'
                     }}
                   >
                     <img 
                       src={saintPhotoUrl} 
                       alt="Saint - Somatic Sexologist and Reclamation Guide"
-                      className="w-full h-full object-cover shadow-2xl"
+                      className="w-full h-full object-cover"
                       style={{
-                        objectPosition: 'center 20%'
+                        objectPosition: 'center 30%'
                       }}
                     />
                   </div>
                 </div>
 
-                {/* Mystical Glow Effect */}
+                {/* Subtle Mystical Glow */}
                 <div 
                   className="absolute inset-0 pointer-events-none"
                   style={{
-                    background: 'radial-gradient(ellipse at center, transparent 40%, rgba(139, 92, 246, 0.1) 70%, rgba(139, 92, 246, 0.2) 100%)',
-                    borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%'
+                    background: 'radial-gradient(ellipse at center, transparent 60%, rgba(139, 92, 246, 0.08) 100%)',
+                    clipPath: 'polygon(15% 100%, 15% 20%, 25% 10%, 35% 5%, 50% 0%, 65% 5%, 75% 10%, 85% 20%, 85% 100%)'
                   }}
                 ></div>
               </div>
