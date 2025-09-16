@@ -266,18 +266,62 @@ export default function Apply() {
       recognition.onerror = (event: any) => {
         console.error('Speech recognition error:', event.error);
         setIsListening(prev => ({ ...prev, [fieldName]: false }));
-        toast({
-          title: "Speech recognition failed",
-          description: "Please check your microphone permissions and try again.",
-          variant: "destructive",
-        });
+        
+        // Don't show error toast for user-cancelled actions
+        if (event.error !== 'aborted' && event.error !== 'no-speech') {
+          toast({
+            title: "Speech recognition failed",
+            description: "Please check your microphone permissions and try again.",
+            variant: "destructive",
+          });
+        }
       };
 
       recognition.onend = () => {
         setIsListening(prev => ({ ...prev, [fieldName]: false }));
+        // Auto-restart if it ended unexpectedly and we're still supposed to be listening
+        setTimeout(() => {
+          if (isListening[fieldName]) {
+            try {
+              recognition.start();
+            } catch (error) {
+              console.error('Failed to restart recognition:', error);
+              setIsListening(prev => ({ ...prev, [fieldName]: false }));
+            }
+          }
+        }, 100);
       };
 
-      recognition.start();
+      // Try to start recognition with error handling
+      try {
+        recognition.start();
+      } catch (error: any) {
+        console.error('Error starting recognition:', error);
+        setIsListening(prev => ({ ...prev, [fieldName]: false }));
+        
+        // If already running, stop and restart
+        if (error.message && error.message.includes('already')) {
+          try {
+            recognition.stop();
+            setTimeout(() => {
+              recognition.start();
+            }, 100);
+          } catch (restartError) {
+            console.error('Failed to restart recognition:', restartError);
+            toast({
+              title: "Failed to start listening",
+              description: "Please refresh the page and try again.",
+              variant: "destructive",
+            });
+          }
+        } else {
+          toast({
+            title: "Failed to start listening",
+            description: "Please check your microphone permissions and try again.",
+            variant: "destructive",
+          });
+        }
+      }
       
       toast({
         title: "Listening...",
