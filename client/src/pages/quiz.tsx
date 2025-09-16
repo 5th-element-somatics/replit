@@ -1077,20 +1077,6 @@ export default function Quiz() {
             )}
           </div>
 
-          {/* Soul Sister Guide Info */}
-          {soundEnabled && (
-            <div className="bg-gradient-to-r from-gray-800/80 to-gray-900/80 border border-purple-400/30 rounded-full p-4 max-w-md mx-auto backdrop-blur-sm">
-              <div className="flex items-center justify-center gap-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                  <Volume2 className="w-4 h-4 text-white" />
-                </div>
-                <div className="text-center">
-                  <p className="text-white text-sm font-medium">Your Spirit Guide: Soul Sister</p>
-                  <p className="text-purple-300 text-xs">Warm & nurturing guidance</p>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>
