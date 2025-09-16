@@ -133,14 +133,14 @@ export default function Home() {
                 <div 
                   className="relative bg-gradient-to-b from-purple-900/40 via-purple-600/30 to-pink-900/40 p-2 shadow-2xl"
                   style={{
-                    clipPath: 'polygon(10% 100%, 10% 25%, 20% 12%, 30% 6%, 50% 0%, 70% 6%, 80% 12%, 90% 25%, 90% 100%)',
-                    aspectRatio: '4/5'
+                    clipPath: 'polygon(5% 100%, 5% 30%, 15% 15%, 25% 8%, 50% 0%, 75% 8%, 85% 15%, 95% 30%, 95% 100%)',
+                    aspectRatio: '5/6'
                   }}
                 >
                   <div 
                     className="w-full h-full overflow-hidden"
                     style={{
-                      clipPath: 'polygon(8% 100%, 8% 27%, 18% 14%, 28% 8%, 50% 4%, 72% 8%, 82% 14%, 92% 27%, 92% 100%)'
+                      clipPath: 'polygon(3% 100%, 3% 32%, 13% 17%, 23% 10%, 50% 5%, 77% 10%, 87% 17%, 97% 32%, 97% 100%)'
                     }}
                   >
                     <img 
@@ -148,7 +148,9 @@ export default function Home() {
                       alt="Saint - Somatic Sexologist and Reclamation Guide"
                       className="w-full h-full object-cover"
                       style={{
-                        objectPosition: 'center 30%'
+                        objectPosition: 'center 25%',
+                        objectFit: 'cover',
+                        transform: 'scale(0.85)'
                       }}
                     />
                   </div>
@@ -159,7 +161,7 @@ export default function Home() {
                   className="absolute inset-0 pointer-events-none"
                   style={{
                     background: 'radial-gradient(ellipse at center, transparent 60%, rgba(139, 92, 246, 0.08) 100%)',
-                    clipPath: 'polygon(10% 100%, 10% 25%, 20% 12%, 30% 6%, 50% 0%, 70% 6%, 80% 12%, 90% 25%, 90% 100%)'
+                    clipPath: 'polygon(5% 100%, 5% 30%, 15% 15%, 25% 8%, 50% 0%, 75% 8%, 85% 15%, 95% 30%, 95% 100%)'
                   }}
                 ></div>
               </div>
