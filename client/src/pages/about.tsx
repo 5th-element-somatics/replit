@@ -171,8 +171,8 @@ export default function About() {
             
             {/* Right Column - Text */}
             <div>
-              <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-8 text-center lg:text-left">
-                I BELIEVE
+              <h2 className="text-3xl sm:text-4xl font-serif font-bold mb-8 text-center lg:text-left">
+                <span className="gradient-text">I BELIEVE</span>
               </h2>
               
               <div className="space-y-3 text-xl text-gray-300 leading-relaxed text-center lg:text-left">
