@@ -195,11 +195,9 @@ export default function FreeMeditation({ accessMode = false }: FreeMeditationPro
                   <div className="relative mb-4">
                     <div className="absolute inset-0 w-14 h-14 mx-auto bg-purple-500/20 rounded-full blur-lg animate-breathing"></div>
                     <div className="relative w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto group-hover:animate-breathing-slow">
-                      <img 
-                        src={eyeSymbol}
-                        alt="Eye symbol representing awareness and perception"
-                        className="w-6 h-6"
-                      />
+                      <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                      </svg>
                     </div>
                   </div>
                   <p className="text-gray-300 text-sm font-medium">Regulate your nervous system in real time</p>
