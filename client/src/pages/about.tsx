@@ -190,81 +190,20 @@ export default function About() {
         </div>
       </section>
 
-      {/* How I Hold Space Section - Portal Experience */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-purple-900/30 via-black to-pink-900/30 relative overflow-hidden">
-        {/* Portal Background Effects */}
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-radial from-purple-600/20 via-transparent to-transparent"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full border border-purple-400/30 mystique-glow animate-pulse"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full border border-pink-400/20 animate-pulse" style={{animationDelay: '1s'}}></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full border border-purple-300/10 animate-pulse" style={{animationDelay: '2s'}}></div>
-        </div>
-        
-        <div className="max-w-5xl mx-auto relative z-10">
-          <div className="text-center mb-16">
-            <p className="text-purple-300 font-semibold mb-4 text-sm tracking-widest">✧ STEP INTO THE PORTAL ✧</p>
-            <h2 className="text-4xl sm:text-6xl font-serif font-bold mb-6">
-              <span className="gradient-text">THE SPACE I HOLD</span>
+      {/* How I Hold Space Section */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <p className="text-purple-400 font-semibold mb-2">A CLOSER LOOK INTO:</p>
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white">
+              HOW I HOLD SPACE
             </h2>
-            <div className="w-24 h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent mx-auto mb-8"></div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            {/* Portal Element 1 */}
-            <div className="text-center p-6 rounded-lg bg-gradient-to-b from-purple-900/20 to-transparent border border-purple-400/20 mystique-glow">
-              <div className="w-16 h-16 mx-auto mb-4 text-purple-300">
-                <svg fill="currentColor" viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="3"/>
-                  <path d="M12 1L12 5M12 19L12 23M4.22 4.22L6.34 6.34M17.66 17.66L19.78 19.78M1 12L5 12M19 12L23 12M4.22 19.78L6.34 17.66M17.66 6.34L19.78 4.22"/>
-                </svg>
-              </div>
-              <h3 className="text-xl font-serif font-bold text-white mb-3">SOMATIC AWAKENING</h3>
-              <p className="text-purple-200 text-sm">Your body remembers what your mind has forgotten</p>
-            </div>
-
-            {/* Portal Element 2 */}
-            <div className="text-center p-6 rounded-lg bg-gradient-to-b from-pink-900/20 to-transparent border border-pink-400/20 mystique-glow">
-              <div className="w-16 h-16 mx-auto mb-4 text-pink-300">
-                <svg fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6z"/>
-                  <circle cx="12" cy="12" r="2"/>
-                </svg>
-              </div>
-              <h3 className="text-xl font-serif font-bold text-white mb-3">EROTIC ENERGY</h3>
-              <p className="text-pink-200 text-sm">Life force rising through every cell</p>
-            </div>
-
-            {/* Portal Element 3 */}
-            <div className="text-center p-6 rounded-lg bg-gradient-to-b from-purple-900/20 to-transparent border border-purple-400/20 mystique-glow">
-              <div className="w-16 h-16 mx-auto mb-4 text-purple-300">
-                <svg fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z"/>
-                  <circle cx="12" cy="12" r="1"/>
-                </svg>
-              </div>
-              <h3 className="text-xl font-serif font-bold text-white mb-3">NERVOUS SYSTEM RESTORATION</h3>
-              <p className="text-purple-200 text-sm">From survival to thriving, naturally</p>
-            </div>
-          </div>
-          
-          <div className="text-center space-y-6 max-w-3xl mx-auto">
-            <div className="text-xl text-gray-200 leading-relaxed">
-              <div className="mb-6">
-                <span className="text-purple-300 font-serif text-2xl">Every space I create</span>
-              </div>
-              <div className="mb-4">is a portal into your deepest knowing—</div>
-              <div className="mb-4">where <strong className="text-pink-300">healing happens in layers</strong>,</div>
-              <div className="mb-4">where <strong className="text-purple-300">pleasure becomes sacred</strong>,</div>
-              <div className="mb-6">where your body finally feels <strong className="text-white">safe to soften</strong>.</div>
-            </div>
-            
-            <div className="p-8 rounded-full bg-gradient-to-r from-purple-900/40 via-pink-900/40 to-purple-900/40 border border-purple-300/30 mystique-glow">
-              <p className="text-2xl font-serif text-white italic">
-                "No pushing. No pretending.<br />
-                Just the sacred truth of your body,<br />
-                <span className="gradient-text font-bold">ready to rise.</span>"
-              </p>
-            </div>
+          <div className="space-y-6 text-gray-300 text-center">
+            <p>My work blends somatic healing, erotic energy awakening, and nervous system restoration; designed for your full unraveling.</p>
+            <p>Every space I hold whether private mentorship, a masterclass, or an immersion is built for your full unraveling.</p>
+            <p><strong className="text-white">No pushing. No pretending. Just the sacred truth of your body, ready to rise.</strong></p>
           </div>
         </div>
       </section>
