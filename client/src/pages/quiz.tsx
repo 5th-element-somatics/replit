@@ -785,7 +785,7 @@ export default function Quiz() {
                   Draw Your Card
                 </h2>
                 <p className="text-lg text-gray-300 mb-8">
-                  The universe has prepared {quizQuestions.length} mystical cards for your reading.
+                  The universe has prepared {quizQuestions.length} cards for your reading.
                   <br />Click the card that calls to your soul.
                 </p>
               </div>
@@ -836,7 +836,7 @@ export default function Quiz() {
                   ✧ Click the card when you feel ready ✧
                 </p>
                 <p className="text-gray-400 text-sm">
-                  Trust your intuition - there are no wrong choices in this mystical reading
+                  Trust your intuition - there are no wrong choices in this reading
                 </p>
               </div>
             </div>
