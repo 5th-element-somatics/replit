@@ -99,19 +99,46 @@ export default function About() {
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-stretch">
             <div className="flex flex-col justify-center h-full py-8 md:py-12">
-              <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-6">
+              <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-8 text-center md:text-left">
                 Meet Saint
               </h2>
-              <h3 className="text-2xl font-serif font-bold text-white mb-4">
-                FOR YEARS, I LIVED LIKE I WAS FINE
-              </h3>
-              <div className="space-y-4 text-gray-300">
-                <p><strong className="text-white">My breath stayed shallow. My jaw stayed tight.</strong> My softness stayed hidden.</p>
-                <p>Avoiding pain had become my baseline.</p>
-                <p>It wasn't collapse but it wasn't freedom either.</p>
-                <p>Everything shifted when I stopped trying to think my way into healing… and started letting my body feel its way through.</p>
-                <p><strong className="text-white">If you can't feel your body, you can't feel yourself.</strong> And without that connection, pleasure, power, and presence stay out of reach.</p>
-                <p><strong className="text-white">Today, I guide women back to that connection,</strong> where softness and sovereignty rise together.</p>
+              <div className="text-center md:text-left leading-relaxed text-lg">
+                <div className="mb-8">
+                  <div className="text-2xl font-serif font-bold text-white mb-6">
+                    FOR YEARS, I LIVED LIKE I WAS FINE
+                  </div>
+                  
+                  <div className="space-y-3 text-gray-300 italic text-xl leading-loose">
+                    <div><strong className="text-white">My breath stayed shallow.</strong></div>
+                    <div><strong className="text-white">My jaw stayed tight.</strong></div>
+                    <div>My softness stayed hidden.</div>
+                    <div className="pt-4">Avoiding pain had become my baseline.</div>
+                    <div>It wasn't collapse</div>
+                    <div>but it wasn't freedom either.</div>
+                  </div>
+                </div>
+
+                <div className="space-y-4 text-gray-300 text-xl leading-loose">
+                  <div>Everything shifted</div>
+                  <div>when I stopped trying to think my way into healing…</div>
+                  <div>and started letting my body feel its way through.</div>
+                  
+                  <div className="pt-6">
+                    <div><strong className="text-white text-2xl">If you can't feel your body,</strong></div>
+                    <div><strong className="text-white text-2xl">you can't feel yourself.</strong></div>
+                  </div>
+                  
+                  <div className="pt-4">
+                    <div>And without that connection,</div>
+                    <div>pleasure, power, and presence</div>
+                    <div>stay out of reach.</div>
+                  </div>
+                  
+                  <div className="pt-8">
+                    <div><strong className="text-white text-xl">Today, I guide women back to that connection,</strong></div>
+                    <div><strong className="text-white text-xl">where softness and sovereignty rise together.</strong></div>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="relative">
