@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Play, Pause, Download, Volume2, Menu, X, Share2 } from "lucide-react";
 import meditationAudioUrl from "@assets/Grounding Into The Body - Guided Meditation_1753289930696.mp3";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
+import orbitalSymbol from "@assets/outline-white-orbit-1_1758064486101.png";
 import MeditationVisuals from "@/components/MeditationVisuals";
 import { ContactForm } from "@/components/ContactForm";
 
@@ -328,20 +329,11 @@ export default function FreeMeditation({ accessMode = false }: FreeMeditationPro
                 {/* Enhanced breathing glow animation */}
                 <div className="absolute inset-0 w-20 h-20 mx-auto bg-gradient-to-br from-purple-500/30 to-pink-600/30 rounded-full blur-xl animate-breathing"></div>
                 <div className="relative w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto animate-breathing-slow shadow-lg shadow-purple-500/30">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                    {/* Central core */}
-                    <circle cx="12" cy="12" r="2" fill="currentColor" />
-                    {/* Horizontal orbital */}
-                    <ellipse cx="12" cy="12" rx="8" ry="3" />
-                    {/* Diagonal orbital 1 */}
-                    <ellipse cx="12" cy="12" rx="8" ry="3" transform="rotate(60 12 12)" />
-                    {/* Diagonal orbital 2 */}
-                    <ellipse cx="12" cy="12" rx="8" ry="3" transform="rotate(-60 12 12)" />
-                    {/* Orbital particles */}
-                    <circle cx="20" cy="12" r="1" fill="currentColor" opacity="0.7" />
-                    <circle cx="4" cy="12" r="1" fill="currentColor" opacity="0.7" />
-                    <circle cx="15" cy="6.5" r="1" fill="currentColor" opacity="0.7" />
-                  </svg>
+                  <img 
+                    src={orbitalSymbol}
+                    alt="Orbital symbol representing transformation and energy flow"
+                    className="w-8 h-8"
+                  />
                 </div>
               </div>
               <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white mb-6">
