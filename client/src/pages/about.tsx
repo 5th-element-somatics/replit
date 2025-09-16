@@ -8,6 +8,7 @@ import saintPhotoUrl from "@assets/croppedbbybreath_1758048269684.jpg";
 import saintArtisticPhoto from "@assets/2J3A2196_1758049750941.jpg";
 import burningRoseImage from "@assets/gaspar-uhas-KrTAeWiPimc-unsplash_1758050365284.jpg";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
+import portalIllustration from "@assets/portal_1758052165051.png";
 import { ContactForm } from "@/components/ContactForm";
 
 export default function About() {
@@ -192,18 +193,32 @@ export default function About() {
 
       {/* How I Hold Space Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <p className="text-purple-400 font-semibold mb-2">A CLOSER LOOK INTO:</p>
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white">
-              HOW I HOLD SPACE
-            </h2>
-          </div>
-          
-          <div className="space-y-6 text-gray-300 text-center">
-            <p>My work blends somatic healing, erotic energy awakening, and nervous system restoration; designed for your full unraveling.</p>
-            <p>Every space I hold whether private mentorship, a masterclass, or an immersion is built for your full unraveling.</p>
-            <p><strong className="text-white">No pushing. No pretending. Just the sacred truth of your body, ready to rise.</strong></p>
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Column - Text */}
+            <div>
+              <div className="text-center lg:text-left mb-12">
+                <p className="text-purple-400 font-semibold mb-2">A CLOSER LOOK INTO:</p>
+                <h2 className="text-3xl sm:text-4xl font-serif font-bold">
+                  <span className="gradient-text">HOW I HOLD SPACE</span>
+                </h2>
+              </div>
+              
+              <div className="space-y-6 text-gray-300 text-center lg:text-left">
+                <p>My work blends somatic healing, erotic energy awakening, and nervous system restoration; designed for your full unraveling.</p>
+                <p>Every space I hold whether private mentorship, a masterclass, or an immersion is built for your full unraveling.</p>
+                <p><strong className="text-white">No pushing. No pretending. Just the sacred truth of your body, ready to rise.</strong></p>
+              </div>
+            </div>
+            
+            {/* Right Column - Illustration */}
+            <div className="flex justify-center lg:justify-end">
+              <img 
+                src={portalIllustration} 
+                alt="Portal illustration representing sacred space and transformation"
+                className="w-full max-w-md h-auto"
+              />
+            </div>
           </div>
         </div>
       </section>
