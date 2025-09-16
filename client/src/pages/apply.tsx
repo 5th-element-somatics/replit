@@ -188,7 +188,6 @@ export default function Apply() {
     defaultValues: {
       name: "",
       email: "",
-      phone: "",
       experience: "",
       whatDrawsYou: "",
       hopeToExplore: "",
@@ -653,25 +652,6 @@ export default function Apply() {
                         )}
                       />
 
-                      <FormField
-                        control={form.control}
-                        name="phone"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-gray-300">Phone Number (Optional)</FormLabel>
-                            <FormControl>
-                              <Input 
-                                placeholder="Your phone number"
-                                className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-400"
-                                data-testid="input-phone"
-                                {...field}
-                                value={field.value || ""}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
                     </div>
                   )}
 
