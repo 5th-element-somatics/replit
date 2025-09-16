@@ -133,14 +133,14 @@ export default function Home() {
                 <div 
                   className="relative bg-gradient-to-b from-purple-900/40 via-purple-600/30 to-pink-900/40 p-2 shadow-2xl"
                   style={{
-                    clipPath: 'polygon(15% 100%, 15% 20%, 25% 10%, 35% 5%, 50% 0%, 65% 5%, 75% 10%, 85% 20%, 85% 100%)',
-                    aspectRatio: '3/4'
+                    clipPath: 'polygon(10% 100%, 10% 25%, 20% 12%, 30% 6%, 50% 0%, 70% 6%, 80% 12%, 90% 25%, 90% 100%)',
+                    aspectRatio: '4/5'
                   }}
                 >
                   <div 
                     className="w-full h-full overflow-hidden"
                     style={{
-                      clipPath: 'polygon(13% 100%, 13% 22%, 22% 12%, 32% 7%, 50% 3%, 68% 7%, 78% 12%, 87% 22%, 87% 100%)'
+                      clipPath: 'polygon(8% 100%, 8% 27%, 18% 14%, 28% 8%, 50% 4%, 72% 8%, 82% 14%, 92% 27%, 92% 100%)'
                     }}
                   >
                     <img 
@@ -159,7 +159,7 @@ export default function Home() {
                   className="absolute inset-0 pointer-events-none"
                   style={{
                     background: 'radial-gradient(ellipse at center, transparent 60%, rgba(139, 92, 246, 0.08) 100%)',
-                    clipPath: 'polygon(15% 100%, 15% 20%, 25% 10%, 35% 5%, 50% 0%, 65% 5%, 75% 10%, 85% 20%, 85% 100%)'
+                    clipPath: 'polygon(10% 100%, 10% 25%, 20% 12%, 30% 6%, 50% 0%, 70% 6%, 80% 12%, 90% 25%, 90% 100%)'
                   }}
                 ></div>
               </div>
