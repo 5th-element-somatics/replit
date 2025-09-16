@@ -16,6 +16,7 @@ import { Progress } from "@/components/ui/progress";
 import { Mic, MicOff, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
 import { z } from "zod";
+import confetti from 'canvas-confetti';
 
 // Enhanced application schema with better validation
 const enhancedApplicationSchema = insertApplicationSchema.extend({
@@ -244,11 +245,6 @@ export default function Apply() {
         form.setValue(fieldName as keyof InsertApplication, newValue);
         
         setIsListening(prev => ({ ...prev, [fieldName]: false }));
-        
-        toast({
-          title: "Speech transcribed!",
-          description: "Your speech has been added to the response box.",
-        });
       };
 
       recognition.onerror = (event: any) => {
@@ -421,10 +417,50 @@ export default function Apply() {
       return response.json();
     },
     onSuccess: () => {
+      // Celestial confetti celebration 
+      const colors = ['#C77DFF', '#9D4EDD', '#7209B7', '#F72585', '#4CC9F0', '#FFD60A'];
+      
+      // Multiple confetti bursts for celestial effect
+      setTimeout(() => {
+        confetti({
+          particleCount: 150,
+          spread: 60,
+          origin: { x: 0.2, y: 0.6 },
+          colors: colors,
+          shapes: ['star'],
+          gravity: 0.6,
+          scalar: 1.2
+        });
+      }, 100);
+      
+      setTimeout(() => {
+        confetti({
+          particleCount: 150,
+          spread: 60,
+          origin: { x: 0.8, y: 0.6 },
+          colors: colors,
+          shapes: ['star'],
+          gravity: 0.6,
+          scalar: 1.2
+        });
+      }, 300);
+      
+      setTimeout(() => {
+        confetti({
+          particleCount: 200,
+          spread: 80,
+          origin: { x: 0.5, y: 0.4 },
+          colors: colors,
+          shapes: ['star', 'circle'],
+          gravity: 0.4,
+          scalar: 1.5
+        });
+      }, 600);
+      
       setIsSubmitted(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
       toast({
-        title: "Application Submitted!",
+        title: "✨ Application Submitted! ✨",
         description: "Thank you for your application. Saint will be in touch soon.",
       });
     },
