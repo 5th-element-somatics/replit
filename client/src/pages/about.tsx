@@ -256,27 +256,29 @@ export default function About() {
       {/* Personal Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-gray-800 to-black">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white text-center mb-8">
-            BEYOND MY WORK
-          </h2>
-          <p className="text-xl text-purple-400 text-center mb-12">Where embodiment becomes devotion.</p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-            <div className="relative">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 items-start">
+            <div className="relative md:col-span-1">
               <img 
                 src={saintArtisticPhoto} 
                 alt="Saint in artistic expression - embodying movement and freedom"
-                className="w-full h-auto rounded-lg shadow-2xl"
+                className="w-full h-auto rounded-lg shadow-2xl max-w-sm mx-auto"
               />
             </div>
             
-            <div className="space-y-4 text-gray-300">
-              <p>• I'm a body-led woman—soft, grounded, and deeply intuitive.</p>
-              <p>• My healing began with learning to feel again, not just talk therapy.</p>
-              <p>• I've studied countless hours in <strong className="text-white">somatics, nervous system repair, and erotic energy</strong> through both formal training and lived experience.</p>
-              <p>• I believe <strong className="text-white">pleasure is sacred</strong>, and softness is strength.</p>
-              <p>• When I'm not guiding, <strong className="text-white">I'm dancing barefoot, creating art,</strong> <strong className="text-white">or grounding in nature.</strong></p>
-              <p>• This path isn't just my work <strong className="text-white">it's my way of life.</strong></p>
+            <div className="md:col-span-2">
+              <h2 className="text-4xl sm:text-5xl font-serif font-bold text-white mb-6">
+                BEYOND MY WORK
+              </h2>
+              <p className="text-2xl text-purple-400 mb-8">Where embodiment becomes devotion.</p>
+              
+              <div className="space-y-5 text-gray-300 text-lg">
+                <p>☥ I'm a body-led woman—soft, grounded, and deeply intuitive.</p>
+                <p>☥ My healing began with learning to feel again, not just talk therapy.</p>
+                <p>☥ I've studied countless hours in <strong className="text-white">somatics, nervous system repair, and erotic energy</strong> through both formal training and lived experience.</p>
+                <p>☥ I believe <strong className="text-white">pleasure is sacred</strong>, and softness is strength.</p>
+                <p>☥ When I'm not guiding, <strong className="text-white">I'm dancing barefoot, creating art,</strong> <strong className="text-white">or grounding in nature.</strong></p>
+                <p>☥ This path isn't just my work <strong className="text-white">it's my way of life.</strong></p>
+              </div>
             </div>
           </div>
         </div>
