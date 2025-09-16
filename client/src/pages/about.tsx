@@ -102,41 +102,41 @@ export default function About() {
               <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-8 text-center md:text-left">
                 Meet Saint
               </h2>
-              <div className="text-center md:text-left leading-relaxed text-lg">
-                <div className="mb-8">
-                  <div className="text-2xl font-serif font-bold text-white mb-6">
+              <div className="text-center md:text-left leading-snug text-lg">
+                <div className="mb-4">
+                  <div className="text-2xl font-serif font-bold text-purple-300 mb-3">
                     FOR YEARS, I LIVED LIKE I WAS FINE
                   </div>
                   
-                  <div className="space-y-3 text-gray-300 italic text-xl leading-loose">
-                    <div><strong className="text-white">My breath stayed shallow.</strong></div>
-                    <div><strong className="text-white">My jaw stayed tight.</strong></div>
-                    <div>My softness stayed hidden.</div>
-                    <div className="pt-4">Avoiding pain had become my baseline.</div>
-                    <div>It wasn't collapse</div>
-                    <div>but it wasn't freedom either.</div>
+                  <div className="space-y-1 text-rose-200 italic text-lg leading-relaxed">
+                    <div><strong className="text-pink-300">My breath stayed shallow.</strong></div>
+                    <div><strong className="text-pink-300">My jaw stayed tight.</strong></div>
+                    <div className="text-gray-300">My softness stayed hidden.</div>
+                    <div className="pt-2 text-gray-400">Avoiding pain had become my baseline.</div>
+                    <div className="text-gray-300">It wasn't collapse</div>
+                    <div className="text-gray-300">but it wasn't freedom either.</div>
                   </div>
                 </div>
 
-                <div className="space-y-4 text-gray-300 text-xl leading-loose">
-                  <div>Everything shifted</div>
-                  <div>when I stopped trying to think my way into healing…</div>
-                  <div>and started letting my body feel its way through.</div>
+                <div className="space-y-2 text-lg leading-relaxed">
+                  <div className="text-purple-200">Everything shifted</div>
+                  <div className="text-purple-200">when I stopped trying to think my way into healing…</div>
+                  <div className="text-rose-200">and started letting my body feel its way through.</div>
                   
-                  <div className="pt-6">
-                    <div><strong className="text-white text-2xl">If you can't feel your body,</strong></div>
-                    <div><strong className="text-white text-2xl">you can't feel yourself.</strong></div>
+                  <div className="pt-3">
+                    <div><strong className="text-pink-200 text-xl">If you can't feel your body,</strong></div>
+                    <div><strong className="text-pink-200 text-xl">you can't feel yourself.</strong></div>
+                  </div>
+                  
+                  <div className="pt-2">
+                    <div className="text-gray-300">And without that connection,</div>
+                    <div className="text-purple-300">pleasure, power, and presence</div>
+                    <div className="text-gray-300">stay out of reach.</div>
                   </div>
                   
                   <div className="pt-4">
-                    <div>And without that connection,</div>
-                    <div>pleasure, power, and presence</div>
-                    <div>stay out of reach.</div>
-                  </div>
-                  
-                  <div className="pt-8">
-                    <div><strong className="text-white text-xl">Today, I guide women back to that connection,</strong></div>
-                    <div><strong className="text-white text-xl">where softness and sovereignty rise together.</strong></div>
+                    <div><strong className="text-rose-300 text-lg">Today, I guide women back to that connection,</strong></div>
+                    <div><strong className="text-purple-300 text-lg">where softness and sovereignty rise together.</strong></div>
                   </div>
                 </div>
               </div>
