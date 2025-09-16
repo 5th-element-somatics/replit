@@ -195,14 +195,16 @@ export default function About() {
           </h2>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            <Card className="bg-gray-800 border border-purple-400 border-opacity-20 text-center">
-              <CardContent className="p-6">
-                <div className="w-12 h-12 mx-auto mb-6 text-purple-400">
-                  <svg fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z"/>
-                  </svg>
+            <Card className="bg-gray-800 border border-purple-400 border-opacity-20 text-center h-full">
+              <CardContent className="p-6 flex flex-col h-full justify-between">
+                <div>
+                  <div className="w-12 h-12 mx-auto mb-6 text-purple-400">
+                    <svg fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z"/>
+                    </svg>
+                  </div>
+                  <p className="text-lg font-semibold text-white mb-6">1:1 guidance designed for your full unraveling, healing, and return to power</p>
                 </div>
-                <p className="text-lg font-semibold text-white mb-6">1:1 GUIDANCE DESIGNED FOR YOUR FULL UNRAVELING, HEALING, AND RETURN TO POWER</p>
                 <Link href="/work-with-me" onClick={handleNavClick}>
                   <Button className="bg-purple-600 hover:bg-purple-700 text-white text-sm">
                     Apply Now
@@ -211,14 +213,16 @@ export default function About() {
               </CardContent>
             </Card>
 
-            <Card className="bg-gray-800 border border-purple-400 border-opacity-20 text-center">
-              <CardContent className="p-6">
-                <div className="w-12 h-12 mx-auto mb-6 text-pink-400">
-                  <svg fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z"/>
-                  </svg>
+            <Card className="bg-gray-800 border border-purple-400 border-opacity-20 text-center h-full">
+              <CardContent className="p-6 flex flex-col h-full justify-between">
+                <div>
+                  <div className="w-12 h-12 mx-auto mb-6 text-pink-400">
+                    <svg fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z"/>
+                    </svg>
+                  </div>
+                  <p className="text-lg font-semibold text-white mb-6">Break free from the good girl story. Awaken your authentic power and reclaim your sensual sovereignty.</p>
                 </div>
-                <p className="text-lg font-semibold text-white mb-6">BREAK FREE FROM THE GOOD GIRL CAGE. AWAKEN YOUR AUTHENTIC POWER AND RECLAIM YOUR SENSUAL SOVEREIGNTY.</p>
                 <Link href="/masterclass">
                   <Button className="bg-pink-600 hover:bg-pink-700 text-white text-sm">
                     Join The Masterclass
@@ -227,14 +231,16 @@ export default function About() {
               </CardContent>
             </Card>
 
-            <Card className="bg-gray-800 border border-purple-400 border-opacity-20 text-center">
-              <CardContent className="p-6">
-                <div className="w-12 h-12 mx-auto mb-6 text-purple-400">
-                  <svg fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z"/>
-                  </svg>
+            <Card className="bg-gray-800 border border-purple-400 border-opacity-20 text-center h-full">
+              <CardContent className="p-6 flex flex-col h-full justify-between">
+                <div>
+                  <div className="w-12 h-12 mx-auto mb-6 text-purple-400">
+                    <svg fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z"/>
+                    </svg>
+                  </div>
+                  <p className="text-lg font-semibold text-white mb-6">Feel safe in your skin again. This gentle audio invites you back into your body with presence and ease.</p>
                 </div>
-                <p className="text-lg font-semibold text-white mb-6">Feel safe in your skin again. THIS GENTLE AUDIO INVITES YOU BACK INTO YOUR BODY WITH PRESENCE AND EASE.</p>
                 <Link href="/free-meditation">
                   <Button className="bg-rose-600 hover:bg-rose-700 text-white text-sm">
                     Download For FREE
