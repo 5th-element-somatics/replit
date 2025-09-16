@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import masterclassCoverUrl from "@assets/image_1757804836253.png";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
-import saintProfilePhoto from "@assets/SEBLOGphoto_1758066455114.jpg";
+import saintProfilePhoto from "@assets/Screen Shot 2023-11-29 at 1.17.16 PM_1758066732311.jpg";
 import { ContactForm } from "@/components/ContactForm";
 
 export default function Masterclass() {
@@ -182,7 +182,7 @@ export default function Masterclass() {
               <img 
                 src={saintProfilePhoto}
                 alt="Saint - Your Reclamation Guide"
-                className="w-24 h-24 sm:w-20 sm:h-20 object-cover rounded-full border-2 border-purple-400/30 shadow-lg"
+                className="w-32 h-32 sm:w-28 sm:h-28 object-cover rounded-full border-2 border-purple-400/30 shadow-lg"
                 data-testid="img-saint-profile"
               />
             </div>
