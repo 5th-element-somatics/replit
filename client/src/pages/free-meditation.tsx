@@ -328,8 +328,19 @@ export default function FreeMeditation({ accessMode = false }: FreeMeditationPro
                 {/* Enhanced breathing glow animation */}
                 <div className="absolute inset-0 w-20 h-20 mx-auto bg-gradient-to-br from-purple-500/30 to-pink-600/30 rounded-full blur-xl animate-breathing"></div>
                 <div className="relative w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto animate-breathing-slow shadow-lg shadow-purple-500/30">
-                  <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                    {/* Central core */}
+                    <circle cx="12" cy="12" r="2" fill="currentColor" />
+                    {/* Horizontal orbital */}
+                    <ellipse cx="12" cy="12" rx="8" ry="3" />
+                    {/* Diagonal orbital 1 */}
+                    <ellipse cx="12" cy="12" rx="8" ry="3" transform="rotate(60 12 12)" />
+                    {/* Diagonal orbital 2 */}
+                    <ellipse cx="12" cy="12" rx="8" ry="3" transform="rotate(-60 12 12)" />
+                    {/* Orbital particles */}
+                    <circle cx="20" cy="12" r="1" fill="currentColor" opacity="0.7" />
+                    <circle cx="4" cy="12" r="1" fill="currentColor" opacity="0.7" />
+                    <circle cx="15" cy="6.5" r="1" fill="currentColor" opacity="0.7" />
                   </svg>
                 </div>
               </div>
