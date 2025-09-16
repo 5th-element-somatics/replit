@@ -720,11 +720,22 @@ Questions? Reply to this email or contact hello@fifthelementsomatics.com
   // Submit application for mentorship
   app.post("/api/applications", async (req, res) => {
     try {
-      const applicationData = insertApplicationSchema.parse(req.body);
-      const application = await storage.createApplication(applicationData);
+      console.log("Received application data:", JSON.stringify(req.body, null, 2));
+      
+      const parseResult = insertApplicationSchema.safeParse(req.body);
+      if (!parseResult.success) {
+        console.error("Validation failed:", parseResult.error.flatten());
+        return res.status(400).json({ 
+          message: "Validation failed", 
+          errors: parseResult.error.flatten() 
+        });
+      }
+      
+      const application = await storage.createApplication(parseResult.data);
       res.json({ success: true, id: application.id });
     } catch (error: any) {
-      res.status(400).json({ message: "Error submitting application: " + error.message });
+      console.error("Application submission error:", error);
+      res.status(500).json({ message: "Internal server error: " + error.message });
     }
   });
 

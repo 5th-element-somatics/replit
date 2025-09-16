@@ -665,6 +665,7 @@ export default function Apply() {
                                 className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-400"
                                 data-testid="input-phone"
                                 {...field}
+                                value={field.value || ""}
                               />
                             </FormControl>
                             <FormMessage />
