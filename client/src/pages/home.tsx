@@ -128,11 +128,63 @@ export default function Home() {
               </Link>
             </div>
             <div className="relative order-1 lg:order-2">
-              <img 
-                src={saintPhotoUrl} 
-                alt="Saint - Somatic Sexologist and Reclamation Guide"
-                className="w-full h-auto rounded-lg shadow-2xl max-w-sm mx-auto lg:max-w-none"
-              />
+              {/* Arch Frame Container */}
+              <div className="relative max-w-sm mx-auto lg:max-w-none">
+                {/* Decorative Sun Element - Top Left */}
+                <div className="absolute -top-8 -left-8 w-16 h-16 z-10">
+                  <div className="relative w-full h-full">
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-yellow-200 to-yellow-400"></div>
+                    {/* Sun rays */}
+                    {Array.from({length: 12}).map((_, i) => (
+                      <div 
+                        key={i} 
+                        className="absolute w-1 h-6 bg-gradient-to-t from-yellow-300 to-yellow-100" 
+                        style={{
+                          left: '50%',
+                          top: '-12px',
+                          transformOrigin: '50% 20px',
+                          transform: `translateX(-50%) rotate(${i * 30}deg)`
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                {/* Arch Frame */}
+                <div 
+                  className="relative overflow-hidden bg-gradient-to-b from-purple-900/30 via-purple-600/20 to-pink-900/30 p-1"
+                  style={{
+                    clipPath: 'ellipse(50% 60% at 50% 100%)',
+                    paddingBottom: '120%',
+                    borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%'
+                  }}
+                >
+                  <div 
+                    className="absolute inset-1 overflow-hidden"
+                    style={{
+                      borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%'
+                    }}
+                  >
+                    <img 
+                      src={saintPhotoUrl} 
+                      alt="Saint - Somatic Sexologist and Reclamation Guide"
+                      className="w-full h-full object-cover shadow-2xl"
+                      style={{
+                        objectPosition: 'center 20%'
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Mystical Glow Effect */}
+                <div 
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    background: 'radial-gradient(ellipse at center, transparent 40%, rgba(139, 92, 246, 0.1) 70%, rgba(139, 92, 246, 0.2) 100%)',
+                    borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%'
+                  }}
+                ></div>
+              </div>
             </div>
           </div>
         </div>
