@@ -183,7 +183,7 @@ export default function FreeMeditation({ accessMode = false }: FreeMeditationPro
             <h1 className="text-3xl sm:text-5xl font-serif font-bold text-white mb-6 leading-tight">
               FEEL SAFE IN YOUR SKIN AGAIN.
             </h1>
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">DOWNLOAD THIS FREE GROUNDING MEDITATION & ROOT INTO YOUR BODY</p>
+            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto whitespace-nowrap">DOWNLOAD THIS FREE GROUNDING MEDITATION & ROOT INTO YOUR BODY</p>
             
             {/* Enhanced Visual Benefits Section */}
             <div className="mb-12">
