@@ -154,7 +154,7 @@ export default function WorkWithMe() {
 
       {/* This Work Is For You Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-900/20 to-pink-900/20" data-testid="section-this-work-for-you">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-6 items-center">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-4 items-center">
           {/* Image */}
           <div className="mb-8 md:mb-0 flex justify-center">
             <img 
