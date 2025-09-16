@@ -143,16 +143,6 @@ export default function Home() {
                       clipPath: 'polygon(3% 100%, 3% 32%, 13% 17%, 23% 10%, 50% 5%, 77% 10%, 87% 17%, 97% 32%, 97% 100%)'
                     }}
                   >
-                    <img 
-                      src={saintPhotoUrl} 
-                      alt="Saint - Somatic Sexologist and Reclamation Guide"
-                      className="w-full h-full object-cover"
-                      style={{
-                        objectPosition: 'center 25%',
-                        objectFit: 'cover',
-                        transform: 'scale(0.85)'
-                      }}
-                    />
                   </div>
                 </div>
 
