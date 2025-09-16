@@ -12,7 +12,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Mic, MicOff, Play, Pause, Trash2 } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { Mic, MicOff, Play, Pause, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
 import { z } from "zod";
 
@@ -24,11 +25,15 @@ const enhancedApplicationSchema = insertApplicationSchema.extend({
     .email("Please enter a valid email address")
     .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Please enter a valid email address")
     .max(255, "Email is too long"),
-  phone: z.string().optional(),
+  phone: z.string().optional().or(z.literal("")),
   experience: z.string().min(10, "Please provide at least a brief description (10+ characters)"),
-  intentions: z.string().min(10, "Please share what you hope to achieve (10+ characters)"),
+  whatDrawsYou: z.string().min(10, "Please share what's drawing you to this work (10+ characters)"),
+  hopeToExplore: z.string().min(10, "Please share what you hope to explore (10+ characters)"),
   challenges: z.string().min(10, "Please describe your current challenges (10+ characters)"),
-  support: z.string().min(10, "Please explain what support means to you (10+ characters)"),
+  support: z.string().min(10, "Please share what support would feel meaningful (10+ characters)"),
+  longToExperience: z.string().min(10, "Please share what you long to experience (10+ characters)"),
+  afraidToExpress: z.string().min(10, "Please share where you feel afraid to express yourself (10+ characters)"),
+  desireFromGuide: z.string().min(10, "Please share what you'd desire from your guide (10+ characters)"),
 });
 
 // Voice recording interface
@@ -40,17 +45,89 @@ interface VoiceRecording {
   duration: number;
 }
 
+// Step configuration
+interface StepConfig {
+  id: number;
+  title: string;
+  description?: string;
+  fieldName?: keyof InsertApplication;
+  question?: string;
+  isInfoStep?: boolean;
+}
+
+const steps: StepConfig[] = [
+  {
+    id: 0,
+    title: "Basic Information",
+    description: "Let's start with your contact details",
+    isInfoStep: true
+  },
+  {
+    id: 1,
+    title: "Experience",
+    fieldName: "experience",
+    question: "What's your experience with somatic work, embodiment practices, or healing?"
+  },
+  {
+    id: 2,
+    title: "What Draws You",
+    fieldName: "whatDrawsYou", 
+    question: "What's currently drawing you to this work?"
+  },
+  {
+    id: 3,
+    title: "Hope to Explore",
+    fieldName: "hopeToExplore",
+    question: "What are you hoping to explore or heal through this space?"
+  },
+  {
+    id: 4,
+    title: "Current Challenges",
+    fieldName: "challenges",
+    question: "What challenges or patterns have been showing up lately?"
+  },
+  {
+    id: 5,
+    title: "Meaningful Support",
+    fieldName: "support",
+    question: "What type of support would feel most meaningful to you right now?"
+  },
+  {
+    id: 6,
+    title: "Long to Experience",
+    fieldName: "longToExperience",
+    question: "What sensations, desires, or emotions do you most long to experience more fully?"
+  },
+  {
+    id: 7,
+    title: "Afraid to Express",
+    fieldName: "afraidToExpress",
+    question: "Where do you feel most afraid to express yourself—emotionally, sexually, or otherwise?"
+  },
+  {
+    id: 8,
+    title: "Desire from Guide",
+    fieldName: "desireFromGuide",
+    question: "If we were to work together, what would you most desire from me as your guide?"
+  }
+];
+
 export default function Apply() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
 
   // Voice recording state for each field
   const [voiceRecordings, setVoiceRecordings] = useState<{[key: string]: VoiceRecording}>({
     experience: { isRecording: false, audioBlob: null, audioUrl: null, isPlaying: false, duration: 0 },
-    intentions: { isRecording: false, audioBlob: null, audioUrl: null, isPlaying: false, duration: 0 },
+    whatDrawsYou: { isRecording: false, audioBlob: null, audioUrl: null, isPlaying: false, duration: 0 },
+    hopeToExplore: { isRecording: false, audioBlob: null, audioUrl: null, isPlaying: false, duration: 0 },
     challenges: { isRecording: false, audioBlob: null, audioUrl: null, isPlaying: false, duration: 0 },
-    support: { isRecording: false, audioBlob: null, audioUrl: null, isPlaying: false, duration: 0 }
+    support: { isRecording: false, audioBlob: null, audioUrl: null, isPlaying: false, duration: 0 },
+    longToExperience: { isRecording: false, audioBlob: null, audioUrl: null, isPlaying: false, duration: 0 },
+    afraidToExpress: { isRecording: false, audioBlob: null, audioUrl: null, isPlaying: false, duration: 0 },
+    desireFromGuide: { isRecording: false, audioBlob: null, audioUrl: null, isPlaying: false, duration: 0 }
   });
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -77,14 +154,30 @@ export default function Apply() {
       email: "",
       phone: "",
       experience: "",
-      intentions: "",
+      whatDrawsYou: "",
+      hopeToExplore: "",
       challenges: "",
       support: "",
+      longToExperience: "",
+      afraidToExpress: "",
+      desireFromGuide: "",
     },
+    mode: "onChange",
   });
 
   // Voice recording functions
   const startRecording = async (fieldName: string) => {
+    // Prevent starting new recording if one is already active for this field
+    if (voiceRecordings[fieldName]?.isRecording) {
+      return;
+    }
+
+    // Clean up existing recording URL to prevent memory leaks
+    const existingRecording = voiceRecordings[fieldName];
+    if (existingRecording?.audioUrl) {
+      URL.revokeObjectURL(existingRecording.audioUrl);
+    }
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const mediaRecorder = new MediaRecorder(stream);
@@ -243,6 +336,7 @@ export default function Apply() {
               onClick={() => recording.isRecording ? stopRecording(fieldName) : startRecording(fieldName)}
               disabled={recording.isRecording && !mediaRecorderRef.current}
               className="flex items-center gap-2"
+              data-testid={`button-voice-record-${fieldName}`}
             >
               {recording.isRecording ? (
                 <>
@@ -272,6 +366,7 @@ export default function Apply() {
               size="sm"
               onClick={() => recording.isPlaying ? pauseRecording(fieldName) : playRecording(fieldName)}
               className="flex items-center gap-2"
+              data-testid={`button-voice-play-${fieldName}`}
             >
               {recording.isPlaying ? (
                 <>
@@ -285,7 +380,7 @@ export default function Apply() {
                 </>
               )}
             </Button>
-            <span className="text-sm text-gray-300">
+            <span className="text-sm text-gray-300" data-testid={`text-recording-duration-${fieldName}`}>
               {formatDuration(recording.duration)} recorded
             </span>
             <Button
@@ -294,6 +389,7 @@ export default function Apply() {
               size="sm"
               onClick={() => deleteRecording(fieldName)}
               className="text-red-400 hover:text-red-300"
+              data-testid={`button-voice-delete-${fieldName}`}
             >
               <Trash2 className="w-4 h-4" />
             </Button>
@@ -303,6 +399,7 @@ export default function Apply() {
               size="sm"
               onClick={() => startRecording(fieldName)}
               className="text-xs"
+              data-testid={`button-voice-rerecord-${fieldName}`}
             >
               Re-record
             </Button>
@@ -310,6 +407,41 @@ export default function Apply() {
         )}
       </div>
     );
+  };
+
+  // Navigation functions
+  const nextStep = () => {
+    if (currentStep < steps.length - 1) {
+      setCurrentStep(currentStep + 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const prevStep = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const canProceed = () => {
+    const currentStepConfig = steps[currentStep];
+    
+    // For the basic info step
+    if (currentStepConfig.isInfoStep) {
+      const { name, email } = form.getValues();
+      return name.trim().length > 0 && email.trim().length > 0;
+    }
+
+    // For question steps - allow progression with either text OR voice recording
+    if (currentStepConfig.fieldName) {
+      const fieldValue = form.getValues()[currentStepConfig.fieldName];
+      const hasValidText = fieldValue && fieldValue.length >= 10;
+      const hasVoiceRecording = voiceRecordings[currentStepConfig.fieldName]?.audioBlob !== null;
+      return hasValidText || hasVoiceRecording;
+    }
+
+    return true;
   };
 
   const submitApplication = useMutation({
@@ -341,6 +473,9 @@ export default function Apply() {
     submitApplication.mutate(data);
   };
 
+  const currentStepConfig = steps[currentStep];
+  const progressPercentage = ((currentStep + 1) / steps.length) * 100;
+
   if (isSubmitted) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
@@ -370,7 +505,7 @@ export default function Apply() {
                 Thank you for your application! Saint will review your submission and be in touch within 48 hours.
               </p>
               <Link href="/" onClick={handleNavClick}>
-                <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500">
+                <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500" data-testid="button-return-home">
                   Return to Home
                 </Button>
               </Link>
@@ -389,6 +524,7 @@ export default function Apply() {
         url="https://fifthelementsomatics.com/apply"
         keywords="1:1 mentorship application, somatic practitioner, trauma-informed therapy, embodiment coach, women's empowerment"
       />
+      
       {/* Navigation */}
       <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
         <Link href="/" onClick={handleNavClick}>
@@ -411,177 +547,171 @@ export default function Apply() {
       {/* Application Form */}
       <div className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl mx-auto">
+          {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-4">
               Apply for 1:1 Mentorship
             </h1>
-            <p className="text-gray-300 text-lg">
-              Tell me about yourself and what you're seeking in this work.
+            <p className="text-gray-300 text-lg italic mb-6">
+              *This form is a soft entry point into our work together. You're invited to share as much or as little as feels true. Written or voice responses welcome.*
             </p>
+            
+            {/* Progress indicator */}
+            <div className="mb-6">
+              <div className="flex justify-between text-sm text-gray-400 mb-2">
+                <span>Step {currentStep + 1} of {steps.length}</span>
+                <span>{Math.round(progressPercentage)}% Complete</span>
+              </div>
+              <Progress value={progressPercentage} className="h-2 bg-gray-800" data-testid="progress-form" />
+            </div>
           </div>
 
           <Card className="bg-gray-800 border border-purple-400 border-opacity-30 mystique-glow">
             <CardHeader>
-              <CardTitle className="text-white">Your Application</CardTitle>
+              <CardTitle className="text-white text-xl" data-testid={`title-step-${currentStep}`}>
+                {currentStepConfig.title}
+              </CardTitle>
+              {currentStepConfig.description && (
+                <p className="text-gray-300">{currentStepConfig.description}</p>
+              )}
             </CardHeader>
             <CardContent>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-gray-300">Full Name *</FormLabel>
-                        <FormControl>
-                          <Input 
-                            placeholder="Your name"
-                            className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-400"
-                            {...field} 
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
+                  {/* Basic Information Step */}
+                  {currentStepConfig.isInfoStep && (
+                    <div className="space-y-4">
+                      <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-gray-300">Full Name *</FormLabel>
+                            <FormControl>
+                              <Input 
+                                placeholder="Your name"
+                                className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-400"
+                                data-testid="input-name"
+                                {...field} 
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-gray-300">Email Address *</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="email"
+                                placeholder="your@email.com"
+                                className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-400"
+                                data-testid="input-email"
+                                {...field} 
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="phone"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-gray-300">Phone Number (Optional)</FormLabel>
+                            <FormControl>
+                              <Input 
+                                placeholder="Your phone number"
+                                className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-400"
+                                data-testid="input-phone"
+                                {...field}
+                                value={field.value || ""}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  )}
+
+                  {/* Question Steps */}
+                  {!currentStepConfig.isInfoStep && currentStepConfig.fieldName && currentStepConfig.question && (
+                    <div className="space-y-4">
+                      <div className="bg-gray-700 bg-opacity-30 p-4 rounded-lg border-l-4 border-purple-400">
+                        <h3 className="text-lg font-medium text-white mb-2" data-testid={`question-${currentStepConfig.fieldName}`}>
+                          {currentStepConfig.question}
+                        </h3>
+                      </div>
+
+                      <FormField
+                        control={form.control}
+                        name={currentStepConfig.fieldName}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-gray-300">Your Response</FormLabel>
+                            <FormControl>
+                              <Textarea 
+                                placeholder="Share your thoughts here, or use the voice recording option below..."
+                                className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-400 min-h-[120px]"
+                                data-testid={`textarea-${currentStepConfig.fieldName}`}
+                                {...field}
+                                value={field.value || ""}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      {/* Voice Recording Controls */}
+                      <VoiceControls fieldName={currentStepConfig.fieldName} />
+                    </div>
+                  )}
+
+                  {/* Navigation */}
+                  <div className="flex justify-between items-center pt-6">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={prevStep}
+                      disabled={currentStep === 0}
+                      className="flex items-center gap-2"
+                      data-testid="button-previous"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                      Previous
+                    </Button>
+
+                    {currentStep === steps.length - 1 ? (
+                      <Button
+                        type="submit"
+                        disabled={submitApplication.isPending || !canProceed()}
+                        className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500"
+                        data-testid="button-submit"
+                      >
+                        {submitApplication.isPending ? "Submitting..." : "Submit Application"}
+                      </Button>
+                    ) : (
+                      <Button
+                        type="button"
+                        onClick={nextStep}
+                        disabled={!canProceed()}
+                        className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 flex items-center gap-2"
+                        data-testid="button-next"
+                      >
+                        Next
+                        <ChevronRight className="w-4 h-4" />
+                      </Button>
                     )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-gray-300">Email Address *</FormLabel>
-                        <FormControl>
-                          <Input 
-                            type="email"
-                            placeholder="your@email.com"
-                            className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-400"
-                            {...field} 
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="phone"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-gray-300">Phone Number (Optional)</FormLabel>
-                        <FormControl>
-                          <Input 
-                            placeholder="Your phone number"
-                            className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-400"
-                            {...field}
-                            value={field.value || ""}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="experience"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-gray-300">What's your experience with somatic work, embodiment practices, or healing? *</FormLabel>
-                        <FormControl>
-                          <div>
-                            <Textarea 
-                              placeholder="Share your background and any previous healing work... (or record your answer below)"
-                              rows={4}
-                              className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-400"
-                              {...field} 
-                            />
-                            <VoiceControls fieldName="experience" />
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="intentions"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-gray-300">What are you hoping to explore or heal through this work? *</FormLabel>
-                        <FormControl>
-                          <div>
-                            <Textarea 
-                              placeholder="What draws you to this work? What are you seeking to shift or explore? (or record your answer below)"
-                              rows={4}
-                              className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-400"
-                              {...field} 
-                            />
-                            <VoiceControls fieldName="intentions" />
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="challenges"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-gray-300">What are the biggest challenges you're facing right now? *</FormLabel>
-                        <FormControl>
-                          <div>
-                            <Textarea 
-                              placeholder="Share what's feeling difficult or stuck in your life... (or record your answer below)"
-                              rows={4}
-                              className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-400"
-                              {...field} 
-                            />
-                            <VoiceControls fieldName="challenges" />
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="support"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-gray-300">What kind of support do you feel would be most helpful? *</FormLabel>
-                        <FormControl>
-                          <div>
-                            <Textarea 
-                              placeholder="What type of guidance, holding, or support would feel most meaningful to you? (or record your answer below)"
-                              rows={4}
-                              className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-400"
-                              {...field} 
-                            />
-                            <VoiceControls fieldName="support" />
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <Button 
-                    type="submit" 
-                    disabled={submitApplication.isPending}
-                    className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold py-4 px-8 rounded-xl text-lg transition-all duration-300 mystique-glow"
-                  >
-                    {submitApplication.isPending ? "Submitting..." : "Submit Application"}
-                  </Button>
-
-                  <p className="text-xs text-gray-400 text-center">
-                    By submitting this application, you agree to be contacted about mentorship opportunities.
-                  </p>
+                  </div>
                 </form>
               </Form>
             </CardContent>

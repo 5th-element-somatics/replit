@@ -23,9 +23,13 @@ export const applications = pgTable("applications", {
   email: text("email").notNull(),
   phone: text("phone"),
   experience: text("experience").notNull(),
-  intentions: text("intentions").notNull(),
+  whatDrawsYou: text("what_draws_you").notNull(),
+  hopeToExplore: text("hope_to_explore").notNull(),
   challenges: text("challenges").notNull(),
   support: text("support").notNull(),
+  longToExperience: text("long_to_experience").notNull(),
+  afraidToExpress: text("afraid_to_express").notNull(),
+  desireFromGuide: text("desire_from_guide").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -326,9 +330,13 @@ export const insertApplicationSchema = createInsertSchema(applications).pick({
   email: true,
   phone: true,
   experience: true,
-  intentions: true,
+  whatDrawsYou: true,
+  hopeToExplore: true,
   challenges: true,
   support: true,
+  longToExperience: true,
+  afraidToExpress: true,
+  desireFromGuide: true,
 });
 
 export const insertLeadSchema = createInsertSchema(leads).pick({
