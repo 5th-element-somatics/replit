@@ -684,6 +684,7 @@ export default function Apply() {
                       </div>
 
                       <FormField
+                        key={currentStepConfig.fieldName}
                         control={form.control}
                         name={currentStepConfig.fieldName}
                         render={({ field }) => (
@@ -691,10 +692,12 @@ export default function Apply() {
                             <FormLabel className="text-gray-300">Your Response</FormLabel>
                             <FormControl>
                               <Textarea 
+                                key={`textarea-${currentStepConfig.fieldName}`}
                                 placeholder={currentStepConfig.subtext || "Share your thoughts here, or use the voice recording option below..."}
                                 className="bg-black bg-opacity-50 border-gray-600 text-white placeholder-gray-400 min-h-[120px]"
                                 data-testid={`textarea-${currentStepConfig.fieldName}`}
                                 {...field}
+                                value={field.value || ""}
                               />
                             </FormControl>
                             <FormMessage />
