@@ -159,8 +159,7 @@ export default function About() {
           <div className="flex items-center justify-center mb-8">
             <div className="w-8 h-8 mr-4 text-purple-400">
               <svg fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C10.343 2 9 3.343 9 5C9 6.657 10.343 8 12 8C13.657 8 15 6.657 15 5C15 3.343 13.657 2 12 2ZM12 10C8.134 10 5 13.134 5 17V22H7V17C7 14.239 9.239 12 12 12C14.761 12 17 14.239 17 17V22H19V17C19 13.134 15.866 10 12 10Z"/>
-                <path d="M10 15H14V19H10Z"/>
+                <path d="M12 2C9.8 2 8 3.8 8 6C8 8.2 9.8 10 12 10C14.2 10 16 8.2 16 6C16 3.8 14.2 2 12 2ZM11 11V22H13V11H15V9H9V11H11Z"/>
               </svg>
             </div>
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white">
@@ -181,7 +180,7 @@ export default function About() {
               <div>Power begins when the body feels safe enough to soften.</div>
               <div className="pt-2">Healing happens in your hips,</div>
               <div>your heart,</div>
-              <div>your hands—</div>
+              <div>your hands</div>
               <div>not just your mind.</div>
             </div>
           </div>
