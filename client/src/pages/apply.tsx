@@ -204,14 +204,15 @@ export default function Apply() {
   // Speech recognition setup
   const [recognition, setRecognition] = useState<any>(null);
   const [isListening, setIsListening] = useState<Record<string, boolean>>({});
+  const [recordingStartValues, setRecordingStartValues] = useState<Record<string, string>>({});
 
   useEffect(() => {
     // Initialize speech recognition if available
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
       const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
       const recognitionInstance = new SpeechRecognition();
-      recognitionInstance.continuous = false;
-      recognitionInstance.interimResults = false;
+      recognitionInstance.continuous = true;
+      recognitionInstance.interimResults = true;
       recognitionInstance.lang = 'en-US';
       setRecognition(recognitionInstance);
     }
@@ -232,19 +233,34 @@ export default function Apply() {
     if (isListening[fieldName]) return;
 
     try {
+      // Store the original value when recording starts
+      const startValue = form.getValues(fieldName as keyof InsertApplication) || "";
+      setRecordingStartValues(prev => ({ ...prev, [fieldName]: startValue }));
       setIsListening(prev => ({ ...prev, [fieldName]: true }));
       
       recognition.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
+        let finalTranscript = '';
+        let interimTranscript = '';
         
-        // Get current field value and append the transcript
-        const currentValue = form.getValues(fieldName as keyof InsertApplication) || "";
-        const newValue = currentValue ? `${currentValue} ${transcript}` : transcript;
+        // Process all results from this recording session
+        for (let i = 0; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript;
+          } else {
+            interimTranscript += transcript;
+          }
+        }
+        
+        // Get the value from when recording started
+        const baseValue = recordingStartValues[fieldName] || "";
+        
+        // Combine original value with new transcripts
+        const separator = baseValue && (finalTranscript || interimTranscript) ? " " : "";
+        const newValue = baseValue + separator + finalTranscript + interimTranscript;
         
         // Set the transcribed text in the form field
         form.setValue(fieldName as keyof InsertApplication, newValue);
-        
-        setIsListening(prev => ({ ...prev, [fieldName]: false }));
       };
 
       recognition.onerror = (event: any) => {
