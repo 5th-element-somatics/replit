@@ -9,6 +9,7 @@ import saintArtisticPhoto from "@assets/2J3A2196_1758049750941.jpg";
 import burningRoseImage from "@assets/gaspar-uhas-KrTAeWiPimc-unsplash_1758050365284.jpg";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
 import portalIllustration from "@assets/portal_1758052165051.png";
+import bookIllustration from "@assets/book_white_1758052784301.png";
 import { ContactForm } from "@/components/ContactForm";
 
 export default function About() {
@@ -156,36 +157,41 @@ export default function About() {
       </section>
 
       {/* Philosophy Section */}
-      <section 
-        className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-900/20 to-pink-900/20 relative"
-        style={{
-          backgroundImage: `url(${burningRoseImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
-        }}
-      >
-        <div className="absolute inset-0 bg-black/40"></div>
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-8">
-            I BELIEVE
-          </h2>
-          
-          <div className="space-y-3 text-xl text-gray-300 leading-relaxed">
-            <div className="text-white font-semibold">Your body doesn't need to be fixed.</div>
-            <div className="text-white font-semibold">It needs to be felt.</div>
-            
-            <div className="pt-4">
-              <div className="text-white font-semibold">Sensuality isn't performance.</div>
-              <div className="text-white font-semibold">It's presence.</div>
+      <section className="py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Column - Book Illustration */}
+            <div className="flex justify-center lg:justify-start">
+              <img 
+                src={bookIllustration} 
+                alt="Mystical book illustration with sun and moon representing wisdom and transformation"
+                className="w-full max-w-md h-auto"
+              />
             </div>
             
-            <div className="pt-6 text-lg text-gray-200 leading-relaxed">
-              <div>Power begins when the body feels safe enough to soften.</div>
-              <div className="pt-2">Healing happens in your hips,</div>
-              <div>your heart,</div>
-              <div>your hands</div>
-              <div>not just your mind.</div>
+            {/* Right Column - Text */}
+            <div>
+              <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-8 text-center lg:text-left">
+                I BELIEVE
+              </h2>
+              
+              <div className="space-y-3 text-xl text-gray-300 leading-relaxed text-center lg:text-left">
+                <div className="text-white font-semibold">Your body doesn't need to be fixed.</div>
+                <div className="text-white font-semibold">It needs to be felt.</div>
+                
+                <div className="pt-4">
+                  <div className="text-white font-semibold">Sensuality isn't performance.</div>
+                  <div className="text-white font-semibold">It's presence.</div>
+                </div>
+                
+                <div className="pt-6 text-lg text-gray-200 leading-relaxed">
+                  <div>Power begins when the body feels safe enough to soften.</div>
+                  <div className="pt-2">Healing happens in your hips,</div>
+                  <div>your heart,</div>
+                  <div>your hands</div>
+                  <div>not just your mind.</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
