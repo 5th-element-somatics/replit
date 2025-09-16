@@ -181,18 +181,6 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Card className="bg-gray-800 border border-purple-400 border-opacity-20 text-center hover:border-opacity-60 transition-all duration-300">
-              <CardContent className="p-6">
-                <h3 className="text-xl font-serif font-bold text-white mb-3">HOLY MESS WORKSHOP</h3>
-                <p className="text-gray-400 text-sm mb-4">Sacred movement & expression · Aug 17 · $45</p>
-                <Link href="/workshop/holy-mess" onClick={handleNavClick}>
-                  <Button className="bg-purple-600 hover:bg-purple-700 text-white w-full">
-                    Register Now
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-
             <Card className="bg-gray-800 border border-indigo-400 border-opacity-20 text-center hover:border-opacity-60 transition-all duration-300">
               <CardContent className="p-6">
                 <h3 className="text-xl font-serif font-bold text-white mb-3">1:1 MENTORSHIP</h3>
