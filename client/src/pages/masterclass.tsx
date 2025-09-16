@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import masterclassCoverUrl from "@assets/image_1757804836253.png";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
+import saintProfilePhoto from "@assets/SEBLOGphoto_1758066455114.jpg";
 import { ContactForm } from "@/components/ContactForm";
 
 export default function Masterclass() {
@@ -171,16 +172,30 @@ export default function Masterclass() {
 
       {/* About Your Guide */}
       <section className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-900/20 to-pink-900/20">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl sm:text-3xl font-serif font-bold mb-6 gradient-text">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-2xl sm:text-3xl font-serif font-bold mb-8 gradient-text text-center">
             Your Reclamation Guide
           </h2>
-          <p className="text-lg text-gray-300 mb-6">
-            Saint is a somatic sexologist who specializes in helping women break free from the "good girl" conditioning that keeps them disconnected from their bodies, their desires, and their power.
-          </p>
-          <p className="text-gray-300">
-            Through trauma-informed somatic practices, Saint guides women back to their authentic selves—where softness and sovereignty rise together.
-          </p>
+          
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+            <div className="flex-shrink-0">
+              <img 
+                src={saintProfilePhoto}
+                alt="Saint - Your Reclamation Guide"
+                className="w-24 h-24 sm:w-20 sm:h-20 object-cover rounded-full border-2 border-purple-400/30 shadow-lg"
+                data-testid="img-saint-profile"
+              />
+            </div>
+            
+            <div className="flex-1 text-center sm:text-left">
+              <p className="text-lg text-gray-300 mb-4">
+                Saint is a somatic sexologist who specializes in helping women break free from the "good girl" conditioning that keeps them disconnected from their bodies, their desires, and their power.
+              </p>
+              <p className="text-gray-300">
+                Through trauma-informed somatic practices, Saint guides women back to their authentic selves—where softness and sovereignty rise together.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
