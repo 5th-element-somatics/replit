@@ -21,7 +21,6 @@ export const applications = pgTable("applications", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull(),
-  phone: text("phone"),
   experience: text("experience").notNull(),
   whatDrawsYou: text("what_draws_you").notNull(),
   hopeToExplore: text("hope_to_explore").notNull(),
