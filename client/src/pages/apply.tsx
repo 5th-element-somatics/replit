@@ -13,7 +13,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
-import { Mic, MicOff, Play, Pause, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Mic, MicOff, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
 import { z } from "zod";
 
@@ -200,72 +200,83 @@ export default function Apply() {
     mode: "onChange",
   });
 
-  // Voice recording functions
+  // Speech recognition setup
+  const [recognition, setRecognition] = useState<any>(null);
+  const [isListening, setIsListening] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    // Initialize speech recognition if available
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+      const recognitionInstance = new SpeechRecognition();
+      recognitionInstance.continuous = false;
+      recognitionInstance.interimResults = false;
+      recognitionInstance.lang = 'en-US';
+      setRecognition(recognitionInstance);
+    }
+  }, []);
+
+  // Voice-to-text functions
   const startRecording = async (fieldName: string) => {
-    // Prevent starting new recording if one is already active for this field
-    if (voiceRecordings[fieldName]?.isRecording) {
+    if (!recognition) {
+      toast({
+        title: "Speech recognition not supported",
+        description: "Please use a modern browser that supports speech recognition.",
+        variant: "destructive",
+      });
       return;
     }
 
-    // Clean up existing recording URL to prevent memory leaks
-    const existingRecording = voiceRecordings[fieldName];
-    if (existingRecording?.audioUrl) {
-      URL.revokeObjectURL(existingRecording.audioUrl);
-    }
+    // Prevent starting new recording if one is already active for this field
+    if (isListening[fieldName]) return;
 
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
+      setIsListening(prev => ({ ...prev, [fieldName]: true }));
       
-      const chunks: BlobPart[] = [];
-      let startTime = Date.now();
-
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          chunks.push(event.data);
-        }
+      recognition.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        
+        // Get current field value and append the transcript
+        const currentValue = form.getValues(fieldName as keyof InsertApplication) || "";
+        const newValue = currentValue ? `${currentValue} ${transcript}` : transcript;
+        
+        // Set the transcribed text in the form field
+        form.setValue(fieldName as keyof InsertApplication, newValue);
+        
+        setIsListening(prev => ({ ...prev, [fieldName]: false }));
+        
+        toast({
+          title: "Speech transcribed!",
+          description: "Your speech has been added to the response box.",
+        });
       };
 
-      mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(chunks, { type: 'audio/webm' });
-        const audioUrl = URL.createObjectURL(audioBlob);
-        const duration = Math.round((Date.now() - startTime) / 1000);
-
-        setVoiceRecordings(prev => ({
-          ...prev,
-          [fieldName]: {
-            ...prev[fieldName],
-            isRecording: false,
-            audioBlob,
-            audioUrl,
-            duration
-          }
-        }));
-
-        // Clean up stream
-        stream.getTracks().forEach(track => track.stop());
+      recognition.onerror = (event: any) => {
+        console.error('Speech recognition error:', event.error);
+        setIsListening(prev => ({ ...prev, [fieldName]: false }));
+        toast({
+          title: "Speech recognition failed",
+          description: "Please check your microphone permissions and try again.",
+          variant: "destructive",
+        });
       };
 
-      mediaRecorder.start();
+      recognition.onend = () => {
+        setIsListening(prev => ({ ...prev, [fieldName]: false }));
+      };
+
+      recognition.start();
       
-      setVoiceRecordings(prev => ({
-        ...prev,
-        [fieldName]: { ...prev[fieldName], isRecording: true, duration: 0 }
-      }));
-
-      // Set up timer state for useEffect
-      recordingStartTimeRef.current = startTime;
-      activeRecordingFieldRef.current = fieldName;
-
       toast({
-        title: "Recording started",
-        description: "Speak your answer clearly. Click stop when finished.",
+        title: "Listening...",
+        description: "Speak your answer clearly. It will be transcribed into the text box.",
       });
+      
     } catch (error) {
-      console.error('Error starting recording:', error);
+      console.error('Error starting speech recognition:', error);
+      setIsListening(prev => ({ ...prev, [fieldName]: false }));
       toast({
-        title: "Recording failed",
+        title: "Failed to start listening",
         description: "Please check your microphone permissions and try again.",
         variant: "destructive",
       });
@@ -273,55 +284,16 @@ export default function Apply() {
   };
 
   const stopRecording = (fieldName: string) => {
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
-      mediaRecorderRef.current.stop();
-    }
-    if (recordingTimerRef.current) {
-      clearInterval(recordingTimerRef.current);
-      recordingTimerRef.current = null;
-    }
-    activeRecordingFieldRef.current = null;
-  };
-
-  const playRecording = (fieldName: string) => {
-    const recording = voiceRecordings[fieldName];
-    if (!recording.audioUrl) return;
-
-    if (audioRef.current) {
-      audioRef.current.pause();
-    }
-
-    audioRef.current = new Audio(recording.audioUrl);
-    audioRef.current.onplay = () => {
-      setVoiceRecordings(prev => ({
-        ...prev,
-        [fieldName]: { ...prev[fieldName], isPlaying: true }
-      }));
-    };
-    audioRef.current.onended = () => {
-      setVoiceRecordings(prev => ({
-        ...prev,
-        [fieldName]: { ...prev[fieldName], isPlaying: false }
-      }));
-    };
-    audioRef.current.play();
-  };
-
-  const pauseRecording = (fieldName: string) => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      setVoiceRecordings(prev => ({
-        ...prev,
-        [fieldName]: { ...prev[fieldName], isPlaying: false }
-      }));
+    if (recognition && isListening[fieldName]) {
+      recognition.stop();
+      setIsListening(prev => ({ ...prev, [fieldName]: false }));
     }
   };
 
-  const deleteRecording = (fieldName: string) => {
-    const recording = voiceRecordings[fieldName];
-    if (recording.audioUrl) {
-      URL.revokeObjectURL(recording.audioUrl);
-    }
+
+  const clearText = (fieldName: string) => {
+    // Clear the text field
+    form.setValue(fieldName as keyof InsertApplication, "");
     if (audioRef.current) {
       audioRef.current.pause();
     }
@@ -343,96 +315,62 @@ export default function Apply() {
     });
   };
 
-  const formatDuration = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
 
-  // Voice controls component
-  const VoiceControls = ({ fieldName }: { fieldName: string }) => {
-    const recording = voiceRecordings[fieldName];
+  // Speech-to-text controls component
+  const SpeechToTextControls = ({ fieldName }: { fieldName: string }) => {
+    const currentValue = form.watch(fieldName as keyof InsertApplication);
+    const hasText = currentValue && currentValue.trim().length > 0;
+    const isCurrentlyListening = isListening[fieldName];
 
     return (
       <div className="flex items-center gap-2 mt-2 p-3 bg-gray-700 bg-opacity-50 rounded-lg">
-        {!recording.audioUrl ? (
-          // Recording controls
-          <>
-            <Button
-              type="button"
-              variant={recording.isRecording ? "destructive" : "outline"}
-              size="sm"
-              onClick={() => recording.isRecording ? stopRecording(fieldName) : startRecording(fieldName)}
-              disabled={recording.isRecording && !mediaRecorderRef.current}
-              className="flex items-center gap-2"
-              data-testid={`button-voice-record-${fieldName}`}
-            >
-              {recording.isRecording ? (
-                <>
-                  <MicOff className="w-4 h-4" />
-                  Stop ({formatDuration(recording.duration)})
-                </>
-              ) : (
-                <>
-                  <Mic className="w-4 h-4" />
-                  Record Voice Answer
-                </>
-              )}
-            </Button>
-            {recording.isRecording && (
-              <div className="flex items-center gap-2 text-sm text-red-400">
-                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                Recording...
-              </div>
-            )}
-          </>
-        ) : (
-          // Playback controls
-          <>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => recording.isPlaying ? pauseRecording(fieldName) : playRecording(fieldName)}
-              className="flex items-center gap-2"
-              data-testid={`button-voice-play-${fieldName}`}
-            >
-              {recording.isPlaying ? (
-                <>
-                  <Pause className="w-4 h-4" />
-                  Pause
-                </>
-              ) : (
-                <>
-                  <Play className="w-4 h-4" />
-                  Play
-                </>
-              )}
-            </Button>
-            <span className="text-sm text-gray-300" data-testid={`text-recording-duration-${fieldName}`}>
-              {formatDuration(recording.duration)} recorded
-            </span>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={() => deleteRecording(fieldName)}
-              className="text-red-400 hover:text-red-300"
-              data-testid={`button-voice-delete-${fieldName}`}
-            >
-              <Trash2 className="w-4 h-4" />
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => startRecording(fieldName)}
-              className="text-xs"
-              data-testid={`button-voice-rerecord-${fieldName}`}
-            >
-              Re-record
-            </Button>
-          </>
+        <Button
+          type="button"
+          variant={isCurrentlyListening ? "destructive" : "outline"}
+          size="sm"
+          onClick={() => isCurrentlyListening ? stopRecording(fieldName) : startRecording(fieldName)}
+          disabled={!recognition}
+          className="flex items-center gap-2"
+          data-testid={`button-voice-record-${fieldName}`}
+        >
+          {isCurrentlyListening ? (
+            <>
+              <MicOff className="w-4 h-4" />
+              Stop Listening
+            </>
+          ) : (
+            <>
+              <Mic className="w-4 h-4" />
+              Speak Your Answer
+            </>
+          )}
+        </Button>
+        
+        {isCurrentlyListening && (
+          <div className="flex items-center gap-2 text-sm text-blue-400">
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+            Listening... speak clearly
+          </div>
+        )}
+
+        {hasText && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => clearText(fieldName)}
+            className="text-red-400 hover:text-red-300 flex items-center gap-2"
+            data-testid={`button-clear-text-${fieldName}`}
+          >
+            <Trash2 className="w-4 h-4" />
+            Clear Text
+          </Button>
+        )}
+
+        {!recognition && (
+          <span className="text-sm text-gray-400">
+            Speech-to-text not supported in this browser
+          </span>
         )}
       </div>
     );
@@ -465,16 +403,14 @@ export default function Apply() {
       return name && name.trim().length > 0 && email && email.trim().length > 0;
     }
 
-    // For question steps - allow progression with either text OR voice recording
+    // For question steps - require text input
     if (currentStepConfig.fieldName) {
       const fieldValue = watchedValues[currentStepConfig.fieldName];
-      const hasValidText = fieldValue && typeof fieldValue === 'string' && fieldValue.trim().length >= 10;
-      const hasVoiceRecording = voiceRecordings[currentStepConfig.fieldName]?.audioBlob !== null;
-      return hasValidText || hasVoiceRecording;
+      return fieldValue && typeof fieldValue === 'string' && fieldValue.trim().length >= 10;
     }
 
     return true;
-  }, [currentStep, watchedValues, voiceRecordings]);
+  }, [currentStep, watchedValues]);
 
   const submitApplication = useMutation({
     mutationFn: async (data: InsertApplication) => {
@@ -687,7 +623,7 @@ export default function Apply() {
                       />
 
                       {/* Voice Recording Controls */}
-                      <VoiceControls fieldName={currentStepConfig.fieldName} />
+                      <SpeechToTextControls fieldName={currentStepConfig.fieldName} />
                     </div>
                   )}
 
