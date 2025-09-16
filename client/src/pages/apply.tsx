@@ -52,6 +52,7 @@ interface StepConfig {
   description?: string;
   fieldName?: keyof InsertApplication;
   question?: string;
+  subtext?: string;
   isInfoStep?: boolean;
 }
 
@@ -66,49 +67,57 @@ const steps: StepConfig[] = [
     id: 1,
     title: "Experience",
     fieldName: "experience",
-    question: "What's your experience with somatic work, embodiment practices, or healing?"
+    question: "What's your experience with somatic work, embodiment practices, or healing?",
+    subtext: "Share any background you have with therapy, bodywork, yoga, meditation, breathwork, or other healing modalities. If you're new to this work, that's perfectly welcome too."
   },
   {
     id: 2,
     title: "What Draws You",
     fieldName: "whatDrawsYou", 
-    question: "What's currently drawing you to this work?"
+    question: "What's currently drawing you to this work?",
+    subtext: "What in your life or inner world is calling you toward somatic healing? What sparked your interest in working with embodiment and erotic reclamation?"
   },
   {
     id: 3,
     title: "Hope to Explore",
     fieldName: "hopeToExplore",
-    question: "What are you hoping to explore or heal through this space?"
+    question: "What are you hoping to explore or heal through this space?",
+    subtext: "Think about what feels tender, stuck, or ready for transformation. This could be related to your relationship with your body, sexuality, emotions, or sense of self."
   },
   {
     id: 4,
     title: "Current Challenges",
     fieldName: "challenges",
-    question: "What challenges or patterns have been showing up lately?"
+    question: "What challenges or patterns have been showing up lately?",
+    subtext: "Consider recurring themes in your relationships, emotional responses, body awareness, or ways of being that you'd like to shift or understand better."
   },
   {
     id: 5,
     title: "Meaningful Support",
     fieldName: "support",
-    question: "What type of support would feel most meaningful to you right now?"
+    question: "What type of support would feel most meaningful to you right now?",
+    subtext: "Think about what kind of guidance, holding, or approach would feel most nourishing. Do you need gentle encouragement, direct feedback, somatic tools, or something else?"
   },
   {
     id: 6,
     title: "Long to Experience",
     fieldName: "longToExperience",
-    question: "What sensations, desires, or emotions do you most long to experience more fully?"
+    question: "What sensations, desires, or emotions do you most long to experience more fully?",
+    subtext: "Consider what feels missing or muted in your life. This might be pleasure, aliveness, peace, power, connection, or any other qualities of experience."
   },
   {
     id: 7,
     title: "Afraid to Express",
     fieldName: "afraidToExpress",
-    question: "Where do you feel most afraid to express yourself—emotionally, sexually, or otherwise?"
+    question: "Where do you feel most afraid to express yourself—emotionally, sexually, or otherwise?",
+    subtext: "Reflect on where you hold back, silence yourself, or feel unsafe to be fully authentic. This might be in relationships, creative expression, or simply being in your body."
   },
   {
     id: 8,
     title: "Desire from Guide",
     fieldName: "desireFromGuide",
-    question: "If we were to work together, what would you most desire from me as your guide?"
+    question: "If we were to work together, what would you most desire from me as your guide?",
+    subtext: "Think about the qualities, approach, or type of mentorship that would feel most supportive for your growth. What do you hope to receive in our work together?"
   }
 ];
 
@@ -429,16 +438,28 @@ export default function Apply() {
     
     // For the basic info step
     if (currentStepConfig.isInfoStep) {
-      const { name, email } = form.getValues();
-      return name.trim().length > 0 && email.trim().length > 0;
+      try {
+        const { name, email } = form.getValues();
+        return name && name.trim().length > 0 && email && email.trim().length > 0;
+      } catch (error) {
+        console.warn('Error checking basic info:', error);
+        return false;
+      }
     }
 
     // For question steps - allow progression with either text OR voice recording
     if (currentStepConfig.fieldName) {
-      const fieldValue = form.getValues()[currentStepConfig.fieldName];
-      const hasValidText = fieldValue && fieldValue.length >= 10;
-      const hasVoiceRecording = voiceRecordings[currentStepConfig.fieldName]?.audioBlob !== null;
-      return hasValidText || hasVoiceRecording;
+      try {
+        const formValues = form.getValues();
+        const fieldValue = formValues[currentStepConfig.fieldName];
+        const hasValidText = fieldValue && typeof fieldValue === 'string' && fieldValue.trim().length >= 10;
+        const hasVoiceRecording = voiceRecordings[currentStepConfig.fieldName]?.audioBlob !== null;
+        return hasValidText || hasVoiceRecording;
+      } catch (error) {
+        console.warn('Error checking field value:', error);
+        // Fallback to checking voice recording only if form access fails
+        return voiceRecordings[currentStepConfig.fieldName]?.audioBlob !== null;
+      }
     }
 
     return true;
@@ -649,6 +670,11 @@ export default function Apply() {
                         <h3 className="text-lg font-medium text-white mb-2" data-testid={`question-${currentStepConfig.fieldName}`}>
                           {currentStepConfig.question}
                         </h3>
+                        {currentStepConfig.subtext && (
+                          <p className="text-sm text-gray-400 italic leading-relaxed" data-testid={`subtext-${currentStepConfig.fieldName}`}>
+                            {currentStepConfig.subtext}
+                          </p>
+                        )}
                       </div>
 
                       <FormField
@@ -664,6 +690,18 @@ export default function Apply() {
                                 data-testid={`textarea-${currentStepConfig.fieldName}`}
                                 {...field}
                                 value={field.value || ""}
+                                onChange={(e) => {
+                                  // Immediately update the field value
+                                  field.onChange(e.target.value);
+                                  // Force a gentle re-validation without blocking input
+                                  setTimeout(() => {
+                                    try {
+                                      form.trigger(currentStepConfig.fieldName!);
+                                    } catch (error) {
+                                      console.warn('Form validation error:', error);
+                                    }
+                                  }, 100);
+                                }}
                               />
                             </FormControl>
                             <FormMessage />
