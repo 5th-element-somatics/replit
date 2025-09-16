@@ -97,8 +97,8 @@ export default function About() {
       {/* About Story Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-            <div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-stretch">
+            <div className="flex flex-col justify-center h-full py-8 md:py-12">
               <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-6">
                 Meet Saint
               </h2>
