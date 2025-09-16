@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import saintPhotoUrl from "@assets/saint_photo_1753245778552.png";
+import saintPhotoUrl from "@assets/croppedbbybreath_1758048269684.jpg";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
 import { ContactForm } from "@/components/ContactForm";
 
