@@ -218,7 +218,7 @@ export default function About() {
                     <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z"/>
                   </svg>
                 </div>
-                <p className="text-lg font-semibold text-white mb-6">BEGIN YOUR JOURNEY INTO SENSUAL SELF-RECLAMATION. EXPERIENCE THE POWER THAT AWAKEN YOUR BODY'S WISDOM, AND YOUR EROTIC ENERGY.</p>
+                <p className="text-lg font-semibold text-white mb-6">BREAK FREE FROM THE GOOD GIRL CAGE. AWAKEN YOUR AUTHENTIC POWER AND RECLAIM YOUR SENSUAL SOVEREIGNTY.</p>
                 <Link href="/masterclass">
                   <Button className="bg-pink-600 hover:bg-pink-700 text-white text-sm">
                     Join The Masterclass
