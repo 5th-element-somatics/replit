@@ -324,11 +324,14 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left Column - Image */}
             <div className="flex justify-center lg:justify-start">
-              <img 
-                src={mysticalImage} 
-                alt="Mystical portrait with candlelight representing inner wisdom and transformation"
-                className="w-full max-w-md h-auto rounded-lg shadow-2xl"
-              />
+              <div className="relative w-full max-w-md rounded-lg shadow-2xl overflow-hidden">
+                <img 
+                  src={mysticalImage} 
+                  alt="Mystical portrait with candlelight representing inner wisdom and transformation"
+                  className="w-full h-auto block"
+                  style={{clipPath: 'inset(0 0 48px 0)'}}
+                />
+              </div>
             </div>
             
             {/* Right Column - Text */}
