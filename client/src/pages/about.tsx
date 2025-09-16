@@ -156,14 +156,34 @@ export default function About() {
       {/* Philosophy Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-900/20 to-pink-900/20">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-8">
-            I BELIEVE
-          </h2>
-          <div className="space-y-6 text-xl text-gray-300">
-            <p><strong className="text-white">Your body doesn't need to be fixed. It needs to be felt.</strong></p>
-            <p><strong className="text-white">Sensuality isn't performance.</strong></p>
-            <p><strong className="text-white">It's presence.</strong></p>
-            <p className="text-lg">POWER BEGINS WHEN THE BODY FEELS SAFE ENOUGH TO SOFTEN. HEALING HAPPENS IN YOUR HIPS, YOUR HEART, YOUR HANDS NOT JUST YOUR MIND.</p>
+          <div className="flex items-center justify-center mb-8">
+            <div className="w-8 h-8 mr-4 text-purple-400">
+              <svg fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C10.343 2 9 3.343 9 5C9 6.657 10.343 8 12 8C13.657 8 15 6.657 15 5C15 3.343 13.657 2 12 2ZM12 10C8.134 10 5 13.134 5 17V22H7V17C7 14.239 9.239 12 12 12C14.761 12 17 14.239 17 17V22H19V17C19 13.134 15.866 10 12 10Z"/>
+                <path d="M10 15H14V19H10Z"/>
+              </svg>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white">
+              I BELIEVE
+            </h2>
+          </div>
+          
+          <div className="space-y-3 text-xl text-gray-300 leading-relaxed">
+            <div className="text-white font-semibold">Your body doesn't need to be fixed.</div>
+            <div className="text-white font-semibold">It needs to be felt.</div>
+            
+            <div className="pt-4">
+              <div className="text-white font-semibold">Sensuality isn't performance.</div>
+              <div className="text-white font-semibold">It's presence.</div>
+            </div>
+            
+            <div className="pt-6 text-lg text-gray-200 leading-relaxed">
+              <div>Power begins when the body feels safe enough to soften.</div>
+              <div className="pt-2">Healing happens in your hips,</div>
+              <div>your heart,</div>
+              <div>your hands—</div>
+              <div>not just your mind.</div>
+            </div>
           </div>
         </div>
       </section>
