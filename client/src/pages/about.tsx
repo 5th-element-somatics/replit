@@ -6,6 +6,7 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import saintPhotoUrl from "@assets/croppedbbybreath_1758048269684.jpg";
 import saintArtisticPhoto from "@assets/2J3A2196_1758049750941.jpg";
+import burningRoseImage from "@assets/gaspar-uhas-KrTAeWiPimc-unsplash_1758050365284.jpg";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
 import { ContactForm } from "@/components/ContactForm";
 
@@ -154,8 +155,17 @@ export default function About() {
       </section>
 
       {/* Philosophy Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-900/20 to-pink-900/20">
-        <div className="max-w-4xl mx-auto text-center">
+      <section 
+        className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-900/20 to-pink-900/20 relative"
+        style={{
+          backgroundImage: `url(${burningRoseImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
+        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="max-w-4xl mx-auto text-center relative z-10">
           <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-8">
             I BELIEVE
           </h2>
