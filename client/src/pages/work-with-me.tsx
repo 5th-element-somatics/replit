@@ -5,6 +5,7 @@ import { Link } from "wouter";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
+import finalWhisperImg from "@assets/creep0045ratio_1758062207610.jpg";
 import { ContactForm } from "@/components/ContactForm";
 
 export default function WorkWithMe() {
@@ -240,27 +241,41 @@ export default function WorkWithMe() {
       </section>
 
       {/* Final Whisper Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white text-center mb-8">
-            A FINAL WHISPER
-          </h2>
-          <p className="text-xl text-gray-300 text-center mb-12">
-            Because you were never meant to do this alone.
-          </p>
+      <section className="py-16 px-4 sm:px-6 lg:px-8" data-testid="section-final-whisper">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+          {/* Image */}
+          <div className="mb-8 md:mb-0">
+            <img 
+              src={finalWhisperImg}
+              alt="Soft, intimate portrait evoking quiet presence"
+              className="w-full rounded-xl object-cover shadow-xl ring-1 ring-purple-400/20"
+              loading="lazy"
+              data-testid="img-final-whisper"
+            />
+          </div>
           
-          <div className="space-y-4 text-lg text-gray-300 text-center">
-            <p>You don't need to be more of anything.</p>
-            <p>You don't need to hold it all alone.</p>
-            <p><strong className="text-white">You just need a space where your full self is welcome.</strong></p>
-            <p><strong className="text-white">A space where softness is strength.</strong></p>
-            <p>Where your body is heard.</p>
-            <p>Where your desires aren't too much.</p>
-            <p><strong className="text-white">This is that space.</strong></p>
-            <p>A space for release.</p>
-            <p>For remembrance.</p>
-            <p>For returning to the truth of who you are.</p>
-            <p><strong className="text-white">And I would be honored to walk it with you.</strong></p>
+          {/* Text Content */}
+          <div className="text-center md:text-left">
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-8">
+              A FINAL WHISPER
+            </h2>
+            <p className="text-xl text-gray-300 mb-12">
+              Because you were never meant to do this alone.
+            </p>
+            
+            <div className="space-y-4 text-lg text-gray-300">
+              <p>You don't need to be more of anything.</p>
+              <p>You don't need to hold it all alone.</p>
+              <p><strong className="text-white">You just need a space where your full self is welcome.</strong></p>
+              <p><strong className="text-white">A space where softness is strength.</strong></p>
+              <p>Where your body is heard.</p>
+              <p>Where your desires aren't too much.</p>
+              <p><strong className="text-white">This is that space.</strong></p>
+              <p>A space for release.</p>
+              <p>For remembrance.</p>
+              <p>For returning to the truth of who you are.</p>
+              <p><strong className="text-white">And I would be honored to walk it with you.</strong></p>
+            </div>
           </div>
         </div>
       </section>
