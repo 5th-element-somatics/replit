@@ -160,7 +160,7 @@ export default function WorkWithMe() {
             <img 
               src={handOutlineImg}
               alt="Hand outline illustration representing openness and receptivity"
-              className="w-full max-w-sm opacity-60 hover:opacity-80 transition-opacity duration-300"
+              className="w-full max-w-48 opacity-60 hover:opacity-80 transition-opacity duration-300"
               loading="lazy"
               data-testid="img-hand-outline"
             />
