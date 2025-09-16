@@ -110,7 +110,7 @@ export default function WorkWithMe() {
             <Card className="bg-gray-800 border border-purple-400 border-opacity-20">
               <CardContent className="p-6 text-center">
                 <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white font-serif font-bold text-xl">01</span>
+                  <span className="text-white font-serif font-bold text-xl">✧</span>
                 </div>
                 <h4 className="text-lg font-semibold text-white mb-3">STRUCTURED SOMATIC MENTORSHIP SESSIONS</h4>
               </CardContent>
@@ -119,7 +119,7 @@ export default function WorkWithMe() {
             <Card className="bg-gray-800 border border-purple-400 border-opacity-20">
               <CardContent className="p-6 text-center">
                 <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white font-serif font-bold text-xl">02</span>
+                  <span className="text-white font-serif font-bold text-xl">♥</span>
                 </div>
                 <h4 className="text-lg font-semibold text-white mb-3">SUPPORT TAILORED TO YOUR RHYTHMS & EMOTIONAL NEEDS</h4>
               </CardContent>
@@ -128,7 +128,7 @@ export default function WorkWithMe() {
             <Card className="bg-gray-800 border border-purple-400 border-opacity-20">
               <CardContent className="p-6 text-center">
                 <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white font-serif font-bold text-xl">03</span>
+                  <span className="text-white font-serif font-bold text-xl">◆</span>
                 </div>
                 <h4 className="text-lg font-semibold text-white mb-3">ACCOUNTABILITY INSIDE A PERMISSION-BASED SPACE</h4>
               </CardContent>
