@@ -371,7 +371,7 @@ export default function Quiz() {
           setIsPlaying(false);
         }
         
-        setShowQuestion(false);
+        // Keep showQuestion true to skip card back after first question
         setCurrentQuestion(currentQuestion + 1);
       } else {
         // Last question - show results
