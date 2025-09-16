@@ -119,7 +119,7 @@ export default function Home() {
                 intimacy...
               </p>
               <p className="text-lg text-gray-300 mb-8">
-                <strong className="text-white">WITH THEMSELVES, THEIR BODIES, AND THE PEOPLE THEY LOVE.</strong>
+                <strong className="text-white">WITH THEMSELVES, THEIR BODIES,<br />AND THE PEOPLE THEY LOVE.</strong>
               </p>
               <Link href="/quiz" onClick={handleNavClick}>
                 <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-4 sm:px-8 py-3 sm:py-4 rounded-full text-sm sm:text-lg transition-all duration-300 mystique-glow w-full max-w-xs mx-auto sm:mx-0 sm:w-auto">
