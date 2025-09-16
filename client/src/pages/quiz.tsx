@@ -188,6 +188,16 @@ export default function Quiz() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Auto-start audio when new question is revealed
+  useEffect(() => {
+    if (showQuestion && soundEnabled && quizQuestions[currentQuestion]) {
+      // Brief delay to let the question animation finish
+      setTimeout(() => {
+        playQuestionAudio(quizQuestions[currentQuestion].question, true);
+      }, 300);
+    }
+  }, [showQuestion, currentQuestion, soundEnabled]);
+
   // Cleanup audio when component unmounts or user navigates away
   useEffect(() => {
     const handleBeforeUnload = () => {
@@ -351,6 +361,23 @@ export default function Quiz() {
 
   const handleAnswer = (questionId: string, value: string) => {
     setAnswers({ ...answers, [questionId]: value });
+    
+    // Auto-advance to next question after brief delay
+    setTimeout(() => {
+      if (currentQuestion < quizQuestions.length - 1) {
+        // Stop current audio when moving to next question
+        if (audioRef.current) {
+          audioRef.current.pause();
+          setIsPlaying(false);
+        }
+        
+        setShowQuestion(false);
+        setCurrentQuestion(currentQuestion + 1);
+      } else {
+        // Last question - show results
+        calculateResult();
+      }
+    }, 1500); // 1.5 second delay to show selection
   };
 
   const nextQuestion = () => {
@@ -967,34 +994,18 @@ export default function Quiz() {
                 })}
               </div>
               
-              {/* Continue Button */}
+              {/* Auto-advance message */}
               <div className="text-center">
-                <Button 
-                  onClick={() => {
-                    if (currentQuestion < quizQuestions.length - 1) {
-                      setShowQuestion(false);
-                      setCurrentQuestion(currentQuestion + 1);
-                    } else {
-                      calculateResult();
-                    }
-                  }}
-                  disabled={!answers[quizQuestions[currentQuestion].id]}
-                  className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-12 py-4 rounded-full text-lg transition-all duration-300 mystique-glow disabled:opacity-50 disabled:cursor-not-allowed shadow-xl"
-                  data-testid="continue-button"
-                >
-                  {currentQuestion === quizQuestions.length - 1 ? (
-                    <span className="flex items-center gap-2">
-                      <Star className="w-5 h-5" />
-                      Reveal My Good Girl Archetype
-                      <Star className="w-5 h-5" />
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-2">
-                      Draw Next Card
-                      <span className="text-2xl">→</span>
-                    </span>
-                  )}
-                </Button>
+                {answers[quizQuestions[currentQuestion].id] && (
+                  <div className="text-purple-300 text-lg animate-pulse">
+                    ✧ Your path has been chosen ✧
+                    <div className="text-sm text-gray-400 mt-2">
+                      {currentQuestion === quizQuestions.length - 1 
+                        ? "Revealing your archetype..." 
+                        : "Drawing next card..."}
+                    </div>
+                  </div>
+                )}
                 {/* Mystic Progress */}
                 <div className="mt-6">
                   <div className="flex justify-center items-center gap-4 text-sm text-purple-300 mb-4">
