@@ -189,10 +189,10 @@ export default function FreeMeditation({ accessMode = false }: FreeMeditationPro
             <div className="mb-12">
               <h3 className="text-lg font-serif font-bold text-white mb-8 animate-fade-in">Inside this guided audio you will:</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                <div className="group bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-emerald-500/20 hover:border-emerald-500/40 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-lg hover:shadow-emerald-500/20 animate-slide-up">
+                <div className="group bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20 animate-slide-up">
                   <div className="relative mb-4">
-                    <div className="absolute inset-0 w-14 h-14 mx-auto bg-emerald-500/20 rounded-full blur-lg animate-breathing"></div>
-                    <div className="relative w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center mx-auto group-hover:animate-breathing-slow">
+                    <div className="absolute inset-0 w-14 h-14 mx-auto bg-purple-500/20 rounded-full blur-lg animate-breathing"></div>
+                    <div className="relative w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto group-hover:animate-breathing-slow">
                       <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                       </svg>
