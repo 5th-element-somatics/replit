@@ -130,9 +130,9 @@ const EmailForm = ({ email, setEmail, includeAddon, setIncludeAddon }: {
                         <div className="text-sm text-gray-400 mt-1">
                           <p className="text-gray-300 font-medium mb-2">You'll receive:</p>
                           <div className="space-y-1 text-xs">
-                            <p>• <span className="font-medium">Boundary Tapping (EFT)</span> — for energetic clarity + emotional self-respect</p>
-                            <p>• <span className="font-medium">Eros Energy Activation</span> — a breath-based practice to awaken aliveness</p>
-                            <p>• <span className="font-medium">Sovereignty Ritual</span> — know your body as sacred, soft & non-negotiable</p>
+                            <p>• <span className="font-medium">Boundary Tapping (EFT)</span> for energetic clarity + emotional self-respect</p>
+                            <p>• <span className="font-medium">Eros Energy Activation</span> a breath-based practice to awaken aliveness</p>
+                            <p>• <span className="font-medium">Sovereignty Ritual</span> know your body as sacred, soft & non-negotiable</p>
                           </div>
                         </div>
                       </div>
