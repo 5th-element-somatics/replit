@@ -437,10 +437,8 @@ function InteractiveDemo({ onClose, onJoinCourse }: { onClose: () => void; onJoi
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const [typedText, setTypedText] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
+  const [fadeKey, setFadeKey] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
 
   const demoSteps = [
@@ -521,35 +519,9 @@ function InteractiveDemo({ onClose, onJoinCourse }: { onClose: () => void; onJoi
     }
   };
 
-  // Typing animation effect
+  // Fade animation effect when step changes
   useEffect(() => {
-    const currentContent = demoSteps[currentStep].content;
-    setTypedText("");
-    setIsTyping(true);
-    
-    let charIndex = 0;
-    
-    if (typingIntervalRef.current) {
-      clearInterval(typingIntervalRef.current);
-    }
-    
-    typingIntervalRef.current = setInterval(() => {
-      if (charIndex < currentContent.length) {
-        setTypedText(currentContent.slice(0, charIndex + 1));
-        charIndex++;
-      } else {
-        setIsTyping(false);
-        if (typingIntervalRef.current) {
-          clearInterval(typingIntervalRef.current);
-        }
-      }
-    }, 50); // Adjust speed as needed
-    
-    return () => {
-      if (typingIntervalRef.current) {
-        clearInterval(typingIntervalRef.current);
-      }
-    };
+    setFadeKey(prev => prev + 1);
   }, [currentStep]);
 
   // Auto-advance with voice narration
@@ -689,10 +661,12 @@ function InteractiveDemo({ onClose, onJoinCourse }: { onClose: () => void; onJoi
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-6 leading-tight">
               {currentStepData.title}
             </h2>
-            <p className="text-xl sm:text-2xl text-gray-200 leading-relaxed mb-8 font-light min-h-[3em]">
-              {typedText}
-              {isTyping && <span className="animate-pulse">|</span>}
-            </p>
+            <div 
+              key={fadeKey}
+              className="text-xl sm:text-2xl text-gray-200 leading-relaxed mb-8 font-light min-h-[3em] animate-fade-in-up"
+            >
+              {currentStepData.content}
+            </div>
 
             {/* Audio Visualization */}
             {soundEnabled && isPlaying && !currentStepData.isCTA && (
