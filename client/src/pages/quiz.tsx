@@ -768,9 +768,11 @@ export default function Quiz() {
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-serif font-bold mb-8">
             <span className="gradient-text">Good Girl Archetype</span>
           </h1>
-          <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-            The cosmic cards reveal the pattern that's been guiding your soul's journey.
-          </p>
+          <div className="flex justify-center items-center gap-4 text-purple-400 text-lg mb-8">
+            <Star className="w-5 h-5 animate-pulse" />
+            <span>The cosmic cards reveal the pattern that's been guiding your soul's journey</span>
+            <Star className="w-5 h-5 animate-pulse" style={{animationDelay: '0.5s'}} />
+          </div>
           <div className="flex justify-center items-center gap-4 text-purple-400 text-lg mb-8">
             <Star className="w-5 h-5 animate-pulse" />
             <span>Sacred Wisdom Awaits</span>
