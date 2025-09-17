@@ -442,57 +442,57 @@ function InteractiveDemo({ onClose, onJoinCourse }: { onClose: () => void; onJoi
   const demoSteps = [
     {
       title: "Welcome to The Good Girl Paradox",
-      content: "Saint here. For too long, you've been living in a cage of your own making—one built from 'shoulds' and 'supposed to's.' This 90-minute masterclass is your key to freedom.",
-      voiceText: "Saint here. For too long, you've been living in a cage of your own making, one built from shoulds and supposed tos. This 90 minute masterclass is your key to freedom. Welcome to The Good Girl Paradox.",
+      content: "Saint here. Let's unravel the shame-based conditioning that taught you to be pleasing, performative, and disconnected from your truth, especially in your erotic life.",
+      voiceText: "Saint here. Let's unravel the shame based conditioning that taught you to be pleasing, performative, and disconnected from your truth, especially in your erotic life.",
       visual: "gradient-orb",
       bgColor: "from-purple-900/40 to-pink-900/40",
-      duration: 8000
+      duration: 9000
     },
     {
-      title: "Module 1: The Prison of Performance",
-      content: "You've mastered being what everyone wants you to be. But what about what YOU want? We'll explore how people-pleasing became your survival strategy and why it's no longer serving you.",
-      voiceText: "You've mastered being what everyone wants you to be. But what about what you want? In module one, we'll explore how people pleasing became your survival strategy and why it's no longer serving you.",
+      title: "The Paradox Revealed",
+      content: "We explore how so many of us were raised to be good girls—obedient, soft, silent—yet carry this deep, burning desire to be praised, wanted, and truly free.",
+      voiceText: "We explore how so many of us were raised to be good girls, obedient, soft, silent, yet carry this deep, burning desire to be praised, wanted, and truly free.",
       visual: "broken-chains",
-      bgColor: "from-red-900/30 to-orange-900/30",
-      duration: 8000
+      bgColor: "from-rose-900/30 to-pink-900/30",
+      duration: 9000
     },
     {
-      title: "Module 2: Your Body Holds the Key",
-      content: "Your liberation isn't in your mind—it's in your body. Learn somatic practices to reconnect with your body's wisdom and break free from mental loops that keep you stuck.",
-      voiceText: "Your liberation isn't in your mind, it's in your body. Learn somatic practices to reconnect with your body's wisdom and break free from mental loops that keep you stuck.",
+      title: "Your Body as Sacred Truth",
+      content: "This masterclass guides you back into the body as the source of truth, power, and pleasure. Not your mind—your body. Your felt sense. Your inner knowing.",
+      voiceText: "This masterclass guides you back into the body as the source of truth, power, and pleasure. Not your mind, your body. Your felt sense. Your inner knowing.",
       visual: "body-energy",
       bgColor: "from-emerald-900/30 to-teal-900/30",
-      duration: 8000
+      duration: 9000
     },
     {
-      title: "Module 3: Reclaiming Your Erotic Self",
-      content: "Not performing sexuality, but truly EMBODYING your sensual, erotic self without shame. Discover how to feel safe in your own desire and express your authentic sexuality.",
-      voiceText: "Not performing sexuality, but truly embodying your sensual, erotic self without shame. Discover how to feel safe in your own desire and express your authentic sexuality.",
+      title: "Reconnect with Your Erotic Self",
+      content: "You'll be guided through somatic practices and reflections to reconnect with your erotic energy in a safe, sacred way. No performance—pure embodiment.",
+      voiceText: "You'll be guided through somatic practices and reflections to reconnect with your erotic energy in a safe, sacred way. No performance, pure embodiment.",
       visual: "flame-lotus",
-      bgColor: "from-rose-900/30 to-pink-900/30",
-      duration: 8000
+      bgColor: "from-orange-900/30 to-rose-900/30",
+      duration: 9000
     },
     {
-      title: "Module 4: Nervous System Recalibration",
-      content: "Learn specific breathwork and somatic techniques to shift your nervous system from survival mode to thriving. Feel safe enough in your body to soften into your power.",
-      voiceText: "Learn specific breathwork and somatic techniques to shift your nervous system from survival mode to thriving. Feel safe enough in your body to soften into your power.",
+      title: "Reclaim Your Desires & Boundaries",
+      content: "Reclaim your desires, boundaries, and inner voice. Learn to release shame through nervous system-aware rituals that honor your authentic self.",
+      voiceText: "Reclaim your desires, boundaries, and inner voice. Learn to release shame through nervous system aware rituals that honor your authentic self.",
       visual: "breathing-waves",
       bgColor: "from-blue-900/30 to-indigo-900/30",
-      duration: 8000
+      duration: 9000
     },
     {
-      title: "Module 5: Integration & Daily Practice",
-      content: "This isn't just theory. You'll receive practical tools, daily practices, and somatic exercises to integrate this transformation into your relationships and daily life.",
-      voiceText: "This isn't just theory. You'll receive practical tools, daily practices, and somatic exercises to integrate this transformation into your relationships and daily life.",
-      visual: "sacred-geometry",
-      bgColor: "from-violet-900/30 to-purple-900/30",
-      duration: 8000
-    },
-    {
-      title: "Ready to Reclaim Your Truth?",
-      content: "90 minutes of transformational content. Lifetime access. Instant download. Trauma-informed practices. Are you ready to step into your sovereign, sensual, sacred self?",
-      voiceText: "90 minutes of transformational content. Lifetime access. Instant download. Trauma informed practices. Are you ready to step into your sovereign, sensual, sacred self?",
+      title: "Awaken Your Central Truth",
+      content: "Together, we awaken your central truth. Not for anyone else, not for approval or validation—but simply, powerfully, for YOU.",
+      voiceText: "Together, we awaken your central truth. Not for anyone else, not for approval or validation, but simply, powerfully, for you.",
       visual: "crown-chakra",
+      bgColor: "from-violet-900/30 to-purple-900/30",
+      duration: 9000
+    },
+    {
+      title: "Your Reclamation Awaits",
+      content: "90 minutes of transformational somatic practices. Lifetime access. Sacred, trauma-informed guidance. Are you ready to remember who you truly are?",
+      voiceText: "90 minutes of transformational somatic practices. Lifetime access. Sacred, trauma informed guidance. Are you ready to remember who you truly are?",
+      visual: "sacred-geometry",
       bgColor: "from-gold-900/30 to-yellow-900/30",
       duration: 0,
       isCTA: true
