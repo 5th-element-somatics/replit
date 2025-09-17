@@ -786,10 +786,6 @@ export default function Quiz() {
                 <h2 className="text-3xl font-serif font-bold text-white mb-4">
                   Draw Your Card
                 </h2>
-                <p className="text-lg text-gray-300 mb-8">
-                  Reveal what the universe wants you to understand right now.
-                  <br />Click the card that calls to your soul.
-                </p>
               </div>
               
               {/* Tarot Card */}
