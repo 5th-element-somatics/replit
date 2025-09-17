@@ -906,7 +906,7 @@ export default function Quiz() {
                       {/* Tarot Card Container */}
                       <div className={`
                         relative bg-gradient-to-br ${cardGradients[index]} rounded-2xl transition-all duration-700
-                        border-2 backdrop-blur-sm overflow-hidden aspect-[3/4] h-64 md:h-72 lg:h-80
+                        border-2 backdrop-blur-sm overflow-hidden w-64 h-96
                         ${isSelected 
                           ? 'border-purple-300 shadow-xl shadow-purple-500/40' 
                           : 'border-purple-400/30 hover:border-purple-300/80 hover:shadow-lg hover:shadow-purple-500/20'
