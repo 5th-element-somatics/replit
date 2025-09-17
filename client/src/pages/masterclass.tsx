@@ -226,10 +226,10 @@ export default function Masterclass() {
                 />
                 <div className="flex-1">
                   <label htmlFor="addon" className="text-white font-semibold cursor-pointer">
-                    Add "Return to the Body" Bonus Content
+                    Add "Return to the Body"
                   </label>
                   <p className="text-sm text-gray-400 mt-1">
-                    Extended somatic practices and body-based healing exercises
+                    Additional somatic practices and body-based healing exercises
                   </p>
                 </div>
                 <span className="text-pink-400 font-bold">+$20</span>
