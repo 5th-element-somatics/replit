@@ -766,7 +766,7 @@ export default function Quiz() {
             <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 blur-3xl -z-10 animate-pulse"></div>
           </div>
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-serif font-bold mb-8">
-            <span className="gradient-text">Good Girl Archetype Reading</span>
+            <span className="gradient-text">Good Girl Archetype</span>
           </h1>
           <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
             The cosmic cards reveal the pattern that's been guiding your soul's journey.
