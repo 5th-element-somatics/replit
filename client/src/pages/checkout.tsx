@@ -76,7 +76,7 @@ const EmailForm = ({ email, setEmail, includeAddon, setIncludeAddon }: {
   includeAddon: boolean;
   setIncludeAddon: (include: boolean) => void;
 }) => {
-  const totalAmount = includeAddon ? 89 : 64;
+  const totalAmount = includeAddon ? 64 : 44;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-gray-100">
@@ -112,7 +112,7 @@ const EmailForm = ({ email, setEmail, includeAddon, setIncludeAddon }: {
                       <div className="text-white font-medium">The Good Girl Paradox Masterclass</div>
                       <div className="text-sm text-gray-400">Lifetime access • Digital content</div>
                     </div>
-                    <span className="text-white font-semibold">$64.00</span>
+                    <span className="text-white font-semibold">$44.00</span>
                   </div>
                   
                   <div className="border border-gray-700 rounded-lg p-4">
@@ -131,7 +131,7 @@ const EmailForm = ({ email, setEmail, includeAddon, setIncludeAddon }: {
                           3 sacred rituals to help you feel, soften, & stay in the shift
                         </div>
                       </div>
-                      <span className="text-white font-semibold">+$25.00</span>
+                      <span className="text-white font-semibold">+$20.00</span>
                     </div>
                   </div>
                   
@@ -238,7 +238,7 @@ const PaymentForm = ({ email, setEmail, includeAddon, setIncludeAddon }: {
     }
   };
 
-  const totalAmount = includeAddon ? 89 : 64;
+  const totalAmount = includeAddon ? 64 : 44;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-gray-100">
@@ -361,7 +361,7 @@ export default function Checkout() {
 
   useEffect(() => {
     if (email) {
-      const amount = includeAddon ? 89 : 64;
+      const amount = includeAddon ? 64 : 44;
       apiRequest("POST", "/api/create-payment-intent", { 
         amount, 
         email,

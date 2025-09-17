@@ -307,7 +307,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const purchase = await storage.createPurchase({
         email,
         stripePaymentIntentId: `manual_test_${Date.now()}`,
-        amount: includeAddon ? 13600 : 8900, // $136 or $89 in cents
+        amount: includeAddon ? 6400 : 4400, // $64 or $44 in cents
         hasReturnToBodyAddon: includeAddon || false
       });
 
@@ -363,7 +363,7 @@ Questions? Reply to this email or contact hello@fifthelementsomatics.com
       }
 
       const paymentIntent = await stripe.paymentIntents.create({
-        amount: Math.round((amount || 6400) * 100), // Convert to cents, default $64
+        amount: Math.round((amount || 4400) * 100), // Convert to cents, default $44
         currency: "usd",
         metadata: {
           email,

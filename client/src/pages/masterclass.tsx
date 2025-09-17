@@ -756,7 +756,7 @@ function InteractiveDemo({ onClose, onJoinCourse }: { onClose: () => void; onJoi
                 onClick={onJoinCourse}
                 className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold px-8 py-4 rounded-full text-lg mx-4"
               >
-                Join The Masterclass - $64
+                Join The Masterclass - $44
               </Button>
             </div>
           ) : (
