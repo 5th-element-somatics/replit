@@ -438,7 +438,9 @@ function InteractiveDemo({ onClose, onJoinCourse }: { onClose: () => void; onJoi
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [fadeKey, setFadeKey] = useState(0);
+  const [waitingForAudio, setWaitingForAudio] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const stepTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
 
   const demoSteps = [
@@ -446,37 +448,37 @@ function InteractiveDemo({ onClose, onJoinCourse }: { onClose: () => void; onJoi
       title: "Welcome to The Good Girl Paradox",
       content: "Saint here. Let's unravel the shame based conditioning that taught you to be pleasing, performative, and disconnected from your truth, especially in your erotic life.",
       voiceText: "Saint here. Let's unravel the shame based conditioning that taught you to be pleasing, performative, and disconnected from your truth, especially in your erotic life.",
-      duration: 9000
+      duration: 15000 // Increased to allow audio to finish
     },
     {
       title: "The Paradox Revealed",
       content: "We explore how so many of us were raised to be good girls... obedient, soft, silent... yet carry this deep, burning desire to be praised, wanted, and truly free.",
       voiceText: "We explore how so many of us were raised to be good girls, obedient, soft, silent, yet carry this deep, burning desire to be praised, wanted, and truly free.",
-      duration: 9000
+      duration: 15000
     },
     {
       title: "Your Body as Sacred Truth",
       content: "This masterclass guides you back into the body as the source of truth, power, and pleasure. Not your mind... your body. Your felt sense. Your inner knowing.",
       voiceText: "This masterclass guides you back into the body as the source of truth, power, and pleasure. Not your mind, your body. Your felt sense. Your inner knowing.",
-      duration: 9000
+      duration: 15000
     },
     {
       title: "Reconnect with Your Erotic Self",
       content: "You'll be guided through somatic practices and reflections to reconnect with your erotic energy in a safe, sacred way. No performance... pure embodiment.",
       voiceText: "You'll be guided through somatic practices and reflections to reconnect with your erotic energy in a safe, sacred way. No performance, pure embodiment.",
-      duration: 9000
+      duration: 15000
     },
     {
       title: "Reclaim Your Desires & Boundaries",
       content: "Reclaim your desires, boundaries, and inner voice. Learn to release shame through nervous system aware rituals that honor your authentic self.",
       voiceText: "Reclaim your desires, boundaries, and inner voice. Learn to release shame through nervous system aware rituals that honor your authentic self.",
-      duration: 9000
+      duration: 15000
     },
     {
       title: "Awaken Your Central Truth",
       content: "Together, we awaken your central truth. Not for anyone else, not for approval or validation... but simply, powerfully, for YOU.",
       voiceText: "Together, we awaken your central truth. Not for anyone else, not for approval or validation, but simply, powerfully, for you.",
-      duration: 9000
+      duration: 15000
     },
     {
       title: "Your Reclamation Awaits",
@@ -546,6 +548,12 @@ function InteractiveDemo({ onClose, onJoinCourse }: { onClose: () => void; onJoi
 
   // Auto-advance with voice narration
   useEffect(() => {
+    // Clear any existing timeout
+    if (stepTimeoutRef.current) {
+      clearTimeout(stepTimeoutRef.current);
+      stepTimeoutRef.current = null;
+    }
+
     const playStepAudio = async () => {
       // Pause any current audio before loading new content
       if (audioRef.current) {
@@ -554,24 +562,33 @@ function InteractiveDemo({ onClose, onJoinCourse }: { onClose: () => void; onJoi
       }
       
       if (soundEnabled && demoSteps[currentStep].voiceText) {
+        setWaitingForAudio(true);
         await generateVoiceNarration(demoSteps[currentStep].voiceText);
         if (audioRef.current) {
           audioRef.current.muted = !soundEnabled;
           audioRef.current.play().catch(console.error);
           setIsPlaying(true);
         }
+      } else {
+        setWaitingForAudio(false);
       }
     };
 
     playStepAudio();
 
+    // Set fallback timeout in case audio doesn't play or fails
     if (isAutoAdvancing && currentStep < demoSteps.length - 1 && demoSteps[currentStep].duration > 0) {
-      const timer = setTimeout(() => {
+      stepTimeoutRef.current = setTimeout(() => {
         setCurrentStep(prev => prev + 1);
       }, demoSteps[currentStep].duration);
-      
-      return () => clearTimeout(timer);
     }
+
+    return () => {
+      if (stepTimeoutRef.current) {
+        clearTimeout(stepTimeoutRef.current);
+        stepTimeoutRef.current = null;
+      }
+    };
   }, [currentStep, isAutoAdvancing, soundEnabled]);
 
   // Clean up audio on unmount
@@ -788,7 +805,22 @@ function InteractiveDemo({ onClose, onJoinCourse }: { onClose: () => void; onJoi
           ref={audioRef} 
           preload="metadata" 
           className="hidden"
-          onEnded={() => setIsPlaying(false)}
+          onEnded={() => {
+            setIsPlaying(false);
+            setWaitingForAudio(false);
+            // Auto-advance when audio finishes (if enabled and not last step)
+            if (isAutoAdvancing && currentStep < demoSteps.length - 1) {
+              // Clear the fallback timer since audio finished naturally
+              if (stepTimeoutRef.current) {
+                clearTimeout(stepTimeoutRef.current);
+                stepTimeoutRef.current = null;
+              }
+              // Small delay to let the user process the end of the audio
+              setTimeout(() => {
+                setCurrentStep(prev => prev + 1);
+              }, 1500);
+            }
+          }}
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
         />
