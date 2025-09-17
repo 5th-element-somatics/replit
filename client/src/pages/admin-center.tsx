@@ -8,12 +8,18 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { 
   Bot, Brain, Zap, MessageSquare, Users, TrendingUp, Send, Mic, MicOff, 
   Settings, Lock, Eye, Download, Search, Filter, BarChart3, Mail, 
-  DollarSign, Calendar, Shield, Database, Activity, Cog, Crown, UserCheck
+  DollarSign, Calendar, Shield, Database, Activity, Cog, Crown, UserCheck,
+  BookOpen, Plus, Edit, Trash2, Play, Pause, Clock, Target, FileText,
+  Save, ExternalLink, MoreHorizontal, Check, X, Copy, PlayCircle
 } from "lucide-react";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
 
@@ -47,6 +53,35 @@ interface Purchase {
   createdAt: string;
 }
 
+interface EmailBroadcast {
+  id: number;
+  subject: string;
+  content: string;
+  audience: string;
+  status: string;
+  sentAt?: string;
+  scheduledFor?: string;
+  openRate?: number;
+  clickRate?: number;
+  recipients: number;
+  createdAt: string;
+}
+
+interface Course {
+  id: number;
+  title: string;
+  description?: string;
+  slug: string;
+  thumbnail?: string;
+  isPublished: boolean;
+  price: number;
+  compareAtPrice?: number;
+  enrollments?: number;
+  completionRate?: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export default function AdminCenter() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
@@ -71,6 +106,24 @@ export default function AdminCenter() {
   const [activeTab, setActiveTab] = useState("overview");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
+  
+  // Email broadcast state
+  const [emailSubject, setEmailSubject] = useState("");
+  const [emailContent, setEmailContent] = useState("");
+  const [emailAudience, setEmailAudience] = useState("all-leads");
+  const [isScheduled, setIsScheduled] = useState(false);
+  const [scheduledDate, setScheduledDate] = useState("");
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const [enableABTest, setEnableABTest] = useState(false);
+  const [subjectB, setSubjectB] = useState("");
+  
+  // Course management state
+  const [showCourseEditor, setShowCourseEditor] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [courseTitle, setCourseTitle] = useState("");
+  const [courseDescription, setCourseDescription] = useState("");
+  const [coursePrice, setCoursePrice] = useState("");
+  const [courseComparePrice, setCourseComparePrice] = useState("");
 
   const handleNavClick = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -515,7 +568,7 @@ export default function AdminCenter() {
 
         {/* Main Tabs Interface */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-6 bg-gray-800 mb-8">
+          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7 bg-gray-800 mb-8">
             <TabsTrigger value="overview" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
               <BarChart3 className="w-4 h-4 mr-2" />
               Overview
@@ -535,6 +588,10 @@ export default function AdminCenter() {
             <TabsTrigger value="email" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
               <Mail className="w-4 h-4 mr-2" />
               Email
+            </TabsTrigger>
+            <TabsTrigger value="courses" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
+              <BookOpen className="w-4 h-4 mr-2" />
+              Courses
             </TabsTrigger>
             <TabsTrigger value="settings" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
               <Settings className="w-4 h-4 mr-2" />
@@ -599,7 +656,7 @@ export default function AdminCenter() {
             </div>
 
             {/* AI Insights */}
-            {!insightsLoading && insights && typeof insights === 'object' && Object.keys(insights).length > 0 && (
+            {!insightsLoading && insights && typeof insights === 'object' && Object.keys(insights).length > 0 ? (
               <Card className="bg-gray-800 border-gray-700 mb-6">
                 <CardHeader>
                   <CardTitle className="text-white flex items-center">
@@ -633,7 +690,7 @@ export default function AdminCenter() {
                   </div>
                 </CardContent>
               </Card>
-            )}
+            ) : null}
           </TabsContent>
 
           {/* AI Assistant Tab */}
@@ -988,51 +1045,738 @@ Examples:
 
           {/* Email Tab */}
           <TabsContent value="email">
-            <div className="mb-6">
-              <h2 className="text-2xl font-serif font-bold text-white mb-6">Email Marketing</h2>
-              
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card className="bg-gray-800 border-gray-700">
-                  <CardHeader>
-                    <CardTitle className="text-white">Campaign Performance</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-300">Open Rate</span>
-                        <span className="text-emerald-400 font-bold">42.3%</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-300">Click Rate</span>
-                        <span className="text-purple-400 font-bold">8.7%</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-300">Unsubscribe Rate</span>
-                        <span className="text-yellow-400 font-bold">0.5%</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card className="bg-gray-800 border-gray-700">
-                  <CardHeader>
-                    <CardTitle className="text-white">Quick Actions</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white">
-                        Create New Campaign
-                      </Button>
-                      <Button variant="outline" className="w-full border-gray-600 text-gray-300">
-                        View Email Analytics
-                      </Button>
-                      <Button variant="outline" className="w-full border-gray-600 text-gray-300">
-                        Manage Templates
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-serif font-bold text-white">Email Marketing</h2>
+                <Button 
+                  onClick={() => setIsPreviewMode(!isPreviewMode)}
+                  variant={isPreviewMode ? "default" : "outline"}
+                  className={isPreviewMode ? "bg-purple-600 hover:bg-purple-700" : "border-gray-600 text-gray-300"}
+                  data-testid="button-toggle-preview"
+                >
+                  <Eye className="w-4 h-4 mr-2" />
+                  {isPreviewMode ? "Edit Mode" : "Preview Mode"}
+                </Button>
               </div>
+
+              {!isPreviewMode ? (
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {/* Email Composer */}
+                  <div className="lg:col-span-2">
+                    <Card className="bg-gray-800 border-gray-700">
+                      <CardHeader>
+                        <CardTitle className="text-white flex items-center">
+                          <Mail className="w-5 h-5 mr-2 text-purple-400" />
+                          Email Broadcast Composer
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-6">
+                        {/* Subject Line with A/B Testing */}
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between">
+                            <Label className="text-white font-medium">Subject Line</Label>
+                            <div className="flex items-center space-x-2">
+                              <Label className="text-sm text-gray-300">A/B Test</Label>
+                              <Switch 
+                                checked={enableABTest} 
+                                onCheckedChange={setEnableABTest}
+                                data-testid="switch-ab-test"
+                              />
+                            </div>
+                          </div>
+                          
+                          <div className="space-y-3">
+                            <Input
+                              placeholder="Enter your subject line..."
+                              value={emailSubject}
+                              onChange={(e) => setEmailSubject(e.target.value)}
+                              className="bg-gray-900 border-gray-600 text-white"
+                              data-testid="input-email-subject"
+                            />
+                            
+                            {enableABTest && (
+                              <Input
+                                placeholder="Subject line B (for A/B testing)..."
+                                value={subjectB}
+                                onChange={(e) => setSubjectB(e.target.value)}
+                                className="bg-gray-900 border-gray-600 text-white"
+                                data-testid="input-email-subject-b"
+                              />
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Email Content Editor */}
+                        <div className="space-y-3">
+                          <Label className="text-white font-medium">Email Content</Label>
+                          <Textarea
+                            placeholder="Write your email content here... You can use {{name}} for personalization."
+                            value={emailContent}
+                            onChange={(e) => setEmailContent(e.target.value)}
+                            className="bg-gray-900 border-gray-600 text-white min-h-[300px] resize-none"
+                            data-testid="textarea-email-content"
+                          />
+                          <p className="text-xs text-gray-400">
+                            Pro tip: Use {"{{name}}"}, {"{{quiz_result}}"}, and {"{{source}}"} for personalization
+                          </p>
+                        </div>
+
+                        {/* Scheduling */}
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between">
+                            <Label className="text-white font-medium">Scheduling</Label>
+                            <div className="flex items-center space-x-2">
+                              <Label className="text-sm text-gray-300">Schedule for later</Label>
+                              <Switch 
+                                checked={isScheduled} 
+                                onCheckedChange={setIsScheduled}
+                                data-testid="switch-schedule"
+                              />
+                            </div>
+                          </div>
+                          
+                          {isScheduled && (
+                            <Input
+                              type="datetime-local"
+                              value={scheduledDate}
+                              onChange={(e) => setScheduledDate(e.target.value)}
+                              className="bg-gray-900 border-gray-600 text-white"
+                              data-testid="input-schedule-date"
+                            />
+                          )}
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex gap-3 pt-4 border-t border-gray-700">
+                          <Button 
+                            className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white flex-1"
+                            disabled={!emailSubject || !emailContent}
+                            data-testid="button-send-email"
+                          >
+                            <Send className="w-4 h-4 mr-2" />
+                            {isScheduled ? "Schedule Email" : "Send Now"}
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            className="border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black"
+                            onClick={() => {
+                              setEmailSubject("");
+                              setEmailContent("");
+                              setEnableABTest(false);
+                              setSubjectB("");
+                              setIsScheduled(false);
+                              setScheduledDate("");
+                            }}
+                            data-testid="button-clear-email"
+                          >
+                            <X className="w-4 h-4 mr-2" />
+                            Clear
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            className="border-gray-600 text-gray-300 hover:bg-gray-600 hover:text-white"
+                            data-testid="button-save-draft"
+                          >
+                            <Save className="w-4 h-4 mr-2" />
+                            Save Draft
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  {/* Audience & Settings Sidebar */}
+                  <div>
+                    <Card className="bg-gray-800 border-gray-700 mb-6">
+                      <CardHeader>
+                        <CardTitle className="text-white flex items-center">
+                          <Target className="w-5 h-5 mr-2 text-pink-400" />
+                          Audience Selection
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div>
+                          <Label className="text-white font-medium mb-3 block">Select Recipients</Label>
+                          <Select value={emailAudience} onValueChange={setEmailAudience}>
+                            <SelectTrigger className="bg-gray-900 border-gray-600 text-white" data-testid="select-audience">
+                              <SelectValue placeholder="Choose audience" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all-leads">All Leads ({Array.isArray(leads) ? leads.length : 0})</SelectItem>
+                              <SelectItem value="quiz-takers">Quiz Takers ({Array.isArray(leads) ? leads.filter((l: Lead) => l.quizResult).length : 0})</SelectItem>
+                              <SelectItem value="meditation-downloaders">Meditation Downloaders ({Array.isArray(leads) ? leads.filter((l: Lead) => l.source === 'meditation-download').length : 0})</SelectItem>
+                              <SelectItem value="people-pleasers">People-Pleasers ({Array.isArray(leads) ? leads.filter((l: Lead) => l.quizResult === 'people_pleaser').length : 0})</SelectItem>
+                              <SelectItem value="perfectionists">Perfectionists ({Array.isArray(leads) ? leads.filter((l: Lead) => l.quizResult === 'perfectionist').length : 0})</SelectItem>
+                              <SelectItem value="rebels">Awakened Rebels ({Array.isArray(leads) ? leads.filter((l: Lead) => l.quizResult === 'rebel').length : 0})</SelectItem>
+                              <SelectItem value="customers">Customers ({Array.isArray(applications) ? applications.length : 0})</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        
+                        <div className="p-3 bg-gray-900 rounded-lg border border-gray-700">
+                          <p className="text-sm text-gray-300">
+                            <strong className="text-white">Estimated Recipients:</strong>
+                            <br />
+                            {emailAudience === 'all-leads' && `${Array.isArray(leads) ? leads.length : 0} leads`}
+                            {emailAudience === 'quiz-takers' && `${Array.isArray(leads) ? leads.filter((l: Lead) => l.quizResult).length : 0} quiz takers`}
+                            {emailAudience === 'meditation-downloaders' && `${Array.isArray(leads) ? leads.filter((l: Lead) => l.source === 'meditation-download').length : 0} meditation downloaders`}
+                            {emailAudience === 'people-pleasers' && `${Array.isArray(leads) ? leads.filter((l: Lead) => l.quizResult === 'people_pleaser').length : 0} people-pleasers`}
+                            {emailAudience === 'perfectionists' && `${Array.isArray(leads) ? leads.filter((l: Lead) => l.quizResult === 'perfectionist').length : 0} perfectionists`}
+                            {emailAudience === 'rebels' && `${Array.isArray(leads) ? leads.filter((l: Lead) => l.quizResult === 'rebel').length : 0} awakened rebels`}
+                            {emailAudience === 'customers' && `${Array.isArray(applications) ? applications.length : 0} customers`}
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Quick Stats */}
+                    <Card className="bg-gray-800 border-gray-700">
+                      <CardHeader>
+                        <CardTitle className="text-white">Campaign Performance</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-4">
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-300">Open Rate</span>
+                            <span className="text-emerald-400 font-bold">42.3%</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-300">Click Rate</span>
+                            <span className="text-purple-400 font-bold">8.7%</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-300">Unsubscribe Rate</span>
+                            <span className="text-yellow-400 font-bold">0.5%</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              ) : (
+                /* Preview Mode */
+                <div className="max-w-2xl mx-auto">
+                  <Card className="bg-white border border-gray-300">
+                    <CardHeader className="border-b bg-gray-50">
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-gray-500">From: Saint (saint@fifthelementsomatic.com)</span>
+                          <span className="text-sm text-gray-500">Preview Mode</span>
+                        </div>
+                        <div className="text-lg font-semibold text-gray-900">
+                          Subject: {emailSubject || "[Enter subject line]"}
+                        </div>
+                        {enableABTest && subjectB && (
+                          <div className="text-lg font-semibold text-gray-700 border-l-4 border-blue-400 pl-3">
+                            Subject B: {subjectB}
+                          </div>
+                        )}
+                      </div>
+                    </CardHeader>
+                    <CardContent className="p-6">
+                      <div className="prose prose-gray max-w-none">
+                        {emailContent ? (
+                          <div className="whitespace-pre-wrap text-gray-800">
+                            {emailContent.replace(/{{name}}/g, "[Recipient Name]").replace(/{{quiz_result}}/g, "[Quiz Result]").replace(/{{source}}/g, "[Source]")}
+                          </div>
+                        ) : (
+                          <div className="text-gray-400 italic">[Email content will appear here]</div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <div className="mt-4 p-3 bg-gray-800 rounded-lg border border-gray-700">
+                    <p className="text-sm text-gray-300">
+                      <strong className="text-white">Preview Info:</strong> This shows how your email will look to recipients.
+                      Personalization tokens like {"{{name}}"} are shown as placeholders.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Recent Broadcasts Section */}
+              <Card className="bg-gray-800 border-gray-700">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center">
+                    <FileText className="w-5 h-5 mr-2 text-green-400" />
+                    Recent Broadcasts
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {/* Sample broadcast entries - these would come from API */}
+                    <div className="p-4 bg-gray-900 rounded-lg border border-gray-700">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <h4 className="text-white font-semibold">Welcome to Your Transformation Journey</h4>
+                          <p className="text-sm text-gray-300 mt-1">Sent to All Leads • 2 hours ago</p>
+                          <div className="flex items-center space-x-4 mt-2 text-xs">
+                            <span className="text-emerald-400">📧 1,247 sent</span>
+                            <span className="text-purple-400">👁 38.2% opened</span>
+                            <span className="text-pink-400">🔗 7.3% clicked</span>
+                          </div>
+                        </div>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
+                              <MoreHorizontal className="w-4 h-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            <DropdownMenuItem>View Details</DropdownMenuItem>
+                            <DropdownMenuItem>Duplicate</DropdownMenuItem>
+                            <DropdownMenuItem className="text-red-400">Archive</DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </div>
+                    
+                    <div className="p-4 bg-gray-900 rounded-lg border border-gray-700">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <h4 className="text-white font-semibold">Your Quiz Results: The People-Pleaser Path</h4>
+                          <p className="text-sm text-gray-300 mt-1">Sent to Quiz Takers • 1 day ago</p>
+                          <div className="flex items-center space-x-4 mt-2 text-xs">
+                            <span className="text-emerald-400">📧 892 sent</span>
+                            <span className="text-purple-400">👁 45.1% opened</span>
+                            <span className="text-pink-400">🔗 12.4% clicked</span>
+                          </div>
+                        </div>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
+                              <MoreHorizontal className="w-4 h-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            <DropdownMenuItem>View Details</DropdownMenuItem>
+                            <DropdownMenuItem>Duplicate</DropdownMenuItem>
+                            <DropdownMenuItem className="text-red-400">Archive</DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </div>
+                    
+                    <div className="p-4 bg-gray-900 rounded-lg border border-gray-700">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-2">
+                            <h4 className="text-white font-semibold">Masterclass Reminder: Tonight at 8PM EST</h4>
+                            <Badge className="bg-blue-600 text-white text-xs">Scheduled</Badge>
+                          </div>
+                          <p className="text-sm text-gray-300 mt-1">Scheduled for Customers • In 3 hours</p>
+                          <div className="flex items-center space-x-4 mt-2 text-xs">
+                            <span className="text-gray-400">📧 ~156 recipients</span>
+                            <span className="text-yellow-400">⏰ Sending at 5:00 PM EST</span>
+                          </div>
+                        </div>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
+                              <MoreHorizontal className="w-4 h-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            <DropdownMenuItem>Edit</DropdownMenuItem>
+                            <DropdownMenuItem>Send Now</DropdownMenuItem>
+                            <DropdownMenuItem className="text-red-400">Cancel</DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </div>
+                    
+                    <div className="text-center py-4">
+                      <Button variant="ghost" className="text-gray-400 hover:text-white">
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        View All Campaigns
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Course Management Tab */}
+          <TabsContent value="courses">
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-serif font-bold text-white">Course Management</h2>
+                <Button 
+                  onClick={() => {
+                    setShowCourseEditor(true);
+                    setSelectedCourse(null);
+                    setCourseTitle("");
+                    setCourseDescription("");
+                    setCoursePrice("");
+                    setCourseComparePrice("");
+                  }}
+                  className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white"
+                  data-testid="button-create-course"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Create New Course
+                </Button>
+              </div>
+
+              {!showCourseEditor ? (
+                /* Course Listing */
+                <div className="space-y-6">
+                  {/* Quick Stats */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <Card className="bg-gray-800 border-emerald-400 border-opacity-30">
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="text-white font-semibold">Total Courses</h3>
+                          <BookOpen className="w-5 h-5 text-emerald-400" />
+                        </div>
+                        <div className="text-2xl font-bold text-emerald-400 mb-2">2</div>
+                        <p className="text-gray-400 text-sm">Active products</p>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="bg-gray-800 border-purple-400 border-opacity-30">
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="text-white font-semibold">Total Enrollments</h3>
+                          <Users className="w-5 h-5 text-purple-400" />
+                        </div>
+                        <div className="text-2xl font-bold text-purple-400 mb-2">156</div>
+                        <p className="text-gray-400 text-sm">All-time students</p>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="bg-gray-800 border-pink-400 border-opacity-30">
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="text-white font-semibold">Completion Rate</h3>
+                          <TrendingUp className="w-5 h-5 text-pink-400" />
+                        </div>
+                        <div className="text-2xl font-bold text-pink-400 mb-2">73%</div>
+                        <p className="text-gray-400 text-sm">Average completion</p>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  {/* Course List */}
+                  <div className="space-y-4">
+                    {/* Good Girl Paradox Masterclass */}
+                    <Card className="bg-gray-800 border-gray-700">
+                      <CardHeader>
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-3 mb-2">
+                              <CardTitle className="text-white">Good Girl Paradox Masterclass</CardTitle>
+                              <Badge className="bg-green-600 text-white">Published</Badge>
+                              <Switch defaultChecked data-testid="switch-course-published-masterclass" />
+                            </div>
+                            <p className="text-gray-300 text-sm">Transform your relationship with power, pleasure, and purpose through somatic practices.</p>
+                            <div className="flex items-center space-x-6 mt-3 text-sm">
+                              <span className="text-emerald-400">👥 89 enrolled</span>
+                              <span className="text-purple-400">📊 68% completed</span>
+                              <span className="text-pink-400">💰 $297</span>
+                            </div>
+                          </div>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
+                                <MoreHorizontal className="w-4 h-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                              <DropdownMenuItem onClick={() => {
+                                setSelectedCourse({
+                                  id: 1,
+                                  title: "Good Girl Paradox Masterclass",
+                                  description: "Transform your relationship with power, pleasure, and purpose through somatic practices.",
+                                  slug: "good-girl-paradox-masterclass",
+                                  isPublished: true,
+                                  price: 297,
+                                  compareAtPrice: 497,
+                                  enrollments: 89,
+                                  completionRate: 68,
+                                  createdAt: "2024-01-15",
+                                  updatedAt: "2024-12-15"
+                                });
+                                setCourseTitle("Good Girl Paradox Masterclass");
+                                setCourseDescription("Transform your relationship with power, pleasure, and purpose through somatic practices.");
+                                setCoursePrice("297");
+                                setCourseComparePrice("497");
+                                setShowCourseEditor(true);
+                              }}>
+                                <Edit className="w-4 h-4 mr-2" />Edit Course
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <PlayCircle className="w-4 h-4 mr-2" />Manage Lessons
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <BarChart3 className="w-4 h-4 mr-2" />View Analytics
+                              </DropdownMenuItem>
+                              <DropdownMenuItem className="text-red-400">
+                                <Trash2 className="w-4 h-4 mr-2" />Archive Course
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid grid-cols-3 gap-4 text-center">
+                          <div className="p-3 bg-gray-900 rounded-lg">
+                            <div className="text-lg font-bold text-white">4</div>
+                            <div className="text-xs text-gray-400">Sections</div>
+                          </div>
+                          <div className="p-3 bg-gray-900 rounded-lg">
+                            <div className="text-lg font-bold text-white">12</div>
+                            <div className="text-xs text-gray-400">Lessons</div>
+                          </div>
+                          <div className="p-3 bg-gray-900 rounded-lg">
+                            <div className="text-lg font-bold text-white">3.2h</div>
+                            <div className="text-xs text-gray-400">Duration</div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Return to the Body Add-on */}
+                    <Card className="bg-gray-800 border-gray-700">
+                      <CardHeader>
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-3 mb-2">
+                              <CardTitle className="text-white">Return to the Body - Somatic Add-on</CardTitle>
+                              <Badge className="bg-green-600 text-white">Published</Badge>
+                              <Switch defaultChecked data-testid="switch-course-published-addon" />
+                            </div>
+                            <p className="text-gray-300 text-sm">Deep somatic practices and guided meditations for nervous system regulation.</p>
+                            <div className="flex items-center space-x-6 mt-3 text-sm">
+                              <span className="text-emerald-400">👥 67 enrolled</span>
+                              <span className="text-purple-400">📊 82% completed</span>
+                              <span className="text-pink-400">💰 $197</span>
+                              <Badge variant="outline" className="border-yellow-400 text-yellow-400">Add-on</Badge>
+                            </div>
+                          </div>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
+                                <MoreHorizontal className="w-4 h-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                              <DropdownMenuItem onClick={() => {
+                                setSelectedCourse({
+                                  id: 2,
+                                  title: "Return to the Body - Somatic Add-on",
+                                  description: "Deep somatic practices and guided meditations for nervous system regulation.",
+                                  slug: "return-to-the-body-addon",
+                                  isPublished: true,
+                                  price: 197,
+                                  enrollments: 67,
+                                  completionRate: 82,
+                                  createdAt: "2024-02-01",
+                                  updatedAt: "2024-12-10"
+                                });
+                                setCourseTitle("Return to the Body - Somatic Add-on");
+                                setCourseDescription("Deep somatic practices and guided meditations for nervous system regulation.");
+                                setCoursePrice("197");
+                                setCourseComparePrice("");
+                                setShowCourseEditor(true);
+                              }}>
+                                <Edit className="w-4 h-4 mr-2" />Edit Course
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <PlayCircle className="w-4 h-4 mr-2" />Manage Lessons
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <BarChart3 className="w-4 h-4 mr-2" />View Analytics
+                              </DropdownMenuItem>
+                              <DropdownMenuItem className="text-red-400">
+                                <Trash2 className="w-4 h-4 mr-2" />Archive Course
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid grid-cols-3 gap-4 text-center">
+                          <div className="p-3 bg-gray-900 rounded-lg">
+                            <div className="text-lg font-bold text-white">2</div>
+                            <div className="text-xs text-gray-400">Sections</div>
+                          </div>
+                          <div className="p-3 bg-gray-900 rounded-lg">
+                            <div className="text-lg font-bold text-white">8</div>
+                            <div className="text-xs text-gray-400">Lessons</div>
+                          </div>
+                          <div className="p-3 bg-gray-900 rounded-lg">
+                            <div className="text-lg font-bold text-white">2.1h</div>
+                            <div className="text-xs text-gray-400">Duration</div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              ) : (
+                /* Course Editor */
+                <Card className="bg-gray-800 border-gray-700">
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-white flex items-center">
+                        <Edit className="w-5 h-5 mr-2 text-purple-400" />
+                        {selectedCourse ? "Edit Course" : "Create New Course"}
+                      </CardTitle>
+                      <Button 
+                        variant="outline"
+                        onClick={() => setShowCourseEditor(false)}
+                        className="border-gray-600 text-gray-300"
+                        data-testid="button-cancel-course-edit"
+                      >
+                        <X className="w-4 h-4 mr-2" />
+                        Cancel
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    {/* Course Basic Info */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      <div className="space-y-4">
+                        <div>
+                          <Label className="text-white font-medium">Course Title</Label>
+                          <Input
+                            placeholder="Enter course title..."
+                            value={courseTitle}
+                            onChange={(e) => setCourseTitle(e.target.value)}
+                            className="bg-gray-900 border-gray-600 text-white mt-2"
+                            data-testid="input-course-title"
+                          />
+                        </div>
+                        
+                        <div>
+                          <Label className="text-white font-medium">Description</Label>
+                          <Textarea
+                            placeholder="Describe your course..."
+                            value={courseDescription}
+                            onChange={(e) => setCourseDescription(e.target.value)}
+                            className="bg-gray-900 border-gray-600 text-white mt-2 min-h-[100px]"
+                            data-testid="textarea-course-description"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <Label className="text-white font-medium">Price ($)</Label>
+                            <Input
+                              placeholder="297"
+                              value={coursePrice}
+                              onChange={(e) => setCoursePrice(e.target.value)}
+                              className="bg-gray-900 border-gray-600 text-white mt-2"
+                              data-testid="input-course-price"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-white font-medium">Compare At Price ($)</Label>
+                            <Input
+                              placeholder="497"
+                              value={courseComparePrice}
+                              onChange={(e) => setCourseComparePrice(e.target.value)}
+                              className="bg-gray-900 border-gray-600 text-white mt-2"
+                              data-testid="input-course-compare-price"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="p-4 bg-gray-900 rounded-lg border border-gray-700">
+                          <h4 className="text-white font-semibold mb-3">Publishing Options</h4>
+                          <div className="flex items-center justify-between">
+                            <span className="text-gray-300">Published</span>
+                            <Switch defaultChecked={selectedCourse?.isPublished} data-testid="switch-course-published" />
+                          </div>
+                          <p className="text-xs text-gray-400 mt-2">
+                            Published courses are visible to customers and can be purchased.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Lesson Management Preview */}
+                    {selectedCourse && (
+                      <div className="space-y-4">
+                        <Separator className="bg-gray-700" />
+                        <div>
+                          <h4 className="text-white font-semibold mb-4 flex items-center">
+                            <PlayCircle className="w-5 h-5 mr-2 text-green-400" />
+                            Course Content
+                          </h4>
+                          
+                          <div className="space-y-3">
+                            {/* Sample sections for the selected course */}
+                            {selectedCourse.id === 1 && (
+                              <>
+                                <div className="p-3 bg-gray-900 rounded-lg border border-gray-700">
+                                  <h5 className="text-white font-medium">Section 1: Foundations of the Good Girl Paradox</h5>
+                                  <p className="text-sm text-gray-400 mt-1">3 lessons • 45 minutes</p>
+                                </div>
+                                <div className="p-3 bg-gray-900 rounded-lg border border-gray-700">
+                                  <h5 className="text-white font-medium">Section 2: Reclaiming Your Power</h5>
+                                  <p className="text-sm text-gray-400 mt-1">4 lessons • 68 minutes</p>
+                                </div>
+                                <div className="p-3 bg-gray-900 rounded-lg border border-gray-700">
+                                  <h5 className="text-white font-medium">Section 3: Embodied Leadership</h5>
+                                  <p className="text-sm text-gray-400 mt-1">3 lessons • 52 minutes</p>
+                                </div>
+                                <div className="p-3 bg-gray-900 rounded-lg border border-gray-700">
+                                  <h5 className="text-white font-medium">Section 4: Integration & Beyond</h5>
+                                  <p className="text-sm text-gray-400 mt-1">2 lessons • 35 minutes</p>
+                                </div>
+                              </>
+                            )}
+                            
+                            {selectedCourse.id === 2 && (
+                              <>
+                                <div className="p-3 bg-gray-900 rounded-lg border border-gray-700">
+                                  <h5 className="text-white font-medium">Section 1: Nervous System Fundamentals</h5>
+                                  <p className="text-sm text-gray-400 mt-1">4 lessons • 72 minutes</p>
+                                </div>
+                                <div className="p-3 bg-gray-900 rounded-lg border border-gray-700">
+                                  <h5 className="text-white font-medium">Section 2: Advanced Somatic Practices</h5>
+                                  <p className="text-sm text-gray-400 mt-1">4 lessons • 58 minutes</p>
+                                </div>
+                              </>
+                            )}
+                            
+                            <Button variant="outline" className="w-full border-gray-600 text-gray-300 hover:bg-gray-600 hover:text-white">
+                              <Plus className="w-4 h-4 mr-2" />
+                              Add Section
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-3 pt-4 border-t border-gray-700">
+                      <Button 
+                        className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white flex-1"
+                        disabled={!courseTitle || !coursePrice}
+                        data-testid="button-save-course"
+                      >
+                        <Save className="w-4 h-4 mr-2" />
+                        {selectedCourse ? "Update Course" : "Create Course"}
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        className="border-gray-600 text-gray-300 hover:bg-gray-600 hover:text-white"
+                        onClick={() => setShowCourseEditor(false)}
+                        data-testid="button-cancel-course-save"
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </div>
           </TabsContent>
 

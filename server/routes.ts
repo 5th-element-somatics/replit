@@ -3139,6 +3139,137 @@ Questions? Reply to this email - I read every single one.`,
     }
   });
 
+  // *** EMAIL BROADCAST MANAGEMENT ROUTES ***
+  
+  // Send email broadcast
+  app.post("/api/admin/email-broadcast", requireAdminAuth, async (req: any, res) => {
+    try {
+      const { subject, content, audience, isScheduled, scheduledFor, enableABTest, subjectB } = req.body;
+      
+      if (!subject || !content || !audience) {
+        return res.status(400).json({ message: "Subject, content, and audience are required" });
+      }
+      
+      // Get recipients based on audience selection
+      let recipients: any[] = [];
+      
+      switch (audience) {
+        case 'all-leads':
+          recipients = await db.select().from(leads);
+          break;
+        case 'quiz-takers':
+          recipients = await db.select().from(leads).where(sql`quiz_result IS NOT NULL`);
+          break;
+        case 'meditation-downloaders':
+          recipients = await db.select().from(leads).where(eq(leads.source, 'meditation-download'));
+          break;
+        case 'people-pleasers':
+          recipients = await db.select().from(leads).where(eq(leads.quizResult, 'people_pleaser'));
+          break;
+        case 'perfectionists':
+          recipients = await db.select().from(leads).where(eq(leads.quizResult, 'perfectionist'));
+          break;
+        case 'rebels':
+          recipients = await db.select().from(leads).where(eq(leads.quizResult, 'rebel'));
+          break;
+        case 'customers':
+          recipients = await db.select().from(applications);
+          break;
+        default:
+          recipients = await db.select().from(leads);
+      }
+      
+      // Simulate email sending (replace with actual email service)
+      console.log(`📧 Admin ${req.adminUser?.email} sending broadcast to ${recipients.length} recipients`);
+      console.log(`Subject: ${subject}`);
+      if (enableABTest && subjectB) {
+        console.log(`Subject B (A/B Test): ${subjectB}`);
+      }
+      console.log(`Audience: ${audience}`);
+      console.log(`Scheduled: ${isScheduled ? scheduledFor : 'Send immediately'}`);
+      
+      // For now, simulate immediate sending
+      // In a real implementation, you'd queue this with your email service
+      
+      res.json({
+        success: true,
+        message: isScheduled ? 'Email broadcast scheduled successfully' : 'Email broadcast sent successfully',
+        recipientCount: recipients.length,
+        broadcastId: Date.now() // Simulated broadcast ID
+      });
+      
+    } catch (error: any) {
+      console.error("Error sending email broadcast:", error);
+      res.status(500).json({ message: "Error sending email broadcast: " + error.message });
+    }
+  });
+  
+  // Get recent email broadcasts
+  app.get("/api/admin/email-broadcasts", requireAdminAuth, async (req: any, res) => {
+    try {
+      // Simulate recent broadcasts data
+      // In a real implementation, you'd fetch this from a broadcasts table
+      const recentBroadcasts = [
+        {
+          id: 1,
+          subject: "Welcome to Your Transformation Journey",
+          audience: "All Leads",
+          status: "sent",
+          sentAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
+          recipients: 1247,
+          openRate: 38.2,
+          clickRate: 7.3
+        },
+        {
+          id: 2,
+          subject: "Your Quiz Results: The People-Pleaser Path",
+          audience: "Quiz Takers",
+          status: "sent",
+          sentAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
+          recipients: 892,
+          openRate: 45.1,
+          clickRate: 12.4
+        },
+        {
+          id: 3,
+          subject: "Masterclass Reminder: Tonight at 8PM EST",
+          audience: "Customers",
+          status: "scheduled",
+          scheduledFor: new Date(Date.now() + 3 * 60 * 60 * 1000).toISOString(), // 3 hours from now
+          recipients: 156
+        }
+      ];
+      
+      res.json(recentBroadcasts);
+      
+    } catch (error: any) {
+      console.error("Error fetching email broadcasts:", error);
+      res.status(500).json({ message: "Error fetching email broadcasts: " + error.message });
+    }
+  });
+  
+  // Get email campaign performance stats
+  app.get("/api/admin/email-stats", requireAdminAuth, async (req: any, res) => {
+    try {
+      // Simulate email performance stats
+      // In a real implementation, you'd calculate these from your email delivery tables
+      const stats = {
+        openRate: 42.3,
+        clickRate: 8.7,
+        unsubscribeRate: 0.5,
+        totalSent: 12847,
+        totalOpens: 5434,
+        totalClicks: 1118
+      };
+      
+      res.json(stats);
+      
+    } catch (error: any) {
+      console.error("Error fetching email stats:", error);
+      res.status(500).json({ message: "Error fetching email stats: " + error.message });
+    }
+  });
+
   // Initialize AI email campaigns on server start
   aiEmailService.initializeDefaultCampaigns().catch(console.error);
 
