@@ -125,7 +125,7 @@ const EmailForm = ({ email, setEmail, includeAddon, setIncludeAddon }: {
                       />
                       <div className="flex-1">
                         <Label htmlFor="addon" className="text-gray-300 cursor-pointer font-medium">
-                          Add "Return to Body" Bonus Session
+                          Add Return to the Body
                         </Label>
                         <div className="text-sm text-gray-400 mt-1 space-y-2">
                           <p className="font-medium text-gray-300">3 sacred rituals to help you feel, soften, & stay in the shift.</p>
