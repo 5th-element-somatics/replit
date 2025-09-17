@@ -693,13 +693,6 @@ function InteractiveDemo({ onClose, onJoinCourse }: { onClose: () => void; onJoi
               >
                 Join The Masterclass - $64
               </Button>
-              <Button
-                onClick={onClose}
-                variant="outline"
-                className="border-gray-600 text-gray-300 px-6 py-2 mx-4"
-              >
-                Maybe Later
-              </Button>
             </div>
           ) : (
             <div className="flex justify-center items-center space-x-4">
