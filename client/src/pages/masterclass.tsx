@@ -100,7 +100,7 @@ export default function Masterclass() {
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div className="order-2 lg:order-1">
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold mb-4 gradient-text">
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold mb-4 gradient-text-blue">
                 The Good Girl<br />
                 Paradox
               </h1>
@@ -174,7 +174,7 @@ export default function Masterclass() {
       {/* About Your Guide */}
       <section className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-900/20 to-pink-900/20">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl sm:text-3xl font-serif font-bold mb-8 gradient-text text-center">
+          <h2 className="text-2xl sm:text-3xl font-serif font-bold mb-8 gradient-text-blue text-center">
             Your Reclamation Guide
           </h2>
           
@@ -239,7 +239,7 @@ export default function Masterclass() {
             <div className="border-t border-gray-600 pt-4 mb-6">
               <div className="flex items-center justify-between">
                 <span className="text-xl font-bold text-white">Total:</span>
-                <span className="text-2xl font-bold gradient-text">
+                <span className="text-2xl font-bold gradient-text-blue">
                   ${includeAddon ? "64" : "44"}
                 </span>
               </div>
@@ -357,7 +357,7 @@ export default function Masterclass() {
       {/* Final CTA */}
       <section className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-gray-800 to-black">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl sm:text-3xl font-serif font-bold mb-4 gradient-text">
+          <h2 className="text-2xl sm:text-3xl font-serif font-bold mb-4 gradient-text-blue">
             Are You Ready to Begin?
           </h2>
           <p className="text-lg text-gray-300 mb-6">

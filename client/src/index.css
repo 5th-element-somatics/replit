@@ -117,6 +117,13 @@
 
 @layer components {
   .gradient-text {
+    background: linear-gradient(45deg, hsl(290, 84%, 66%), hsl(340, 84%, 66%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-text-blue {
     background: linear-gradient(45deg, hsl(180, 84%, 42%), hsl(200, 84%, 50%));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
