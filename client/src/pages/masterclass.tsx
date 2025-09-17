@@ -10,6 +10,7 @@ import { apiRequest } from "@/lib/queryClient";
 import masterclassCoverUrl from "@assets/image_1757804836253.png";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
 import saintProfilePhoto from "@assets/Screen Shot 2023-11-29 at 1.17.16 PM_1758066732311.jpg";
+import ggpBackground from "@assets/GGPbackground_1758068123940.png";
 import { ContactForm } from "@/components/ContactForm";
 
 export default function Masterclass() {
@@ -436,64 +437,53 @@ function InteractiveDemo({ onClose, onJoinCourse }: { onClose: () => void; onJoi
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
+  const [typedText, setTypedText] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
 
   const demoSteps = [
     {
       title: "Welcome to The Good Girl Paradox",
-      content: "Saint here. Let's unravel the shame-based conditioning that taught you to be pleasing, performative, and disconnected from your truth, especially in your erotic life.",
+      content: "Saint here. Let's unravel the shame based conditioning that taught you to be pleasing, performative, and disconnected from your truth, especially in your erotic life.",
       voiceText: "Saint here. Let's unravel the shame based conditioning that taught you to be pleasing, performative, and disconnected from your truth, especially in your erotic life.",
-      visual: "gradient-orb",
-      bgColor: "from-purple-900/40 to-pink-900/40",
       duration: 9000
     },
     {
       title: "The Paradox Revealed",
-      content: "We explore how so many of us were raised to be good girls—obedient, soft, silent—yet carry this deep, burning desire to be praised, wanted, and truly free.",
+      content: "We explore how so many of us were raised to be good girls... obedient, soft, silent... yet carry this deep, burning desire to be praised, wanted, and truly free.",
       voiceText: "We explore how so many of us were raised to be good girls, obedient, soft, silent, yet carry this deep, burning desire to be praised, wanted, and truly free.",
-      visual: "broken-chains",
-      bgColor: "from-rose-900/30 to-pink-900/30",
       duration: 9000
     },
     {
       title: "Your Body as Sacred Truth",
-      content: "This masterclass guides you back into the body as the source of truth, power, and pleasure. Not your mind—your body. Your felt sense. Your inner knowing.",
+      content: "This masterclass guides you back into the body as the source of truth, power, and pleasure. Not your mind... your body. Your felt sense. Your inner knowing.",
       voiceText: "This masterclass guides you back into the body as the source of truth, power, and pleasure. Not your mind, your body. Your felt sense. Your inner knowing.",
-      visual: "body-energy",
-      bgColor: "from-emerald-900/30 to-teal-900/30",
       duration: 9000
     },
     {
       title: "Reconnect with Your Erotic Self",
-      content: "You'll be guided through somatic practices and reflections to reconnect with your erotic energy in a safe, sacred way. No performance—pure embodiment.",
+      content: "You'll be guided through somatic practices and reflections to reconnect with your erotic energy in a safe, sacred way. No performance... pure embodiment.",
       voiceText: "You'll be guided through somatic practices and reflections to reconnect with your erotic energy in a safe, sacred way. No performance, pure embodiment.",
-      visual: "flame-lotus",
-      bgColor: "from-orange-900/30 to-rose-900/30",
       duration: 9000
     },
     {
       title: "Reclaim Your Desires & Boundaries",
-      content: "Reclaim your desires, boundaries, and inner voice. Learn to release shame through nervous system-aware rituals that honor your authentic self.",
+      content: "Reclaim your desires, boundaries, and inner voice. Learn to release shame through nervous system aware rituals that honor your authentic self.",
       voiceText: "Reclaim your desires, boundaries, and inner voice. Learn to release shame through nervous system aware rituals that honor your authentic self.",
-      visual: "breathing-waves",
-      bgColor: "from-blue-900/30 to-indigo-900/30",
       duration: 9000
     },
     {
       title: "Awaken Your Central Truth",
-      content: "Together, we awaken your central truth. Not for anyone else, not for approval or validation—but simply, powerfully, for YOU.",
+      content: "Together, we awaken your central truth. Not for anyone else, not for approval or validation... but simply, powerfully, for YOU.",
       voiceText: "Together, we awaken your central truth. Not for anyone else, not for approval or validation, but simply, powerfully, for you.",
-      visual: "crown-chakra",
-      bgColor: "from-violet-900/30 to-purple-900/30",
       duration: 9000
     },
     {
       title: "Your Reclamation Awaits",
-      content: "90 minutes of transformational somatic practices. Lifetime access. Sacred, trauma-informed guidance. Are you ready to remember who you truly are?",
+      content: "90 minutes of transformational somatic practices. Lifetime access. Sacred, trauma informed guidance. Are you ready to remember who you truly are?",
       voiceText: "90 minutes of transformational somatic practices. Lifetime access. Sacred, trauma informed guidance. Are you ready to remember who you truly are?",
-      visual: "sacred-geometry",
-      bgColor: "from-gold-900/30 to-yellow-900/30",
       duration: 0,
       isCTA: true
     }
@@ -530,6 +520,37 @@ function InteractiveDemo({ onClose, onJoinCourse }: { onClose: () => void; onJoi
       setIsLoadingAudio(false);
     }
   };
+
+  // Typing animation effect
+  useEffect(() => {
+    const currentContent = demoSteps[currentStep].content;
+    setTypedText("");
+    setIsTyping(true);
+    
+    let charIndex = 0;
+    
+    if (typingIntervalRef.current) {
+      clearInterval(typingIntervalRef.current);
+    }
+    
+    typingIntervalRef.current = setInterval(() => {
+      if (charIndex < currentContent.length) {
+        setTypedText(currentContent.slice(0, charIndex + 1));
+        charIndex++;
+      } else {
+        setIsTyping(false);
+        if (typingIntervalRef.current) {
+          clearInterval(typingIntervalRef.current);
+        }
+      }
+    }, 50); // Adjust speed as needed
+    
+    return () => {
+      if (typingIntervalRef.current) {
+        clearInterval(typingIntervalRef.current);
+      }
+    };
+  }, [currentStep]);
 
   // Auto-advance with voice narration
   useEffect(() => {
@@ -599,101 +620,19 @@ function InteractiveDemo({ onClose, onJoinCourse }: { onClose: () => void; onJoi
     }
   };
 
-  const renderVisual = (visualType: string, bgColor: string) => {
-    const visualClasses = `absolute inset-0 bg-gradient-to-br ${bgColor} opacity-20`;
-    
-    switch (visualType) {
-      case 'gradient-orb':
-        return (
-          <div className={visualClasses}>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-              <div className="w-48 h-48 bg-gradient-to-br from-purple-400 to-pink-600 rounded-full opacity-60 animate-pulse"></div>
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-gradient-to-br from-white to-purple-200 rounded-full opacity-40 animate-ping"></div>
-            </div>
-          </div>
-        );
-      case 'broken-chains':
-        return (
-          <div className={visualClasses}>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-6xl opacity-30">⛓️‍💥</div>
-            </div>
-          </div>
-        );
-      case 'body-energy':
-        return (
-          <div className={visualClasses}>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="relative">
-                <div className="w-40 h-64 bg-gradient-to-t from-emerald-500/30 to-transparent rounded-full animate-pulse"></div>
-                <div className="absolute top-1/4 left-1/2 transform -translate-x-1/2 w-20 h-32 bg-gradient-to-t from-teal-400/40 to-transparent rounded-full animate-ping"></div>
-              </div>
-            </div>
-          </div>
-        );
-      case 'flame-lotus':
-        return (
-          <div className={visualClasses}>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="relative">
-                <div className="w-32 h-32 bg-gradient-to-t from-rose-500/40 to-pink-600/40 rounded-full animate-pulse"></div>
-                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-40 bg-gradient-to-t from-orange-500/30 to-transparent rounded-full animate-bounce"></div>
-              </div>
-            </div>
-          </div>
-        );
-      case 'breathing-waves':
-        return (
-          <div className={visualClasses}>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="space-y-4">
-                {[...Array(5)].map((_, i) => (
-                  <div 
-                    key={i}
-                    className="w-64 h-2 bg-blue-400/30 rounded-full animate-pulse" 
-                    style={{ animationDelay: `${i * 0.2}s` }}
-                  ></div>
-                ))}
-              </div>
-            </div>
-          </div>
-        );
-      case 'sacred-geometry':
-        return (
-          <div className={visualClasses}>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="relative">
-                <div className="w-40 h-40 border-2 border-violet-400/40 rounded-full animate-spin"></div>
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-28 h-28 border-2 border-purple-400/40 rounded-full animate-ping"></div>
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-gradient-to-br from-violet-500/30 to-purple-600/30 rounded-full"></div>
-              </div>
-            </div>
-          </div>
-        );
-      case 'crown-chakra':
-        return (
-          <div className={visualClasses}>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="relative">
-                <div className="w-48 h-16 bg-gradient-to-r from-gold-400/40 to-yellow-500/40 rounded-full animate-pulse"></div>
-                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-32 bg-gradient-to-br from-yellow-300/30 to-gold-500/30 rounded-full animate-ping"></div>
-              </div>
-            </div>
-          </div>
-        );
-      default:
-        return <div className={visualClasses}></div>;
-    }
-  };
-
   const currentStepData = demoSteps[currentStep];
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-95 z-50 flex items-center justify-center p-4">
       <div className="bg-gray-900 rounded-lg max-w-5xl w-full max-h-[90vh] overflow-hidden relative">
-        {/* Background Visual */}
+        {/* Beautiful Serpent Background */}
         <div className="absolute inset-0 overflow-hidden rounded-lg">
-          {renderVisual(currentStepData.visual, currentStepData.bgColor)}
+          <img 
+            src={ggpBackground}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover opacity-90"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/60"></div>
         </div>
 
         {/* Close Button */}
@@ -750,8 +689,9 @@ function InteractiveDemo({ onClose, onJoinCourse }: { onClose: () => void; onJoi
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mb-6 leading-tight">
               {currentStepData.title}
             </h2>
-            <p className="text-xl sm:text-2xl text-gray-200 leading-relaxed mb-8 font-light">
-              {currentStepData.content}
+            <p className="text-xl sm:text-2xl text-gray-200 leading-relaxed mb-8 font-light min-h-[3em]">
+              {typedText}
+              {isTyping && <span className="animate-pulse">|</span>}
             </p>
 
             {/* Audio Visualization */}
