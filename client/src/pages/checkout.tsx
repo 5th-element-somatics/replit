@@ -127,19 +127,13 @@ const EmailForm = ({ email, setEmail, includeAddon, setIncludeAddon }: {
                         <Label htmlFor="addon" className="text-gray-300 cursor-pointer font-medium">
                           Add Return to the Body
                         </Label>
-                        <div className="text-sm text-gray-400 mt-1 space-y-2">
-                          <p className="font-medium text-gray-300">3 sacred rituals to help you feel, soften, & stay in the shift.</p>
-                          <p className="italic">This isn't about learning more. It's about letting it land.</p>
-                          <p>Return to the Body is a collection of 3 guided practices to integrate the masterclass and build a deeper relationship with your erotic energy in real time, through your body.</p>
-                          <div className="mt-2">
-                            <p className="text-gray-300 font-medium mb-1">You'll receive:</p>
-                            <div className="space-y-1 text-xs">
-                              <p>• <span className="font-medium">Boundary Tapping (EFT)</span> — for energetic clarity + emotional self-respect</p>
-                              <p>• <span className="font-medium">Eros Energy Activation</span> — a breath-based practice to awaken aliveness</p>
-                              <p>• <span className="font-medium">Sovereignty Ritual</span> — know your body as sacred, soft & non-negotiable</p>
-                            </div>
+                        <div className="text-sm text-gray-400 mt-1">
+                          <p className="text-gray-300 font-medium mb-2">You'll receive:</p>
+                          <div className="space-y-1 text-xs">
+                            <p>• <span className="font-medium">Boundary Tapping (EFT)</span></p>
+                            <p>• <span className="font-medium">Eros Energy Activation</span></p>
+                            <p>• <span className="font-medium">Sovereignty Ritual</span></p>
                           </div>
-                          <p className="font-medium text-purple-300 italic">These aren't extras. They're anchors.</p>
                         </div>
                       </div>
                       <span className="text-white font-semibold">+$20.00</span>
