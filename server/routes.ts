@@ -409,8 +409,8 @@ Questions? Reply to this email or contact hello@fifthelementsomatics.com
             });
 
             // Get offer details for membership creation
-            const offer = await storage.getOffer(courseOrder.offerId);
-            const course = await storage.getCourse(courseOrder.courseId);
+            const offer = courseOrder.offerId ? await storage.getOffer(courseOrder.offerId) : null;
+            const course = courseOrder.courseId ? await storage.getCourse(courseOrder.courseId) : null;
 
             if (offer && course) {
               // Calculate access dates based on offer type
@@ -2891,7 +2891,7 @@ Questions? Reply to this email - I read every single one.`,
   // Get user's memberships (requires secure authentication)
   app.get("/api/memberships", requireMemberAuth, async (req, res) => {
     try {
-      const memberships = await storage.getMembershipsByEmail(req.memberUser.email);
+      const memberships = await storage.getMembershipsByEmail((req as any).memberUser.email);
       
       // Sanitize membership data - exclude sensitive internal fields
       const sanitizedMemberships = memberships.map(membership => ({
@@ -2985,7 +2985,7 @@ Questions? Reply to this email - I read every single one.`,
       }
       
       // Check if user has membership for this course using authenticated email
-      const memberships = await storage.getMembershipsByEmail(req.memberUser.email);
+      const memberships = await storage.getMembershipsByEmail((req as any).memberUser.email);
       
       // Get the section to find the course ID
       const section = await storage.getSection(lesson.sectionId!);
