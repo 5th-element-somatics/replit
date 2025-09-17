@@ -327,7 +327,6 @@ export const insertPurchaseSchema = createInsertSchema(purchases).pick({
 export const insertApplicationSchema = createInsertSchema(applications).pick({
   name: true,
   email: true,
-  phone: true,
   experience: true,
   whatDrawsYou: true,
   hopeToExplore: true,
