@@ -10,6 +10,7 @@ import { Share2, Copy, Heart, Sparkles, Volume2, VolumeX, Play, Pause, Loader2, 
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
+import crystalBall from "@assets/outline-white- crystal-ball_1758070536841.png";
 
 interface QuizQuestion {
   id: string;
@@ -757,7 +758,11 @@ export default function Quiz() {
         {/* Mystical Header */}
         <div className="text-center mb-16">
           <div className="relative">
-            <div className="text-7xl mb-6">🔮</div>
+            <img 
+              src={crystalBall} 
+              alt="Crystal Ball" 
+              className="w-24 h-24 mx-auto mb-6"
+            />
             <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 blur-3xl -z-10 animate-pulse"></div>
           </div>
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-serif font-bold mb-8">
