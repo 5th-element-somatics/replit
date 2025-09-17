@@ -222,7 +222,7 @@ export default function Masterclass() {
                   id="addon"
                   checked={includeAddon}
                   onCheckedChange={(checked) => setIncludeAddon(checked === true)}
-                  className="mt-1"
+                  className="mt-1 rounded-none"
                 />
                 <div className="flex-1">
                   <label htmlFor="addon" className="text-white font-semibold cursor-pointer">
