@@ -787,7 +787,7 @@ export default function Quiz() {
                   Draw Your Card
                 </h2>
                 <p className="text-lg text-gray-300 mb-8">
-                  The universe has prepared {quizQuestions.length} cards for your reading.
+                  Reveal what the universe wants you to understand right now.
                   <br />Click the card that calls to your soul.
                 </p>
               </div>
