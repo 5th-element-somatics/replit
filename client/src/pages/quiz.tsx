@@ -773,11 +773,6 @@ export default function Quiz() {
             <span>The cosmic cards reveal the pattern that's been guiding your soul's journey</span>
             <Star className="w-5 h-5 animate-pulse" style={{animationDelay: '0.5s'}} />
           </div>
-          <div className="flex justify-center items-center gap-4 text-purple-400 text-lg mb-8">
-            <Star className="w-5 h-5 animate-pulse" />
-            <span>Sacred Wisdom Awaits</span>
-            <Star className="w-5 h-5 animate-pulse" style={{animationDelay: '0.5s'}} />
-          </div>
         </div>
 
 
