@@ -524,12 +524,39 @@ function InteractiveDemo({ onClose, onJoinCourse }: { onClose: () => void; onJoi
     setFadeKey(prev => prev + 1);
   }, [currentStep]);
 
+  // Wire soundEnabled to audio element mute state
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    
+    audio.muted = !soundEnabled;
+    
+    // If enabling sound and audio is loaded but paused, try to resume
+    if (soundEnabled && audio.src && audio.paused && !audio.ended) {
+      audio.play().catch(() => {
+        console.log("Audio play failed - user interaction may be required");
+      });
+    }
+    
+    // If disabling sound, pause the audio
+    if (!soundEnabled && !audio.paused) {
+      audio.pause();
+    }
+  }, [soundEnabled]);
+
   // Auto-advance with voice narration
   useEffect(() => {
     const playStepAudio = async () => {
+      // Pause any current audio before loading new content
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+      
       if (soundEnabled && demoSteps[currentStep].voiceText) {
         await generateVoiceNarration(demoSteps[currentStep].voiceText);
         if (audioRef.current) {
+          audioRef.current.muted = !soundEnabled;
           audioRef.current.play().catch(console.error);
           setIsPlaying(true);
         }
@@ -546,6 +573,17 @@ function InteractiveDemo({ onClose, onJoinCourse }: { onClose: () => void; onJoi
       return () => clearTimeout(timer);
     }
   }, [currentStep, isAutoAdvancing, soundEnabled]);
+
+  // Clean up audio on unmount
+  useEffect(() => {
+    return () => {
+      const audio = audioRef.current;
+      if (audio) {
+        audio.pause();
+        audio.src = "";
+      }
+    };
+  }, []);
 
   // Audio event handlers
   useEffect(() => {
@@ -592,6 +630,16 @@ function InteractiveDemo({ onClose, onJoinCourse }: { onClose: () => void; onJoi
     }
   };
 
+  const toggleSound = () => {
+    const nextSoundState = !soundEnabled;
+    setSoundEnabled(nextSoundState);
+    
+    // Immediately sync with audio element
+    if (audioRef.current) {
+      audioRef.current.muted = !nextSoundState;
+    }
+  };
+
   const currentStepData = demoSteps[currentStep];
 
   return (
@@ -622,7 +670,7 @@ function InteractiveDemo({ onClose, onJoinCourse }: { onClose: () => void; onJoi
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => setSoundEnabled(!soundEnabled)}
+            onClick={toggleSound}
             className="text-white/80 hover:text-white bg-black/50 backdrop-blur-sm"
           >
             {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
@@ -736,7 +784,14 @@ function InteractiveDemo({ onClose, onJoinCourse }: { onClose: () => void; onJoi
         </div>
 
         {/* Hidden Audio Element */}
-        <audio ref={audioRef} preload="metadata" className="hidden" />
+        <audio 
+          ref={audioRef} 
+          preload="metadata" 
+          className="hidden"
+          onEnded={() => setIsPlaying(false)}
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+        />
       </div>
     </div>
   );
