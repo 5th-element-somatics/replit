@@ -862,7 +862,7 @@ export default function Quiz() {
               </div>
 
               {/* Mystical Tarot Card Answer Options */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-[60px] mb-12 max-w-6xl mx-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-[60px] mb-12 max-w-6xl mx-auto justify-items-center">
                 {quizQuestions[currentQuestion].options.map((option, index) => {
                   const isSelected = answers[quizQuestions[currentQuestion].id] === option.value;
                   const tarotSymbols = ['★', '☽', '◆', '✧'];
@@ -906,7 +906,7 @@ export default function Quiz() {
                       {/* Tarot Card Container */}
                       <div className={`
                         relative bg-gradient-to-br ${cardGradients[index]} rounded-2xl transition-all duration-700
-                        border-2 backdrop-blur-sm overflow-hidden w-64 h-96
+                        border-2 backdrop-blur-sm overflow-hidden w-48 h-72 sm:w-56 sm:h-84 lg:w-64 lg:h-96
                         ${isSelected 
                           ? 'border-purple-300 shadow-xl shadow-purple-500/40' 
                           : 'border-purple-400/30 hover:border-purple-300/80 hover:shadow-lg hover:shadow-purple-500/20'
