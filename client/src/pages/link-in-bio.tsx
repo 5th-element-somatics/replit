@@ -104,7 +104,7 @@ export default function LinkInBio() {
             href="/quiz"
             title="Take the Good Girl Archetype Quiz"
             description="Discover which of the 4 Good Girl archetypes is keeping you from your power & pleasure"
-            emoji="✨"
+            emoji="🔮"
             testId="link-quiz"
           />
 
