@@ -67,7 +67,6 @@ export default function LinkInBio() {
         type="profile"
         keywords="Saint Fifth Element Somatics, link in bio, Good Girl Quiz, sacred meditation, masterclass, mentorship, somatic sexology, embodiment coach"
       />
-
       <div className="max-w-md mx-auto px-4 py-8">
         {/* Profile Header */}
         <div className="text-center mb-8">
@@ -93,9 +92,7 @@ export default function LinkInBio() {
           <h1 className="text-3xl font-serif font-bold mb-2" data-testid="text-name">
             <span className="gradient-text">SAINT</span>
           </h1>
-          <p className="text-lg text-purple-300 font-semibold mb-2" data-testid="text-title">
-            SOMATIC SEXOLOGIST
-          </p>
+          <p className="text-lg text-purple-300 font-semibold mb-2" data-testid="text-title">SOMATIC SEXOLOGIST & MASTER RECLAMATOR</p>
           <p className="text-sm text-gray-300 leading-relaxed max-w-xs mx-auto" data-testid="text-tagline">
             Helping women reclaim their erotic truth & build unshakable intimacy with themselves, their bodies & the people they love
           </p>
@@ -185,7 +182,6 @@ export default function LinkInBio() {
           </div>
         </div>
       </div>
-
       {/* Background Elements for Mystical Feel */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
         <div className="absolute top-20 left-10 w-32 h-32 rounded-full bg-purple-500/5 blur-3xl animate-float-0"></div>
