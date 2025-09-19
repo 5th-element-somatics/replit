@@ -5,17 +5,19 @@ import { Link } from "wouter";
 import { ExternalLink, Instagram, Mail } from "lucide-react";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
 import saintProfileImage from "@assets/saint_photo_1753245778552.png";
+import tarotCards from "@assets/outline-white- tarot-cards_1758245046275.png";
 
 interface LinkCardProps {
   href: string;
   title: string;
   description: string;
   emoji?: string;
+  image?: string;
   testId: string;
   isExternal?: boolean;
 }
 
-function LinkCard({ href, title, description, emoji, testId, isExternal = false }: LinkCardProps) {
+function LinkCard({ href, title, description, emoji, image, testId, isExternal = false }: LinkCardProps) {
   const cardContent = (
     <Card 
       className="w-full bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-sm border border-purple-500/20 hover:border-purple-400/40 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/20 mystique-glow"
@@ -23,7 +25,8 @@ function LinkCard({ href, title, description, emoji, testId, isExternal = false 
     >
       <CardContent className="p-6 text-center">
         <div className="flex items-center justify-center space-x-3 mb-2">
-          {emoji && <span className="text-4xl">{emoji}</span>}
+          {image && <img src={image} alt="" className="w-8 h-8" />}
+          {!image && emoji && <span className="text-4xl">{emoji}</span>}
           <h3 className="text-lg font-serif font-bold text-white">
             {title}
           </h3>
@@ -104,7 +107,7 @@ export default function LinkInBio() {
             href="/quiz"
             title="Take the Good Girl Archetype Quiz"
             description="Discover which of the 4 Good Girl archetypes is keeping you from your power & pleasure"
-            emoji="🔮"
+            image={tarotCards}
             testId="link-quiz"
           />
 
