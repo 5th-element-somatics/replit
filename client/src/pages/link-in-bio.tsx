@@ -125,7 +125,7 @@ export default function LinkInBio() {
 
           <LinkCard
             href="/free-meditation"
-            title="Free Sacred Meditation Download"
+            title="Free Grounding Ritual Download"
             description="A guided practice to help you drop into your body & reconnect with your inner wisdom"
             image={candleImage}
             testId="link-meditation"
