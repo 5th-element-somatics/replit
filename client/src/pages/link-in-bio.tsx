@@ -145,7 +145,7 @@ export default function LinkInBio() {
 
           <LinkCard
             href="/apply"
-            title="Apply for 1:1 Mentorship"
+            title="Work 1:1 with me"
             description="Work directly with Saint to transform your relationship with your body, pleasure & power"
             image={orbitImage}
             testId="link-apply"
