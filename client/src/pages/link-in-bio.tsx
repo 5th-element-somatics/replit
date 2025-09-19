@@ -27,26 +27,27 @@ function LinkCard({ href, title, description, emoji, image, testId, isExternal =
       className="w-full bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-sm border border-purple-500/20 hover:border-purple-400/40 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/20 mystique-glow"
       data-testid={testId}
     >
-      <CardContent className="p-6 text-center">
-        <div className="flex flex-col items-center space-y-4">
-          {/* Icon Section */}
-          <div className="flex items-center justify-center">
+      <CardContent className="p-6">
+        <div className="flex items-center space-x-4">
+          {/* Icon Section - Left Side */}
+          <div className="flex-shrink-0">
             {image && <img src={image} alt="" className="w-12 h-12 opacity-90" />}
-            {!image && emoji && <span className="text-5xl">{emoji}</span>}
+            {!image && emoji && <span className="text-4xl">{emoji}</span>}
           </div>
           
-          {/* Title Section */}
-          <div className="flex items-center justify-center space-x-2">
-            <h3 className="text-xl font-serif font-bold text-white leading-tight">
-              {title}
-            </h3>
-            {isExternal && <ExternalLink className="w-4 h-4 text-purple-400 flex-shrink-0" />}
+          {/* Content Section - Right Side */}
+          <div className="flex-1 text-left">
+            <div className="flex items-center space-x-2 mb-2">
+              <h3 className="text-lg font-serif font-bold text-white leading-tight">
+                {title}
+              </h3>
+              {isExternal && <ExternalLink className="w-4 h-4 text-purple-400 flex-shrink-0" />}
+            </div>
+            
+            <p className="text-gray-300 text-sm leading-relaxed">
+              {description}
+            </p>
           </div>
-          
-          {/* Description Section */}
-          <p className="text-gray-300 text-sm leading-relaxed max-w-xs">
-            {description}
-          </p>
         </div>
       </CardContent>
     </Card>
