@@ -6,6 +6,7 @@ import { ExternalLink, Instagram, Mail } from "lucide-react";
 import tiger_no_bg from "@assets/tiger_no_bg.png";
 import saintProfileImage from "@assets/saint_photo_1753245778552.png";
 import tarotCards from "@assets/outline-white- tarot-cards_1758245046275.png";
+import laptopImage from "@assets/outline-white-laptop_1758245304235.png";
 
 interface LinkCardProps {
   href: string;
@@ -115,7 +116,7 @@ export default function LinkInBio() {
             href="/masterclass"
             title="The Good Girl Paradox Masterclass"
             description="A deep-dive training on breaking free from people-pleasing patterns & reclaiming your authentic desires"
-            emoji="🎭"
+            image={laptopImage}
             testId="link-masterclass"
           />
 
