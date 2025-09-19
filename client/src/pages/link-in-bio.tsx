@@ -9,6 +9,7 @@ import tarotCards from "@assets/outline-white- tarot-cards_1758245046275.png";
 import laptopImage from "@assets/outline-white-laptop_1758245304235.png";
 import candleImage from "@assets/outline-white- candle-2_1758245366249.png";
 import orbitImage from "@assets/outline-white-orbit-1_1758245429472.png";
+import moonStarImage from "@assets/outline-white-moon-2_1758245561893.png";
 
 interface LinkCardProps {
   href: string;
@@ -142,7 +143,7 @@ export default function LinkInBio() {
             href="/about"
             title="About Saint & Her Work"
             description="Learn about Saint's journey & her trauma-informed approach to sacred embodiment"
-            emoji="💜"
+            image={moonStarImage}
             testId="link-about"
           />
 
