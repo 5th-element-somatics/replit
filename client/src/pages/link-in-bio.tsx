@@ -23,7 +23,7 @@ function LinkCard({ href, title, description, emoji, testId, isExternal = false 
     >
       <CardContent className="p-6 text-center">
         <div className="flex items-center justify-center space-x-3 mb-2">
-          {emoji && <span className="text-2xl">{emoji}</span>}
+          {emoji && <span className="text-4xl">{emoji}</span>}
           <h3 className="text-lg font-serif font-bold text-white">
             {title}
           </h3>
