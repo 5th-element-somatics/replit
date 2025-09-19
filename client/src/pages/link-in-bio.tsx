@@ -146,14 +146,6 @@ export default function LinkInBio() {
             image={moonStarImage}
             testId="link-about"
           />
-
-          <LinkCard
-            href="/work-with-me"
-            title="Work With Me"
-            description="Explore all the ways we can collaborate on your embodiment & reclamation journey"
-            emoji="🔥"
-            testId="link-work-with-me"
-          />
         </div>
 
         {/* Social Links Footer */}
