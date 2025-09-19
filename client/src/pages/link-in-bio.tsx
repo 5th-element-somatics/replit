@@ -7,6 +7,7 @@ import tiger_no_bg from "@assets/tiger_no_bg.png";
 import saintProfileImage from "@assets/saint_photo_1753245778552.png";
 import tarotCards from "@assets/outline-white- tarot-cards_1758245046275.png";
 import laptopImage from "@assets/outline-white-laptop_1758245304235.png";
+import candleImage from "@assets/outline-white- candle-2_1758245366249.png";
 
 interface LinkCardProps {
   href: string;
@@ -124,7 +125,7 @@ export default function LinkInBio() {
             href="/free-meditation"
             title="Free Sacred Meditation Download"
             description="A guided practice to help you drop into your body & reconnect with your inner wisdom"
-            emoji="🧘‍♀️"
+            image={candleImage}
             testId="link-meditation"
           />
 
