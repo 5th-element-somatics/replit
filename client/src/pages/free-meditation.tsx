@@ -34,7 +34,10 @@ interface FreeMeditationProps {
   accessMode?: boolean;
 }
 
-export default function FreeMeditation({ accessMode = false }: FreeMeditationProps) {
+// Route component wrapper that handles both route props and custom props
+export default function FreeMeditation(props: any) {
+  // Extract accessMode from props if it exists, default to false for route usage
+  const accessMode = props?.accessMode || false;
   const { toast } = useToast();
   const [isSubmitted, setIsSubmitted] = useState(accessMode);
   const [isMenuOpen, setIsMenuOpen] = useState(false);

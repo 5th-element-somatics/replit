@@ -21,6 +21,7 @@ import HolyMessWorkshop from "@/pages/workshop-holy-mess";
 import HolyMessWorkshopVarB from "@/pages/workshop-holy-mess-var-b";
 import HolyMessWorkshopVarC from "@/pages/workshop-holy-mess-var-c";
 import V2ReimagiedMockup from "@/pages/v2-reimagined-mockup";
+import LinkInBio from "@/pages/link-in-bio";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -43,6 +44,7 @@ function Router() {
       <Route path="/meditation-access" component={MeditationAccess} />
       <Route path="/waitlist" component={Waitlist} />
       <Route path="/quiz" component={Quiz} />
+      <Route path="/link-in-bio" component={LinkInBio} />
       <Route path="/v2-reimagined-mockup" component={V2ReimagiedMockup} />
       <Route path="/email-header-test" component={EmailHeaderTest} />
       <Route component={NotFound} />
