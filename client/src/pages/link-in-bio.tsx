@@ -8,6 +8,7 @@ import saintProfileImage from "@assets/saint_photo_1753245778552.png";
 import tarotCards from "@assets/outline-white- tarot-cards_1758245046275.png";
 import laptopImage from "@assets/outline-white-laptop_1758245304235.png";
 import candleImage from "@assets/outline-white- candle-2_1758245366249.png";
+import orbitImage from "@assets/outline-white-orbit-1_1758245429472.png";
 
 interface LinkCardProps {
   href: string;
@@ -133,7 +134,7 @@ export default function LinkInBio() {
             href="/apply"
             title="Apply for 1:1 Mentorship"
             description="Work directly with Saint to transform your relationship with your body, pleasure & power"
-            emoji="🌹"
+            image={orbitImage}
             testId="link-apply"
           />
 
