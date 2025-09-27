@@ -732,6 +732,84 @@ Questions? Reply to this email or contact hello@fifthelementsomatics.com
       }
       
       const application = await storage.createApplication(parseResult.data);
+      
+      // Send notification email to hello@fifthelementsomatics.com
+      if (process.env.SENDGRID_API_KEY) {
+        try {
+          await sgMail.send({
+            to: 'hello@fifthelementsomatics.com',
+            from: process.env.SENDGRID_FROM_EMAIL!,
+            subject: `New Mentorship Application from ${parseResult.data.name}`,
+            html: `
+              <div style="font-family: Georgia, serif; max-width: 700px; margin: 0 auto; background: linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 100%); color: #ffffff; padding: 40px;">
+                <div style="text-align: center; margin-bottom: 40px;">
+                  <h1 style="color: #C77DFF; font-size: 28px; margin-bottom: 10px;">New 1:1 Mentorship Application</h1>
+                  <p style="color: #E5E7EB; font-size: 16px;">Someone is ready to begin their sacred journey with you</p>
+                </div>
+                
+                <div style="background: rgba(199, 125, 255, 0.1); border: 1px solid #C77DFF; border-radius: 12px; padding: 30px; margin-bottom: 30px;">
+                  <h2 style="color: #E879F9; font-size: 22px; margin-bottom: 20px;">${parseResult.data.name}</h2>
+                  <p style="color: #E5E7EB; font-size: 16px; margin-bottom: 10px;"><strong>Email:</strong> ${parseResult.data.email}</p>
+                  <p style="color: #E5E7EB; font-size: 16px;"><strong>Applied:</strong> ${new Date().toLocaleString()}</p>
+                </div>
+
+                <div style="space-y: 25px;">
+                  <div style="margin-bottom: 25px;">
+                    <h3 style="color: #C77DFF; font-size: 18px; margin-bottom: 10px;">Somatic Experience</h3>
+                    <p style="color: #E5E7EB; line-height: 1.6; font-size: 15px;">${parseResult.data.experience}</p>
+                  </div>
+
+                  <div style="margin-bottom: 25px;">
+                    <h3 style="color: #C77DFF; font-size: 18px; margin-bottom: 10px;">What draws them to this work?</h3>
+                    <p style="color: #E5E7EB; line-height: 1.6; font-size: 15px;">${parseResult.data.whatDrawsYou}</p>
+                  </div>
+
+                  <div style="margin-bottom: 25px;">
+                    <h3 style="color: #C77DFF; font-size: 18px; margin-bottom: 10px;">What they hope to explore</h3>
+                    <p style="color: #E5E7EB; line-height: 1.6; font-size: 15px;">${parseResult.data.hopeToExplore}</p>
+                  </div>
+
+                  <div style="margin-bottom: 25px;">
+                    <h3 style="color: #C77DFF; font-size: 18px; margin-bottom: 10px;">Current challenges</h3>
+                    <p style="color: #E5E7EB; line-height: 1.6; font-size: 15px;">${parseResult.data.challenges}</p>
+                  </div>
+
+                  <div style="margin-bottom: 25px;">
+                    <h3 style="color: #C77DFF; font-size: 18px; margin-bottom: 10px;">Support they're seeking</h3>
+                    <p style="color: #E5E7EB; line-height: 1.6; font-size: 15px;">${parseResult.data.support}</p>
+                  </div>
+
+                  <div style="margin-bottom: 25px;">
+                    <h3 style="color: #C77DFF; font-size: 18px; margin-bottom: 10px;">What they long to experience</h3>
+                    <p style="color: #E5E7EB; line-height: 1.6; font-size: 15px;">${parseResult.data.longToExperience}</p>
+                  </div>
+
+                  <div style="margin-bottom: 25px;">
+                    <h3 style="color: #C77DFF; font-size: 18px; margin-bottom: 10px;">What they're afraid to express</h3>
+                    <p style="color: #E5E7EB; line-height: 1.6; font-size: 15px;">${parseResult.data.afraidToExpress}</p>
+                  </div>
+
+                  <div style="margin-bottom: 25px;">
+                    <h3 style="color: #C77DFF; font-size: 18px; margin-bottom: 10px;">What they desire from their guide</h3>
+                    <p style="color: #E5E7EB; line-height: 1.6; font-size: 15px;">${parseResult.data.desireFromGuide}</p>
+                  </div>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #C77DFF 0%, #E879F9 100%); border-radius: 12px; padding: 25px; text-align: center; margin-top: 30px;">
+                  <p style="color: #000000; font-size: 16px; margin: 0;">
+                    Reply directly to <strong>${parseResult.data.email}</strong> to begin the conversation
+                  </p>
+                </div>
+              </div>
+            `
+          });
+          console.log('✅ Mentorship application notification sent to hello@fifthelementsomatics.com');
+        } catch (emailError) {
+          console.error("Failed to send application notification email:", emailError);
+          // Don't fail the application submission if email fails
+        }
+      }
+      
       res.json({ success: true, id: application.id });
     } catch (error: any) {
       console.error("Application submission error:", error);
