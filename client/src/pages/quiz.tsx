@@ -139,6 +139,7 @@ export default function Quiz() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [showResult, setShowResult] = useState(false);
+  const [showEmailCollection, setShowEmailCollection] = useState(false);
   const [result, setResult] = useState<keyof typeof resultTypes | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
@@ -375,8 +376,8 @@ export default function Quiz() {
         // Keep showQuestion true to skip card back after first question
         setCurrentQuestion(currentQuestion + 1);
       } else {
-        // Last question - show results
-        calculateResult();
+        // Last question - show email collection before results
+        setShowEmailCollection(true);
       }
     }, 1500); // 1.5 second delay to show selection
   };
@@ -392,7 +393,7 @@ export default function Quiz() {
       setCurrentQuestion(currentQuestion + 1);
       setShowQuestion(false); // Reset for next card
     } else {
-      calculateResult();
+      setShowEmailCollection(true);
     }
   };
 
@@ -470,6 +471,11 @@ export default function Quiz() {
 
     setIsSubmitting(true);
     try {
+      // First calculate the result if not already calculated
+      if (!result) {
+        calculateResult();
+      }
+
       await apiRequest("POST", "/api/leads", {
         email: email.trim(),
         name: name.trim(),
@@ -478,9 +484,13 @@ export default function Quiz() {
         quizAnswers: JSON.stringify(answers)
       });
 
+      // Hide email collection and show results
+      setShowEmailCollection(false);
+      setShowResult(true);
+      
       window.scrollTo({ top: 0, behavior: 'smooth' });
       toast({
-        title: "Results saved!",
+        title: "Here are your results!",
         description: "Check your email for your personalized transformation guide.",
       });
     } catch (error) {
@@ -520,6 +530,142 @@ export default function Quiz() {
       description: "Share your result on social media.",
     });
   };
+
+  // Email Collection Screen (before results)
+  if (showEmailCollection) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
+        <SEOHead 
+          title="Get Your Quiz Results - Fifth Element Somatics"
+          description="Enter your details to receive your personalized Good Girl Archetype results and transformation guide."
+          image="/quiz-share.svg"
+          url="https://fifthelementsomatics.com/quiz"
+        />
+        
+        {/* Navigation */}
+        <nav className="flex items-center justify-between p-4 sm:p-6 lg:p-8">
+          <div className="flex items-center space-x-3">
+            <Link href="/" onClick={handleNavClick}>
+              <img 
+                src={tiger_no_bg} 
+                alt="Fifth Element Somatics" 
+                className="h-12 w-auto cursor-pointer hover:opacity-90 transition-opacity"
+              />
+            </Link>
+            <Link href="/" onClick={handleNavClick}>
+              <span className="text-lg font-serif font-semibold text-white">FIFTH ELEMENT SOMATICS</span>
+            </Link>
+          </div>
+          
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex space-x-8">
+            <Link href="/" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">HOME</Link>
+            <Link href="/free-meditation" onClick={handleNavClick} className="text-emerald-400 hover:text-emerald-300 transition-colors font-semibold">FREE MEDITATION</Link>
+            <Link href="/quiz" onClick={handleNavClick} className="text-white font-semibold">TAKE THE QUIZ</Link>
+            <Link href="/work-with-me" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">WORK WITH ME</Link>
+            <Link href="/masterclass" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">MASTERCLASS</Link>
+            <Link href="/about" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors">ABOUT</Link>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button 
+            className="md:hidden text-white p-2"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+
+          {/* Mobile Navigation */}
+          {isMenuOpen && (
+            <div className="absolute top-20 left-0 right-0 bg-gray-900 bg-opacity-95 backdrop-blur-sm md:hidden z-50">
+              <div className="flex flex-col p-4 space-y-4">
+                <Link href="/" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">HOME</Link>
+                <Link href="/free-meditation" onClick={handleNavClick} className="text-emerald-400 hover:text-emerald-300 transition-colors font-semibold text-lg">FREE MEDITATION</Link>
+                <Link href="/quiz" onClick={handleNavClick} className="text-white font-semibold text-lg">TAKE THE QUIZ</Link>
+                <Link href="/work-with-me" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">WORK WITH ME</Link>
+                <Link href="/masterclass" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">MASTERCLASS</Link>
+                <Link href="/about" onClick={handleNavClick} className="text-gray-300 hover:text-white transition-colors text-lg">ABOUT</Link>
+              </div>
+            </div>
+          )}
+        </nav>
+
+        {/* Email Collection Content */}
+        <div className="max-w-2xl mx-auto px-4 py-12 text-center">
+          <div className="relative mb-8">
+            <img 
+              src={crystalBall} 
+              alt="Crystal Ball" 
+              className="w-20 h-20 mx-auto mb-6"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 blur-3xl -z-10 animate-pulse"></div>
+          </div>
+          
+          <h1 className="text-4xl sm:text-5xl font-serif font-bold mb-6">
+            <span className="gradient-text">Your Archetype Awaits</span>
+          </h1>
+          
+          <div className="flex justify-center items-center gap-4 text-purple-400 text-lg mb-8">
+            <Star className="w-5 h-5 animate-pulse" />
+            <span>The cosmic cards have revealed your path</span>
+            <Star className="w-5 h-5 animate-pulse" style={{animationDelay: '0.5s'}} />
+          </div>
+
+          <p className="text-xl text-gray-300 mb-8 leading-relaxed">
+            Enter your details below to unlock your personalized archetype results and receive your transformation guide.
+          </p>
+
+          {/* Email Collection Form */}
+          <Card className="bg-gradient-to-br from-purple-900/30 to-pink-900/30 border border-purple-400/30 backdrop-blur-sm">
+            <CardContent className="p-8">
+              <h3 className="text-2xl font-serif font-bold text-white mb-6">
+                🌟 Get Your Sacred Results 🌟
+              </h3>
+              
+              <div className="space-y-4 mb-6">
+                <Input
+                  placeholder="Your first name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="bg-black/50 border-purple-400/30 text-white text-lg p-4 text-center"
+                  data-testid="input-name"
+                />
+                <Input
+                  type="email"
+                  placeholder="your@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="bg-black/50 border-purple-400/30 text-white text-lg p-4 text-center"
+                  data-testid="input-email"
+                />
+              </div>
+
+              <Button 
+                onClick={submitLead}
+                disabled={isSubmitting}
+                className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold py-4 px-8 text-lg rounded-lg mystique-glow"
+                data-testid="button-reveal-results"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    Revealing Your Archetype...
+                  </>
+                ) : (
+                  "✨ Reveal My Archetype ✨"
+                )}
+              </Button>
+
+              <p className="text-sm text-gray-400 mt-4">
+                You'll also receive your personalized transformation guide via email
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   if (showResult && result) {
     const resultData = resultTypes[result];
@@ -611,36 +757,14 @@ export default function Quiz() {
                 </div>
               </div>
 
-              {/* Email Capture */}
-              <div className="bg-gray-800 bg-opacity-50 rounded-lg p-6 mb-6">
-                <h3 className="text-xl font-semibold text-white mb-4 text-center">
-                  Get Your Personalized Transformation Guide
+              {/* Welcome Message */}
+              <div className="bg-emerald-800/20 border border-emerald-400/30 rounded-lg p-6 mb-6 text-center">
+                <h3 className="text-xl font-semibold text-emerald-300 mb-2">
+                  Welcome to your journey, {name}! ✨
                 </h3>
-                <p className="text-gray-300 mb-4 text-center">
-                  Receive a detailed breakdown of your archetype and specific practices to support your reclamation journey.
+                <p className="text-gray-300">
+                  Your personalized transformation guide has been sent to <strong>{email}</strong>
                 </p>
-                <div className="grid md:grid-cols-2 gap-4 mb-4">
-                  <Input
-                    placeholder="Your name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="bg-black bg-opacity-50 border-gray-600 text-white"
-                  />
-                  <Input
-                    type="email"
-                    placeholder="your@email.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="bg-black bg-opacity-50 border-gray-600 text-white"
-                  />
-                </div>
-                <Button 
-                  onClick={submitLead}
-                  disabled={isSubmitting}
-                  className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-pink-600 hover:to-purple-500 text-white font-bold py-3 rounded-lg"
-                >
-                  {isSubmitting ? "Sending..." : "Send My Results"}
-                </Button>
               </div>
 
               {/* Actions */}
